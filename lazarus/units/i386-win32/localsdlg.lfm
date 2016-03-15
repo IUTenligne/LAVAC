@@ -1,0 +1,32 @@
+inherited LocalsDlg: TLocalsDlg
+  Left = 359
+  Height = 200
+  Top = 126
+  Width = 500
+  HorzScrollBar.Page = 499
+  VertScrollBar.Page = 199
+  ActiveControl = lvLocals
+  BorderStyle = bsSizeToolWin
+  Caption = 'Locals'
+  ClientHeight = 200
+  ClientWidth = 500
+  object lvLocals: TListView[0]
+    Left = 0
+    Height = 200
+    Top = 0
+    Width = 500
+    Align = alClient
+    Columns = <    
+      item
+        Caption = 'Name'
+        Width = 150
+      end    
+      item
+        Caption = 'Value'
+      end>
+    MultiSelect = True
+    RowSelect = True
+    TabOrder = 0
+    ViewStyle = vsReport
+  end
+end

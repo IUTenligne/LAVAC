@@ -1,0 +1,5 @@
+﻿  xmlparser.cpp
+c:\lavac32\xml\xmlparser\xmlparser\xmlparser.cpp(91): warning C4715: 'fnxmlparser' : les chemins de contrôle ne retournent pas tous une valeur
+     CrÚation de la bibliothÞque C:\LAVAC32\xml\xmlparser\Debug\xmlparser.lib et de l'objet C:\LAVAC32\xml\xmlparser\Debug\xmlparser.exp
+LINK : warning LNK4098: conflit entre la bibliothÞque par dÚfaut 'LIBCMTD' et les autres bibliothÞquesá; utilisez /NODEFAULTLIB:library
+  xmlparser.vcxproj -> C:\LAVAC32\xml\xmlparser\Debug\xmlparser.dll

@@ -1,0 +1,299 @@
+UNIT LAVACINI;
+interface
+{************************************************}
+uses Windows, Dos, SysUtils,
+		 Strings,
+		 MMlavac,
+                 VFW,
+		 MCIWnd
+		 {$IFDEF _DEBUG}
+		 ,MMDEBUG
+		 {$ENDIF};
+
+procedure ReadIniFile(szIni : PCHAR);
+
+implementation
+
+procedure ReadIniFile(szIni : PCHAR);
+begin
+	StrCopy(gszIni, szIni);
+
+	{bWin32 := (LOWORD(LOBYTE(GetVersion)) > 3) OR
+						((LOWORD(LOBYTE(GetVersion)) = 3) AND (LOWORD(HIBYTE(GetVersion)) > 11));}
+
+	{WriteLn((LOBYTE(LOWORD(GetVersion))));
+	WriteLn((HIBYTE(LOWORD(GetVersion))));
+	WriteLn((HIBYTE(HIWORD(GetVersion)))); 5
+	WriteLn((LOBYTE(HIWORD(GetVersion)))); 0}
+
+	bWin95 := (LOBYTE(LOWORD(GetVersion)) > 3) OR
+						((LOBYTE(LOWORD(GetVersion)) = 3) AND (HIBYTE(LOWORD(GetVersion)) > 11));
+	bWinNT := (LOBYTE(LOWORD(GetVersion)) = 3) AND (HIBYTE(HIWORD(GetVersion)) = 5);
+
+	{Mode Lecture Ecriture Partageable}
+	FileMode := OF_SHARE_DENY_NONE OR OF_READWRITE;
+
+	GetPrivateProfileString('DIRECTORIES', 'SERVER', 'C:\',szParam,SizeOf(szParam), gszIni);
+	if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+	PathServeur := szParam;
+
+	GetPrivateProfileString('DIRECTORIES', 'LAVAC', '#',szParam,SizeOf(szParam), gszIni);
+	if szParam[0] = '#' then begin
+		StrCopy(PathLavac, PathServeur);
+		StrCat(PathLavac, 'LAVAC\');
+	end else begin
+		if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+		PathLavac := szParam;
+	end;
+
+	GetPrivateProfileString('DIRECTORIES', 'TEACHER', '#',szParam,SizeOf(szParam), gszIni);
+	if szParam[0] = '#' then begin
+		StrCopy(PathProf, PathLavac);
+		StrCat(PathProf, 'PROF\');
+	end else begin
+		if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+		PathProf := szParam;
+	end;
+
+	GetPrivateProfileString('DIRECTORIES', 'STUDENTS', '#',szParam,SizeOf(szParam), gszIni);
+	if szParam[0] = '#' then begin
+		StrCopy(PathEleves, PathLavac);
+		StrCat(PathEleves, 'ELEVES\');
+	end else begin
+		if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+		PathEleves := szParam;
+	end;
+	StrCopy(OldPathEleves, PathEleves);
+
+	GetPrivateProfileString('DIRECTORIES', 'LESSONS', '#',szParam, SizeOf(szParam), gszIni);
+	if szParam[0] = '#' then begin
+		StrCopy(PathLecons, PathLavac);
+		StrCat(PathLecons, 'LECONS\');
+	end else begin
+		if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+		PathLecons := szParam;
+	end;
+
+	GetPrivateProfileString('DIRECTORIES', 'SOUNDS', '#',szParam,SizeOf(szParam), gszIni);
+  if szParam[0] = '#' then begin
+		StrCopy(PathSons, PathLavac);
+		StrCat(PathSons, 'SONS\');
+	end else begin
+		if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+		PathSons := szParam;
+	end;
+
+	GetPrivateProfileString('DIRECTORIES', 'IMAGES', '#',szParam,SizeOf(szParam), gszIni);
+	if szParam[0] = '#' then begin
+		StrCopy(PathImages, PathLavac);
+		StrCat(PathImages, 'IMAGES\');
+	end else begin
+		if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+		PathImages := szParam;
+	end;
+
+	GetPrivateProfileString('DIRECTORIES', 'TEXTS', '#',szParam,SizeOf(szParam), gszIni);
+	if szParam[0] = '#' then begin
+		StrCopy(PathTextes, PathLavac);
+		StrCat(PathTextes, 'TEXTES\');
+	end else begin
+		if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+		PathTextes := szParam;
+	end;
+
+	GetPrivateProfileString('DIRECTORIES', 'DYNAPATH', '#',szParam,SizeOf(szParam), gszIni);
+	if szParam[0] = '#' then begin
+		bDynaPath := FALSE;
+	end else begin
+		bDynaPath := StrComp(StrUpper(szParam), 'TRUE') = 0;
+	end;
+
+	GetPrivateProfileString('DIRECTORIES', 'FLOPPY', 'A:\',szParam,SizeOf(szParam), gszIni);
+	if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+	PathFloppy := szParam;
+
+	GetPrivateProfileString('WAVE', 'BITS', '8',szParam,SizeOf(szParam), gszIni);
+	Val(StrPas(szParam),wNbBits,ErrPos);
+	if ErrPos<>0 then wNbBits := 8;
+
+	GetPrivateProfileString('WAVE', 'FREQ', '11025',szParam,SizeOf(szParam), gszIni);
+	Val(StrPas(szParam),FrequEch,ErrPos);
+	if ErrPos<>0 then FrequEch := 11025;
+
+	GetPrivateProfileString('WAVE', 'BLOCK', '22050',szParam,SizeOf(szParam), gszIni);
+	Val(StrPas(szParam),dwBlockSize,ErrPos);
+	if ErrPos<>0 then dwBlockSize := FrequEch * 2;
+	dwIniBlockSize := dwBlockSize;
+
+	GetPrivateProfileString('WAVE', 'SBP_PORT', 'FFFF',szParam,SizeOf(szParam), gszIni);
+	Val('$'+StrPas(szParam),SbpBaseAddr,ErrPos);
+	if ErrPos <> 0 then SbpBaseAddr := $FFFF;
+
+	GetPrivateProfileString('WAVE', 'MIXER', 'SBPMIXER.EXE',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szMixer, szParam);
+
+	{FTP ?}
+	GetPrivateProfileString('DIRECTORIES', 'FTP', 'FALSE',szParam,SizeOf(szParam), gszIni);
+	if strPos(strUpper(szParam), 'TRUE') <> nil then
+		bFTP := TRUE
+	else
+		bFTP := FALSE;
+
+	FTPFILENAME := GetPrivateProfileInt('FTP', 'FILENAMEOFS', 39, gszIni);
+	FTPSIZE := GetPrivateProfileInt('FTP', 'SIZEOFS', 24, gszIni);
+	FTPHOUR := GetPrivateProfileInt('FTP', 'HOUROFS', 10, gszIni);
+	FTPMIN  := GetPrivateProfileInt('FTP', 'MINOFS', 13, gszIni);
+
+	{Recherche du travail vidéo en local}
+	GetPrivateProfileString('VIDEO', 'LOCAL', 'FALSE',szParam,SizeOf(szParam), gszIni);
+	if strPos(strUpper(szParam), 'TRUE') <> nil then
+		VideoLoc := TRUE
+  else
+    VideoLoc := FALSE;
+	StartVideoLoc := VideoLoc;
+
+	GetPrivateProfileString('VIDEO', 'LOCALPATH', '#', szParam, SizeOf(szParam), gszIni);
+	if szParam[0] = '#' then begin
+		StrCopy(PathVideoLoc, PathLavac);
+		StrCat(PathVideoLoc, 'VIDEO\');
+		PathVideoLoc[0] := 'C';
+	end else begin
+		if szParam[StrLen(szParam) - 1] <> '\' then StrCat(szParam, '\');
+		PathVideoLoc := szParam;
+	end;
+
+	{Valeur minimale nécessaire sur disque local}
+	GetPrivateProfileString('VIDEO', 'TAILLE', '2048',szParam,SizeOf(szParam), gszIni);
+	Val(StrPas(szParam),TailleLoc,ErrPos);
+	if ErrPos <> 0 then
+		TailleLoc := (2048*1024)
+	else
+		TailleLoc := TailleLoc*1024;
+
+	GetPrivateProfileString('VIDEO', 'EXT', '.AVI',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szVideoExt, szParam);
+
+	GetPrivateProfileString('VIDEO', 'DEFEXT', 'AVI',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szVideoDefExt, szParam);
+
+	GetPrivateProfileString('VIDEO', 'EDITOR', 'VIDCAP.EXE',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szVideoEditor, szParam);
+
+	GetPrivateProfileString('Image', 'EXT', '.BMP',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szImageExt, szParam);
+
+	GetPrivateProfileString('Image', 'DEFEXT', 'BMP',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szImageDefExt, szParam);
+
+	GetPrivateProfileString('Image', 'EDITOR', 'PBRUSH.EXE',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szImageEditor, szParam);
+
+	GetPrivateProfileString('Image', 'TEMPLATE', 'NONE',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szImageTemplate, szParam);
+
+	GetPrivateProfileString('Sound', 'EXT', '.WAV',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szSoundExt, szParam);
+
+	GetPrivateProfileString('Sound', 'DEFEXT', 'WAV',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szSoundDefExt, szParam);
+
+	GetPrivateProfileString('Sound', 'EDITOR', 'SOUNDREC.EXE',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szSoundEditor, szParam);
+
+	GetPrivateProfileString('TEXT', 'EXT', '.TXT',szParam,SizeOf(szParam), gszIni);
+	//GetPrivateProfileString('TEXT', 'EXT', '.RTF',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szTextExt, szParam);
+
+	GetPrivateProfileString('TEXT', 'DEFEXT', 'TXT',szParam,SizeOf(szParam), gszIni);
+	//GetPrivateProfileString('TEXT', 'DEFEXT', 'RTF',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szTextDefExt, szParam);
+
+	GetPrivateProfileString('TEXT', 'EDITOR', 'NOTEPAD.EXE',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szTextEditor, szParam);
+
+	GetPrivateProfileString('TEXT', 'TEMPLATE', 'NONE',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szTextTemplate, szParam);
+
+	{Utilisation de NetBios}
+	GetPrivateProfileString('NETWORK', 'NETBIOS', 'TRUE',szParam,SizeOf(szParam), gszIni);
+	if strPos(strUpper(szParam), 'TRUE') <> nil then
+		bNetBios := TRUE
+	else
+		bNetBios := FALSE;
+
+	{Fenêtre Video n'est pas fille de la fenêtre image de LAVAC }
+	GetPrivateProfileString('VIDEO', 'NOTCHILD', 'FALSE', szParam, SizeOf(szParam), gszIni);
+	if strPos(strUpper(szParam), 'FALSE') <> nil then
+		bVideoNotChild  := FALSE
+	else
+		bVideoNotChild  := TRUE;
+
+	{ ne fait pas la synchro de la video par 'Notify' mais par polling }
+	GetPrivateProfileString('VIDEO', 'NOTNOTIFY', 'FALSE', szParam, SizeOf(szParam), gszIni);
+	if strPos(strUpper(szParam), 'FALSE') <> nil then
+		bVideoNotNotify  := FALSE
+	else
+		bVideoNotNotify  := TRUE;
+
+	{ Joue le fichier Wave associé au fichier Vidéo }
+	GetPrivateProfileString('VIDEO', 'WAVE', 'FALSE', szParam, SizeOf(szParam), gszIni);
+	if strPos(strUpper(szParam), 'FALSE') <> nil then
+		bVideoWave  := FALSE
+	else
+		bVideoWave  := TRUE;
+
+	{ Delay en 10eme de seconde de lancement du son par rapport à la video }
+	GetPrivateProfileString('VIDEO', 'WAVEDELAY', '2',szParam,SizeOf(szParam), gszIni);
+	Val(StrPas(szParam),nVideoWaveDelay,ErrPos);
+	if ErrPos <> 0 then	nVideoWaveDelay := 2;
+
+	{POSTE ETUDIANT}
+	GetPrivateProfileString('NETWORK', 'STATION', '1',szParam,SizeOf(szParam), gszIni);
+	Val(szParam, NoElev, ErrPos);
+	if ErrPos <> 0 then begin
+		NoElev := 1;
+	end else begin
+		StrCopy(ELEVE, szParam);
+	end;
+
+	{USER}
+	GetPrivateProfileString('WINEXEC', 'PATH', '',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szExecPath, szParam);
+	GetPrivateProfileString('WINEXEC', 'TITLE', 'Utilisateur',szParam,SizeOf(szParam), gszIni);
+	StrCopy(szExecTitle, szParam);
+
+	GetPrivateProfileString('WAVE', 'RECDEFAULT', 'FALSE', szParam, SizeOf(szParam), gszIni);
+	bRecDefault := StrComp(StrUpper(szParam), 'TRUE') = 0;
+
+	{Alloc buffer texte, free : c.f. MMLavacDone...}
+	hLineBuffer := GlobalAlloc(GPTR, MAXTEXTBUFFER);
+	lpszLineBuffer := GlobalLock(hLineBuffer);
+
+	MCIWndRegisterClass;
+
+	{ certification des classes TrackBar sous Win 3.1x et Win 95 }
+	if NOT GetClassInfo(hInstance, 'MCIWNDTRACKBAR', cTrackBar) then begin
+		if GetClassInfo(hInstance, 'MSCTLS_TRACKBAR32', cTrackBar) then begin
+		   StrCopy(cTrackBar.lpszClassName, 'MCIWNDTRACKBAR');
+		   RegisterClass(cTrackBar);
+                end;
+		{MessageBox(0, 'MCIWNDTRACKBAR', 'Created from MSCTLS_TRACKBAR', 0);
+	end else begin
+		MessageBox(0, 'MCIWNDTRACKBAR', 'Exist', 0);}
+	end;
+
+	if NOT GetClassInfo(hInstance, 'MSCTLS_TRACKBAR32', cTrackBar) then begin
+		if GetClassInfo(hInstance, 'MCIWNDTRACKBAR', cTrackBar) then begin
+		   StrCopy(cTrackBar.lpszClassName, 'MSCTLS_TRACKBAR');
+		   RegisterClass(cTrackBar);
+                end;
+		{MessageBox(0, 'MSCTLS_TRACKBAR', 'Created from MCIWNDTRACKBAR', 0);
+	end else begin
+		MessageBox(0, 'MSCTLS_TRACKBAR', 'Exist', 0);}
+	end;
+
+	hRepTexte := 0;
+
+end;
+
+end.

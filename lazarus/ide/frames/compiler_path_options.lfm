@@ -1,0 +1,239 @@
+inherited CompilerPathOptionsFrame: TCompilerPathOptionsFrame
+  Height = 432
+  Width = 509
+  ClientHeight = 432
+  ClientWidth = 509
+  TabOrder = 0
+  DesignLeft = 346
+  DesignTop = 328
+  object OtherUnitsLabel: TLabel[0]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 14
+    Top = 0
+    Width = 78
+    Caption = 'OtherUnitsLabel'
+    ParentColor = False
+  end
+  object IncludeFilesLabel: TLabel[1]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = OtherUnitsEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 14
+    Top = 41
+    Width = 82
+    BorderSpacing.Top = 6
+    Caption = 'IncludeFilesLabel'
+    ParentColor = False
+  end
+  object OtherSourcesLabel: TLabel[2]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ProjTargetApplyConventionsCheckBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 14
+    Top = 222
+    Width = 92
+    Caption = 'OtherSourcesLabel'
+    ParentColor = False
+  end
+  object LibrariesLabel: TLabel[3]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = IncludeFilesEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 14
+    Top = 82
+    Width = 66
+    BorderSpacing.Top = 6
+    Caption = 'LibrariesLabel'
+    ParentColor = False
+  end
+  object UnitOutputDirLabel: TLabel[4]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = LibrariesEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 14
+    Top = 123
+    Width = 92
+    BorderSpacing.Top = 6
+    Caption = 'UnitOutputDirLabel'
+    ParentColor = False
+  end
+  object DebugPathLabel: TLabel[5]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = OtherSourcesEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 14
+    Top = 263
+    Width = 79
+    BorderSpacing.Top = 6
+    Caption = 'DebugPathLabel'
+    ParentColor = False
+  end
+  object LCLWidgetTypeLabel: TLabel[6]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = LCLWidgetTypeComboBox
+    AnchorSideTop.Side = asrCenter
+    Left = 0
+    Height = 14
+    Top = 307
+    Width = 101
+    Caption = 'LCLWidgetTypeLabel'
+    ParentColor = False
+  end
+  object OtherUnitsEdit: TEdit[7]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = OtherUnitsLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 21
+    Top = 14
+    Width = 509
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Bottom = 6
+    TabOrder = 0
+    Text = 'OtherUnitsEdit'
+  end
+  object IncludeFilesEdit: TEdit[8]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = IncludeFilesLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 21
+    Top = 55
+    Width = 509
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Bottom = 6
+    TabOrder = 1
+    Text = 'IncludeFilesEdit'
+  end
+  object OtherSourcesEdit: TEdit[9]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = OtherSourcesLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 21
+    Top = 236
+    Width = 509
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Bottom = 6
+    TabOrder = 6
+    Text = 'OtherSourcesEdit'
+  end
+  object LibrariesEdit: TEdit[10]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = LibrariesLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 21
+    Top = 96
+    Width = 509
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Bottom = 6
+    TabOrder = 2
+    Text = 'LibrariesEdit'
+  end
+  object UnitOutputDirEdit: TEdit[11]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = UnitOutputDirLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 21
+    Top = 137
+    Width = 509
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Bottom = 6
+    TabOrder = 3
+    Text = 'UnitOutputDirEdit'
+  end
+  object DebugPathEdit: TEdit[12]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = DebugPathLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 21
+    Top = 277
+    Width = 509
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Bottom = 6
+    TabOrder = 7
+    Text = 'DebugPathEdit'
+  end
+  object LCLWidgetTypeComboBox: TComboBox[13]
+    AnchorSideLeft.Control = LCLWidgetTypeLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = DebugPathEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 107
+    Height = 21
+    Top = 304
+    Width = 171
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    ItemHeight = 13
+    Style = csDropDownList
+    TabOrder = 8
+  end
+  object ProjTargetFileLabel: TLabel[14]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = UnitOutputDirEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 0
+    Height = 14
+    Top = 164
+    Width = 93
+    Caption = 'ProjTargetFileLabel'
+    ParentColor = False
+  end
+  object ProjTargetFileEdit: TEdit[15]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ProjTargetFileLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 21
+    Top = 178
+    Width = 509
+    Anchors = [akTop, akLeft, akRight]
+    OnChange = ProjTargetFileEditChange
+    TabOrder = 4
+    Text = 'ProjTargetFileEdit'
+  end
+  object ProjTargetApplyConventionsCheckBox: TCheckBox[16]
+    AnchorSideLeft.Control = ProjTargetFileEdit
+    AnchorSideTop.Control = ProjTargetFileEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 17
+    Top = 199
+    Width = 203
+    BorderSpacing.Bottom = 6
+    Caption = 'ProjTargetApplyConventionsCheckBox'
+    TabOrder = 5
+  end
+end

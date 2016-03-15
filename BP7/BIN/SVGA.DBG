@@ -1,0 +1,19 @@
+
+Logged 01/26/1996 at  6:42
+
+3.2.2 TDW video driver (SVGA) (Built: Sep 23 1992, 16:17:37)
+This DLL is: E:\BP\BIN\SVGA.DLL
+------------------------------------------------------------------------------
+TDVIDEO.DLL:VideoInit
+  display.drv=VGA478.DRV - ET4000 1024x768   256 colors (Large fonts)
+  Vmode=0x38  Rows=25  BitBlt=1  ForceRepaint=0  XGA=0
+  Video resolution detected: (1024x768x256)
+  UserBitmap=None
+TDVIDEO.DLL:VideoBigSize MAX = 25
+TDVIDEO.DLL:VideoIsColor = 1
+TDVIDEO.DLL:VideoBigSize MAX = 25
+TDVIDEO.DLL:VideoGetTextSelector (Color) - A000=1027  B000=102F  B800=1037
+TDVIDEO.DLL:VideoDebuggerScreen
+TDVIDEO.DLL:VideoSetSize bigflg = 0
+TDVIDEO.DLL:VideoWindowsScreen
+TDVIDEO.DLL:VideoDone

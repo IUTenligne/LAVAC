@@ -1,0 +1,154 @@
+object SVNStatusFrm: TSVNStatusFrm
+  Left = 277
+  Height = 408
+  Top = 174
+  Width = 738
+  Caption = 'SVNStatusFrm'
+  ClientHeight = 408
+  ClientWidth = 738
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '0.9.29'
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 37
+    Top = 365
+    Width = 726
+    OKButton.Name = 'OKButton'
+    OKButton.Caption = '&Commit'
+    OKButton.OnClick = OKButtonClick
+    HelpButton.Name = 'PatchButton'
+    HelpButton.Caption = 'Create &Patch File'
+    HelpButton.OnClick = PatchButtonClick
+    CloseButton.Name = 'PatchFileButton'
+    CloseButton.Caption = 'Close'
+    CloseButton.Enabled = False
+    CancelButton.Name = 'CancelButton'
+    CancelButton.Caption = 'Cancel'
+    TabOrder = 2
+    ShowButtons = [pbOK, pbCancel, pbHelp]
+    ShowGlyphs = [pbOK, pbCancel, pbClose]
+  end
+  object SVNFileListView: TListView
+    Left = 6
+    Height = 178
+    Top = 181
+    Width = 726
+    Align = alClient
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    Checkboxes = True
+    Columns = <    
+      item
+        AutoSize = True
+        Width = 10
+      end    
+      item
+        AutoSize = True
+        Width = 10
+      end    
+      item
+        AutoSize = True
+        Width = 10
+      end    
+      item
+        AutoSize = True
+        Width = 10
+      end    
+      item
+        AutoSize = True
+        Width = 10
+      end    
+      item
+        AutoSize = True
+        Width = 10
+      end    
+      item
+        AutoSize = True
+        Width = 10
+      end    
+      item
+        AutoSize = True
+        Width = 10
+      end    
+      item
+        AutoSize = True
+        Width = 628
+      end>
+    PopupMenu = PopupMenu1
+    RowSelect = True
+    SortColumn = 1
+    SortType = stText
+    TabOrder = 0
+    ViewStyle = vsReport
+    OnColumnClick = SVNFileListViewColumnClick
+    OnDblClick = mnuShowDiffClick
+  end
+  object SVNCommitMsgMemo: TMemo
+    Left = 6
+    Height = 135
+    Top = 41
+    Width = 726
+    Align = alTop
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    ParentFont = False
+    TabOrder = 1
+  end
+  object Splitter: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 5
+    Top = 176
+    Width = 738
+    Align = alTop
+    ResizeAnchor = akTop
+  end
+  object SVNCommitMsgHistoryComboBox: TComboBox
+    Left = 6
+    Height = 29
+    Top = 6
+    Width = 726
+    Align = alTop
+    BorderSpacing.Around = 6
+    ItemHeight = 0
+    OnChange = SVNCommitMsgHistoryComboBoxChange
+    TabOrder = 4
+  end
+  object PopupMenu1: TPopupMenu
+    Images = ImageList
+    OnPopup = PopupMenu1Popup
+    left = 53
+    top = 213
+    object mnuShowDiff: TMenuItem
+      Caption = 'svn diff'
+      ImageIndex = 0
+      OnClick = mnuShowDiffClick
+    end
+    object mnuOpen: TMenuItem
+      Caption = 'open'
+      OnClick = mnuOpenClick
+    end
+    object mnuAdd: TMenuItem
+      Caption = 'svn add'
+      OnClick = mnuAddClick
+    end
+    object mnuRemove: TMenuItem
+      Caption = 'svn remove --keep-local'
+      OnClick = mnuRemoveClick
+    end
+    object mnuRevert: TMenuItem
+      Caption = 'svn revert'
+      ImageIndex = 1
+      OnClick = mnuRevertClick
+    end
+  end
+  object ImageList: TImageList
+    left = 88
+    top = 213
+  end
+end

@@ -1,0 +1,2 @@
+IDS_HELLOSTRING     EQU     1
+

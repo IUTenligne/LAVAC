@@ -1,0 +1,150 @@
+object AbstractMethodsDialog: TAbstractMethodsDialog
+  Left = 350
+  Height = 344
+  Top = 291
+  Width = 581
+  ActiveControl = MethodsCheckListBox
+  BorderStyle = bsDialog
+  Caption = 'AbstractMethodsDialog'
+  ClientHeight = 344
+  ClientWidth = 581
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '0.9.29'
+  object NoteLabel: TLabel
+    Left = 0
+    Height = 16
+    Top = 0
+    Width = 581
+    Align = alTop
+    Caption = 'NoteLabel'
+    ParentColor = False
+    WordWrap = True
+  end
+  object MethodsGroupBox: TGroupBox
+    Left = 0
+    Height = 290
+    Top = 16
+    Width = 581
+    Align = alClient
+    Anchors = [akLeft, akRight, akBottom]
+    Caption = 'MethodsGroupBox'
+    ClientHeight = 272
+    ClientWidth = 577
+    TabOrder = 0
+    object MethodsCheckListBox: TCheckListBox
+      AnchorSideBottom.Control = SelectAllButton
+      Left = 0
+      Height = 235
+      Top = 0
+      Width = 577
+      Align = alTop
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      ItemHeight = 0
+      OnClickCheck = MethodsCheckListBoxClickCheck
+      TabOrder = 0
+    end
+    object SelectAllButton: TButton
+      AnchorSideLeft.Control = MethodsGroupBox
+      AnchorSideBottom.Control = MethodsGroupBox
+      AnchorSideBottom.Side = asrBottom
+      Left = 6
+      Height = 25
+      Top = 241
+      Width = 107
+      Anchors = [akLeft, akBottom]
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'SelectAllButton'
+      OnClick = SelectAllButtonClick
+      TabOrder = 1
+    end
+    object SelectNoneButton: TButton
+      AnchorSideLeft.Control = SelectAllButton
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = MethodsGroupBox
+      AnchorSideBottom.Side = asrBottom
+      Left = 119
+      Height = 25
+      Top = 241
+      Width = 122
+      Anchors = [akLeft, akBottom]
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'SelectNoneButton'
+      OnClick = SelectNoneButtonClick
+      TabOrder = 2
+    end
+  end
+  object BtnPanel: TPanel
+    Left = 0
+    Height = 38
+    Top = 306
+    Width = 581
+    Align = alBottom
+    AutoSize = True
+    BevelOuter = bvNone
+    ClientHeight = 38
+    ClientWidth = 581
+    TabOrder = 1
+    object CancelBitBtn: TBitBtn
+      AnchorSideRight.Control = BtnPanel
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = BtnPanel
+      AnchorSideBottom.Side = asrBottom
+      Left = 494
+      Height = 26
+      Top = 6
+      Width = 81
+      Anchors = [akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Cancel = True
+      Caption = 'Cancel'
+      Constraints.MinWidth = 75
+      Kind = bkCancel
+      ModalResult = 2
+      NumGlyphs = 0
+      TabOrder = 0
+    end
+    object AddFirstBitBtn: TBitBtn
+      AnchorSideRight.Control = AddAllBitBtn
+      AnchorSideBottom.Control = BtnPanel
+      AnchorSideBottom.Side = asrBottom
+      Left = 313
+      Height = 26
+      Top = 6
+      Width = 75
+      Anchors = [akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = '&Yes'
+      Constraints.MinWidth = 75
+      Default = True
+      Kind = bkYes
+      ModalResult = 6
+      NumGlyphs = 0
+      OnClick = AddFirstBitBtnClick
+      TabOrder = 1
+    end
+    object AddAllBitBtn: TBitBtn
+      AnchorSideRight.Control = CancelBitBtn
+      AnchorSideBottom.Control = BtnPanel
+      AnchorSideBottom.Side = asrBottom
+      Left = 394
+      Height = 26
+      Top = 6
+      Width = 94
+      Anchors = [akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'Yes to &All'
+      Constraints.MinWidth = 75
+      Kind = bkYesToAll
+      ModalResult = 10
+      NumGlyphs = 0
+      OnClick = AddAllBitBtnClick
+      TabOrder = 2
+    end
+  end
+end

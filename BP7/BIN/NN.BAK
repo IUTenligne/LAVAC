@@ -1,0 +1,17 @@
+program test;
+uses winapi;
+function GetSegBaseAddr(Selector:word):longint; assembler;
+asm
+        mov     ax,301h
+        mov     bx,Selector
+        int     31h
+        mov     ax,dx
+        mov     dx,cx
+end;
+
+var RMPtr:Pointer;
+    MySelector:Thandle;
+begin
+ MySelector:=GlobalAlloc(GMEM_Moveable+GMEM_ZeroInit,32000);
+ RMPtr:=ptr(GetSegBaseAddr(MySelector) shr 4,0);
+end.

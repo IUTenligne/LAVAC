@@ -1,0 +1,104 @@
+#
+#   Makefile.fpc for LCL Examples for Free Pascal
+#
+
+[package]
+name=lazarus-examples
+version=0.9b
+
+[target]
+units=hello \
+  bitbutton \
+  checkbox \
+  combobox \
+  comdialogs \
+  edittest \
+  groupbox \
+  groupboxnested \
+  listboxtest \
+  listviewtest \
+  loadpicture \
+  memotest \
+  messagedialogs \
+  notebk \
+  notebooktest \
+  progressbar \
+  scrollbar \
+  speedtest \
+  synedit1 \
+  taborder \
+  testall \
+  toolbar \
+  trackbar
+
+[require]
+libc=y
+packages=regexpr
+
+[clean]
+files=$(wildcard *$(OEXT)) $(wildcard *$(PPUEXT)) \
+  $(wildcard units/$(CPU_TARGET)-$(OS_TARGET)/*$(OEXT)) \
+  $(wildcard units/$(CPU_TARGET)-$(OS_TARGET)/*$(PPUEXT)) \
+  $(wildcard trayicon/*$(OEXT)) $(wildcard trayicon/*$(PPUEXT)) \
+  $(wildcard units/$(CPU_TARGET)-$(OS_TARGET)/*.or) \
+  hello \
+  bitbutton \
+  checkbox \
+  combobox \
+  comdialogs \
+  edittest \
+  groupbox \
+  groupboxnested \
+  listboxtest \
+  listviewtest \
+  loadpicture \
+  memotest \
+  messagedialogs \
+  notebk \
+  notebooktest \
+  progressbar \
+  scrollbar \
+  speedtest \
+  synedit1 \
+  taborder \
+  testall \
+  toolbar \
+  trackbar
+
+[default]
+            
+[compiler]
+options=-gl  
+unitdir=../lcl/units/$(CPU_TARGET)-$(OS_TARGET) \
+        ../lcl/units/$(CPU_TARGET)-$(OS_TARGET)/$(LCL_PLATFORM) \
+        ../components/synedit/units/$(CPU_TARGET)-$(OS_TARGET) \
+        ../components/codetools/units/$(CPU_TARGET)-$(OS_TARGET) \
+        .
+units=allexamples
+
+
+[prerules]
+ifndef LCL_PLATFORM
+ifneq ($(findstring $(OS_TARGET),win32 win64),)
+LCL_PLATFORM=win32
+else
+ifeq ($(OS_TARGET),wince)
+LCL_PLATFORM=wince
+else
+ifeq ($(OS_TARGET),darwin)
+LCL_PLATFORM=carbon
+else
+LCL_PLATFORM=gtk2
+endif
+endif
+endif
+export LCL_PLATFORM
+endif
+
+#
+# apptype gui
+ifeq ($(OS_TARGET),win32)
+LAZARUS_OPT+= -WG
+endif
+
+cleanall: clean

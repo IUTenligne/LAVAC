@@ -1,0 +1,161 @@
+object HeapTrcViewForm: THeapTrcViewForm
+  Left = 440
+  Height = 516
+  Top = 302
+  Width = 689
+  Caption = 'HeapTrcViewForm'
+  ClientHeight = 516
+  ClientWidth = 689
+  FormStyle = fsStayOnTop
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  LCLVersion = '0.9.29'
+  object lblTrcFile: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Side = asrCenter
+    Left = 6
+    Height = 18
+    Top = 9
+    Width = 45
+    BorderSpacing.Left = 6
+    Caption = '.trc file'
+    ParentColor = False
+  end
+  object btnUpdate: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 20
+    Top = 40
+    Width = 70
+    AutoSize = True
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 12
+    Caption = 'Update'
+    OnClick = btnUpdateClick
+    TabOrder = 0
+  end
+  object chkStayOnTop: TCheckBox
+    AnchorSideTop.Control = btnUpdate
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 591
+    Height = 18
+    Top = 41
+    Width = 92
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 6
+    Caption = 'Stay on top'
+    OnChange = chkStayOnTopChange
+    TabOrder = 1
+  end
+  object btnBrowse: TButton
+    AnchorSideTop.Side = asrCenter
+    Left = 645
+    Height = 20
+    Top = 9
+    Width = 38
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 6
+    Caption = '...'
+    OnClick = btnBrowseClick
+    TabOrder = 2
+  end
+  object chkUseRaw: TCheckBox
+    AnchorSideLeft.Control = btnClipboard
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = btnUpdate
+    AnchorSideTop.Side = asrCenter
+    Left = 211
+    Height = 18
+    Top = 41
+    Width = 107
+    BorderSpacing.Left = 6
+    Caption = 'Raw leak data'
+    Checked = True
+    OnChange = chkUseRawChange
+    State = cbChecked
+    TabOrder = 3
+  end
+  object ctrlPanel: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = btnUpdate
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 6
+    Height = 444
+    Top = 66
+    Width = 677
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 6
+    BevelOuter = bvNone
+    ClientHeight = 444
+    ClientWidth = 677
+    TabOrder = 4
+    object trvTraceInfo: TTreeView
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 352
+      Top = 6
+      Width = 677
+      Align = alClient
+      BorderSpacing.Top = 6
+      DefaultItemHeight = 19
+      ReadOnly = True
+      TabOrder = 0
+      OnDblClick = trvTraceInfoDblClick
+      Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips]
+    end
+    object memoSummary: TMemo
+      Left = 0
+      Height = 81
+      Top = 363
+      Width = 677
+      Align = alBottom
+      ReadOnly = True
+      ScrollBars = ssVertical
+      TabOrder = 1
+    end
+    object splitter: TSplitter
+      Cursor = crVSplit
+      Left = 0
+      Height = 5
+      Top = 358
+      Width = 677
+      Align = alBottom
+      ResizeAnchor = akBottom
+    end
+  end
+  object btnClipboard: TButton
+    AnchorSideLeft.Control = btnUpdate
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = btnUpdate
+    Left = 82
+    Height = 20
+    Top = 40
+    Width = 123
+    AutoSize = True
+    BorderSpacing.Left = 6
+    Caption = 'Paste Clipboard'
+    OnClick = btnClipboardClick
+    TabOrder = 5
+  end
+  object edtTrcFileName: TComboBox
+    AnchorSideLeft.Control = lblTrcFile
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Control = btnBrowse
+    Left = 57
+    Height = 21
+    Top = 8
+    Width = 582
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    ItemHeight = 0
+    TabOrder = 6
+  end
+end

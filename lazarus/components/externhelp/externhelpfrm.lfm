@@ -1,0 +1,265 @@
+inherited ExternHelpGeneralOptsFrame: TExternHelpGeneralOptsFrame
+  Height = 384
+  Width = 581
+  ClientHeight = 384
+  ClientWidth = 581
+  TabOrder = 0
+  DesignLeft = 358
+  DesignTop = 166
+  object ItemsTreeView: TTreeView[0]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Splitter1
+    AnchorSideBottom.Control = AddSpeedButton
+    Left = 6
+    Height = 344
+    Top = 6
+    Width = 218
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    BorderSpacing.Bottom = 6
+    DefaultItemHeight = 15
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 0
+    OnDragOver = ItemsTreeViewDragOver
+    OnEdited = ItemsTreeViewEdited
+    OnEditing = ItemsTreeViewEditing
+    OnEndDrag = ItemsTreeViewEndDrag
+    OnMouseMove = ItemsTreeViewMouseMove
+    OnSelectionChanged = ItemsTreeViewSelectionChanged
+    OnStartDrag = ItemsTreeViewStartDrag
+  end
+  object AddSpeedButton: TSpeedButton[1]
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 6
+    Height = 22
+    Top = 356
+    Width = 23
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Around = 6
+    Color = clBtnFace
+    NumGlyphs = 0
+    OnClick = AddSpeedButtonClick
+    ShowHint = True
+    ParentShowHint = False
+  end
+  object DeleteSpeedButton: TSpeedButton[2]
+    AnchorSideLeft.Control = AddSpeedButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = AddSpeedButton
+    Left = 35
+    Height = 22
+    Top = 356
+    Width = 23
+    Color = clBtnFace
+    NumGlyphs = 0
+    OnClick = DeleteSpeedButtonClick
+    ShowHint = True
+    ParentShowHint = False
+  end
+  object NameLabel: TLabel[3]
+    AnchorSideLeft.Control = Splitter1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 235
+    Height = 14
+    Top = 20
+    Width = 53
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 20
+    Caption = 'NameLabel'
+    ParentColor = False
+  end
+  object NameEdit: TEdit[4]
+    AnchorSideLeft.Control = NameLabel
+    AnchorSideTop.Control = NameLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 235
+    Height = 21
+    Top = 34
+    Width = 340
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 6
+    OnChange = NameEditChange
+    OnEditingDone = NameEditEditingDone
+    TabOrder = 1
+    Text = 'NameEdit'
+  end
+  object FilenameLabel: TLabel[5]
+    AnchorSideLeft.Control = NameLabel
+    AnchorSideTop.Control = NameEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 235
+    Height = 14
+    Top = 70
+    Width = 68
+    BorderSpacing.Top = 15
+    Caption = 'FilenameLabel'
+    ParentColor = False
+  end
+  object FilenameEdit: TEdit[6]
+    AnchorSideLeft.Control = FilenameLabel
+    AnchorSideTop.Control = FilenameLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 235
+    Height = 21
+    Top = 84
+    Width = 346
+    Anchors = [akTop, akLeft, akRight]
+    OnChange = FilenameEditChange
+    OnEditingDone = FilenameEditEditingDone
+    TabOrder = 2
+    Text = 'FilenameEdit'
+  end
+  object URLLabel: TLabel[7]
+    AnchorSideLeft.Control = NameLabel
+    AnchorSideTop.Control = WithSubDirsCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 235
+    Height = 14
+    Top = 160
+    Width = 45
+    BorderSpacing.Top = 15
+    Caption = 'URLLabel'
+    ParentColor = False
+  end
+  object HelpBitBtn: TBitBtn[8]
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 500
+    Height = 23
+    Top = 355
+    Width = 75
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'HelpBitBtn'
+    TabOrder = 3
+  end
+  object Splitter1: TSplitter[9]
+    AnchorSideTop.Control = ItemsTreeView
+    AnchorSideBottom.Control = ItemsTreeView
+    AnchorSideBottom.Side = asrBottom
+    Left = 224
+    Height = 344
+    Top = 6
+    Width = 5
+    Align = alNone
+    Anchors = [akTop, akLeft, akBottom]
+  end
+  object StoreLabel: TLabel[10]
+    AnchorSideLeft.Control = NameLabel
+    AnchorSideTop.Control = URLMemo
+    AnchorSideTop.Side = asrBottom
+    Left = 235
+    Height = 14
+    Top = 252
+    Width = 52
+    BorderSpacing.Top = 15
+    Caption = 'StoreLabel'
+    ParentColor = False
+  end
+  object StoreComboBox: TComboBox[11]
+    AnchorSideLeft.Control = StoreLabel
+    AnchorSideTop.Control = StoreLabel
+    AnchorSideTop.Side = asrBottom
+    Left = 235
+    Height = 21
+    Top = 266
+    Width = 157
+    ItemHeight = 13
+    OnEditingDone = StoreComboBoxEditingDone
+    TabOrder = 5
+    Text = 'StoreComboBox'
+  end
+  object FileBrowseButton: TButton[12]
+    AnchorSideLeft.Control = FilenameEdit
+    AnchorSideTop.Control = FilenameEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = FilenameEdit
+    AnchorSideBottom.Side = asrBottom
+    Left = 235
+    Height = 23
+    Top = 105
+    Width = 61
+    AutoSize = True
+    BorderSpacing.Right = 6
+    Caption = 'Browse'
+    OnClick = FileBrowseButtonClick
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 6
+  end
+  object FileMacrofyButton: TButton[13]
+    AnchorSideLeft.Control = FileBrowseButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = FilenameEdit
+    AnchorSideTop.Side = asrBottom
+    Left = 302
+    Height = 23
+    Top = 105
+    Width = 113
+    AutoSize = True
+    Caption = 'FileMacrofyButton'
+    OnClick = FileMacrofyButtonClick
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 7
+  end
+  object URLMemo: TMemo[14]
+    AnchorSideLeft.Control = URLLabel
+    AnchorSideTop.Control = URLLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 235
+    Height = 63
+    Top = 174
+    Width = 346
+    Anchors = [akTop, akLeft, akRight]
+    Lines.Strings = (
+      'URLMemo'
+    )
+    OnEditingDone = URLMemoEditingDone
+    TabOrder = 8
+  end
+  object WithSubDirsCheckBox: TCheckBox[15]
+    AnchorSideLeft.Control = FileBrowseButton
+    AnchorSideTop.Control = FileBrowseButton
+    AnchorSideTop.Side = asrBottom
+    Left = 235
+    Height = 17
+    Top = 128
+    Width = 123
+    Caption = 'WithSubDirsCheckBox'
+    OnEditingDone = WithSubDirsCheckBoxEditingDone
+    TabOrder = 9
+  end
+  object SelEditorFileButton: TButton[16]
+    AnchorSideLeft.Control = FileMacrofyButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = FileMacrofyButton
+    Left = 421
+    Height = 23
+    Top = 105
+    Width = 116
+    AutoSize = True
+    BorderSpacing.Left = 6
+    Caption = 'SelEditorFileButton'
+    OnClick = SelEditorFileButtonClick
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 10
+  end
+end

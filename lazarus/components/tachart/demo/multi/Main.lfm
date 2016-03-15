@@ -1,0 +1,243 @@
+object Form1: TForm1
+  Left = 387
+  Height = 459
+  Top = 241
+  Width = 529
+  Caption = 'Form1'
+  ClientHeight = 459
+  ClientWidth = 529
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '0.9.29'
+  object PageControl1: TPageControl
+    Left = 0
+    Height = 459
+    Top = 0
+    Width = 529
+    ActivePage = tsBubble
+    Align = alClient
+    TabIndex = 0
+    TabOrder = 0
+    object tsBubble: TTabSheet
+      Caption = 'Bubble'
+      ClientHeight = 433
+      ClientWidth = 521
+      object chBubble: TChart
+        Left = 0
+        Height = 433
+        Top = 0
+        Width = 521
+        AxisList = <        
+          item
+            Title.LabelFont.Orientation = 900
+          end        
+          item
+            Alignment = calBottom
+            Marks.Attachment = maCenter
+            Marks.Distance = 0
+            Marks.LabelBrush.Style = bsSolid
+            TickLength = 0
+          end>
+        Foot.Brush.Color = clBtnFace
+        Foot.Font.Color = clBlue
+        Proportional = True
+        Title.Brush.Color = clBtnFace
+        Title.Font.Color = clBlue
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Align = alClient
+        ParentColor = False
+        object Chart1BubbleSeries1: TBubbleSeries
+          Marks.Attachment = maCenter
+          Marks.Distance = 0
+          Marks.Format = '%0:.9g'
+          Marks.Style = smsValue
+          BubbleBrush.Color = clRed
+          BubbleBrush.Style = bsDiagCross
+          Source = lcsBubble
+        end
+      end
+    end
+    object tsStacked: TTabSheet
+      Caption = 'Stacked'
+      ClientHeight = 433
+      ClientWidth = 521
+      object chStacked: TChart
+        Left = 0
+        Height = 391
+        Top = 0
+        Width = 521
+        AxisList = <        
+          item
+            Title.LabelFont.Orientation = 900
+          end        
+          item
+            Alignment = calBottom
+          end>
+        Depth = 10
+        Foot.Brush.Color = clBtnFace
+        Foot.Font.Color = clBlue
+        Title.Brush.Color = clBtnFace
+        Title.Font.Color = clBlue
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Align = alClient
+        ParentColor = False
+        object chStackedBarSeries1: TBarSeries
+          Active = False
+          ZPosition = 5
+          BarBrush.Color = clRed
+          Depth = 10
+          Source = ccsStacked
+          Styles = ChartStyles1
+        end
+        object chStackedLineSeries1: TLineSeries
+          Active = False
+          Depth = 10
+          Source = ccsStacked
+          Styles = ChartStyles1
+        end
+        object chStackedAreaSeries1: TAreaSeries
+          ZPosition = 5
+          AreaContourPen.Color = clGreen
+          AreaContourPen.EndCap = pecSquare
+          AreaContourPen.Width = 2
+          Depth = 10
+          Source = ccsStacked
+          Styles = ChartStyles1
+          UseZeroLevel = True
+          ZeroLevel = 1
+        end
+      end
+      object pnStackedControls: TPanel
+        Left = 0
+        Height = 42
+        Top = 391
+        Width = 521
+        Align = alBottom
+        BevelOuter = bvNone
+        ClientHeight = 42
+        ClientWidth = 521
+        TabOrder = 1
+        object rgStackedSeries: TRadioGroup
+          Left = 0
+          Height = 42
+          Top = 0
+          Width = 181
+          Align = alLeft
+          AutoFill = True
+          Caption = ' Type '
+          ChildSizing.LeftRightSpacing = 6
+          ChildSizing.TopBottomSpacing = 6
+          ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+          ChildSizing.EnlargeVertical = crsHomogenousChildResize
+          ChildSizing.ShrinkHorizontal = crsScaleChilds
+          ChildSizing.ShrinkVertical = crsScaleChilds
+          ChildSizing.Layout = cclTopToBottomThenLeftToRight
+          ChildSizing.ControlsPerLine = 3
+          ClientHeight = 24
+          ClientWidth = 177
+          ItemIndex = 0
+          Items.Strings = (
+            'Area'
+            'Bar'
+            'Line'
+          )
+          OnClick = rgStackedSeriesClick
+          TabOrder = 0
+        end
+        object cbPercentage: TCheckBox
+          Left = 192
+          Height = 17
+          Top = 15
+          Width = 75
+          Caption = 'Percentage'
+          OnChange = cbPercentageChange
+          TabOrder = 1
+        end
+      end
+    end
+    object tsWhiskers: TTabSheet
+      Caption = 'Box-and-whiskers'
+      ClientHeight = 433
+      ClientWidth = 521
+      object chWhiskers: TChart
+        Left = 0
+        Height = 433
+        Top = 0
+        Width = 521
+        AxisList = <        
+          item
+            Grid.Visible = False
+            Title.LabelFont.Orientation = 900
+          end        
+          item
+            Alignment = calBottom
+          end>
+        Foot.Brush.Color = clBtnFace
+        Foot.Font.Color = clBlue
+        Title.Brush.Color = clBtnFace
+        Title.Font.Color = clBlue
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Align = alClient
+        ParentColor = False
+        object chWhiskersBoxAndWhiskerSeries1: TBoxAndWhiskerSeries
+          BoxBrush.Color = clGreen
+          MedianPen.Color = clLime
+          MedianPen.Width = 2
+          WhiskersPen.Color = clBlue
+        end
+      end
+    end
+  end
+  object lcsBubble: TListChartSource
+    DataPoints.Strings = (
+      '10|50|3|?|'
+      '20|30|1|?|'
+      '50|40|6|?|'
+      '80|60|2|?|'
+      '60|50|15|?|'
+      '35|20|9|?|'
+    )
+    YCount = 2
+    left = 130
+    top = 65
+  end
+  object rcsStacked: TRandomChartSource
+    PointsNumber = 9
+    RandSeed = 317042356
+    XMax = 9
+    XMin = 1
+    YCount = 3
+    YMax = 20
+    YMin = 3
+    left = 244
+    top = 65
+  end
+  object ccsStacked: TCalculatedChartSource
+    Origin = rcsStacked
+    left = 244
+    top = 136
+  end
+  object ChartStyles1: TChartStyles
+    Styles = <    
+      item
+        Brush.Color = clRed
+        Pen.Style = psDot
+      end    
+      item
+        Brush.Color = clLime
+        Pen.Color = clGreen
+        Pen.Width = 2
+      end    
+      item
+        Brush.Color = clBlue
+      end>
+    left = 244
+    top = 208
+  end
+end

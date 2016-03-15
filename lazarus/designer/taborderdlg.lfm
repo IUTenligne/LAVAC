@@ -1,0 +1,102 @@
+object TabOrderDialog: TTabOrderDialog
+  Left = 381
+  Height = 387
+  Top = 167
+  Width = 310
+  ActiveControl = ItemTreeview
+  BorderStyle = bsSizeToolWin
+  Caption = 'TabOrderDialog'
+  ClientHeight = 387
+  ClientWidth = 310
+  OnClose = TabOrderDialogCLOSE
+  OnCreate = TabOrderDialogCREATE
+  Position = poScreenCenter
+  LCLVersion = '0.9.27'
+  object ArrowUp: TSpeedButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 279
+    Height = 25
+    Top = 120
+    Width = 25
+    Anchors = [akTop, akRight]
+    BorderSpacing.Around = 6
+    Color = clBtnFace
+    NumGlyphs = 0
+    OnClick = UpSpeedbuttonCLICK
+  end
+  object ArrowDown: TSpeedButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 279
+    Height = 25
+    Top = 176
+    Width = 25
+    Anchors = [akTop, akRight]
+    BorderSpacing.Around = 6
+    Color = clBtnFace
+    NumGlyphs = 0
+    OnClick = DownSpeedbuttonCLICK
+  end
+  object ItemTreeview: TTreeView
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideBottom.Control = ShowOldValuesCheckbox
+    Left = 6
+    Height = 320
+    Top = 6
+    Width = 267
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 6
+    DefaultItemHeight = 15
+    HideSelection = False
+    ReadOnly = True
+    RightClickSelect = True
+    TabOrder = 0
+    Options = [tvoAutoItemHeight, tvoKeepCollapsedNodes, tvoReadOnly, tvoRightClickSelect, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips]
+  end
+  object ShowOldValuesCheckbox: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = BtnPanel
+    Left = 6
+    Height = 17
+    Top = 332
+    Width = 141
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Around = 6
+    Caption = 'ShowOldValuesCheckbox'
+    OnClick = ShowOldValuesCheckboxCLICK
+    TabOrder = 1
+  end
+  object OkButton: TBitBtn
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 161
+    Height = 26
+    Top = 355
+    Width = 59
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = '&OK'
+    Kind = bkOK
+    ModalResult = 1
+    NumGlyphs = 0
+    OnClick = OkButtonCLICK
+    TabOrder = 2
+  end
+  object BtnPanel: TButtonPanel
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 6
+    Height = 26
+    Top = 355
+    Width = 298
+    Anchors = [akRight, akBottom]
+    TabOrder = 3
+    ShowButtons = [pbOK, pbCancel]
+    ShowBevel = False
+  end
+end

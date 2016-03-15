@@ -1,0 +1,40 @@
+{%MainUnit ../stdctrls.pp}
+
+{
+ *****************************************************************************
+ *                                                                           *
+ *  This file is part of the Lazarus Component Library (LCL)                 *
+ *                                                                           *
+ *  See the file COPYING.modifiedLGPL.txt, included in this distribution,    *
+ *  for details about the copyright.                                         *
+ *                                                                           *
+ *  This program is distributed in the hope that it will be useful,          *
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of           *
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                     *
+ *                                                                           *
+ *****************************************************************************
+}
+{------------------------------------------------------------------------------}
+
+class procedure TToggleBox.WSRegisterClass;
+begin
+  inherited WSRegisterClass;
+  RegisterToggleBox;
+end;
+
+procedure TToggleBox.CreateParams(var Params: TCreateParams);
+begin
+  inherited CreateParams(Params);
+  Params.Style := (Params.Style and not BS_3STATE) or BS_AUTOCHECKBOX or BS_PUSHLIKE;
+end;
+
+constructor TToggleBox.Create(TheOwner : TComponent);
+begin
+  inherited Create(TheOwner);
+  fCompStyle := csToggleBox;
+  TabStop := True;
+end;
+
+{------------------------------------------------------------------------------}
+
+// included by stdctrls.pp

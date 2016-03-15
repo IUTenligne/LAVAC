@@ -1,0 +1,123 @@
+object SQLConnectionForm: TSQLConnectionForm
+  Left = 547
+  Height = 215
+  Top = 454
+  Width = 395
+  ActiveControl = EHostName
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsDialog
+  Caption = 'Connect to a database'
+  ClientHeight = 215
+  ClientWidth = 395
+  OnCreate = FormCreate
+  LCLVersion = '0.9.27'
+  object LEHostName: TLabel
+    Left = 8
+    Height = 23
+    Top = 6
+    Width = 97
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = '&Host'
+    FocusControl = EHostName
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object LEDatabaseName: TLabel
+    Left = 8
+    Height = 23
+    Top = 40
+    Width = 97
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = '&Database'
+    FocusControl = EDatabaseName
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object LEUserName: TLabel
+    Left = 8
+    Height = 23
+    Top = 72
+    Width = 97
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = '&Username'
+    FocusControl = EUserName
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object LEPassword: TLabel
+    Left = 8
+    Height = 23
+    Top = 104
+    Width = 97
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = '&Password'
+    FocusControl = EPassword
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object LCharset: TLabel
+    Left = 44
+    Height = 21
+    Top = 139
+    Width = 60
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = '&Charset'
+    FocusControl = ECharset
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object EHostName: TEdit
+    Left = 112
+    Height = 27
+    Top = 6
+    Width = 274
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 0
+  end
+  object EDatabaseName: TEdit
+    Left = 112
+    Height = 27
+    Top = 40
+    Width = 274
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 1
+  end
+  object EUserName: TEdit
+    Left = 113
+    Height = 27
+    Top = 72
+    Width = 273
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 2
+  end
+  object EPassword: TEdit
+    Left = 112
+    Height = 27
+    Top = 104
+    Width = 274
+    Anchors = [akTop, akLeft, akRight]
+    EchoMode = emPassword
+    PasswordChar = '*'
+    TabOrder = 3
+  end
+  object BPButtons: TButtonPanel
+    Left = 6
+    Height = 35
+    Top = 174
+    Width = 383
+    TabOrder = 4
+    ShowButtons = [pbOK, pbCancel]
+  end
+  object ECharset: TEdit
+    Left = 112
+    Height = 27
+    Top = 136
+    Width = 61
+    TabOrder = 5
+  end
+end

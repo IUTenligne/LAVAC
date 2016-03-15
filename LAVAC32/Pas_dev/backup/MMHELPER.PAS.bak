@@ -1,0 +1,1132 @@
+{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}
+{                                                }
+{   Unité mmhelper                               }
+{                                                }
+{   Projet LAVAC                                 }
+{                                                }
+{  (c) 1992-97 C Puissance 3 Informatique        }
+{              MORGAN MULTIMEDIA                 }
+{                                                }
+{  Guillaume de Bailliencourt                    }
+{                                                }
+{  Création : 14/04/1997                         }
+{                                                }
+{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}
+
+{Procédures relatives aux accès des fichiers Lavac}
+
+UNIT mmhelper;
+
+INTERFACE
+
+USES Windows, Dos, SysUtils, mmLavac, Strings,
+     {$IFDEF _TUTOR}
+     uQcmWin, uQcmType,
+     {$ENDIF}
+     mmString, mmmci
+     {$IFDEF _DEBUG}
+     ,MMDEBUG
+     {$ENDIF};
+
+{	TEnumMultiSelProc = function(nItem : integer; wParam : DWORD; lParam : longint) : Bool;}
+TYPE
+	PDLGBOXINFO = ^TDLGBOXINFO;
+	TDLGBOXINFO =
+		record
+			hInst : THANDLE;
+			pszName : Array[0..255] of char;
+			hParent : HWND;
+			lpProc : DLGPROC;
+		end;
+
+CONST
+	COPY_INIT = WORD(-1);
+	COPY_ADD = 0;
+
+function SetTextPos(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function SetImagePos(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function SetTutorPos(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function CallDialogBoxParam(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function CopyList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function DisposeList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function CutList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function PasteList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function UndoList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function LinkImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function LinkVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function LinkText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function LinkSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function LinkTutor(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function CreateImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function CreateVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function CreateText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function CreateSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function EditImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function EditVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function EditText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function EditSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function UnlinkTutor(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function UnlinkImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function UnlinkVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function UnlinkText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function UnlinkSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function GetImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function GetVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function GetText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function GetSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+function GetTutor(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+
+IMPLEMENTATION
+
+function CallDialogBoxParam(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+begin
+	CallDialogBoxParam := FALSE;
+	if lParam = 0 then exit;
+	with PDLGBOXINFO(lParam)^ do begin
+		wParam := DialogBoxParam(hInst, pszName, hParent, lpProc, MakeLong(nItem + 1, wParam));
+	end;
+	CallDialogBoxParam := Bool(wParam);
+end;
+
+function SetTextPos(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		SetTextPos := FALSE;
+		if lParam = 0 then exit;
+		GetQuestionRec(nItem + 1, tQuestion);
+		tQuestion.Options := (tQuestion.Options AND $0F) OR $50;
+		tQuestion.tx1 := PRECT(lParam)^.left;
+		tQuestion.ty1 := PRECT(lParam)^.top;
+		tQuestion.tx2 := PRECT(lParam)^.right;
+		tQuestion.ty2 := PRECT(lParam)^.bottom;
+		SetQuestionRec(nItem + 1, tQuestion);
+		SetTextPos := TRUE;
+end;
+
+function SetImagePos(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		SetImagePos := FALSE;
+		if lParam = 0 then exit;
+		GetQuestionRec(nItem + 1, tQuestion);
+		tQuestion.Options := (tQuestion.Options AND $F0) OR $05;
+		tQuestion.gx1 := PRECT(lParam)^.left;
+		tQuestion.gy1 := PRECT(lParam)^.top;
+		tQuestion.gx2 := PRECT(lParam)^.right;
+		tQuestion.gy2 := PRECT(lParam)^.bottom;
+		SetQuestionRec(nItem + 1, tQuestion);
+		SetImagePos := TRUE;
+end;
+
+function SetTutorPos(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		SetTutorPos := FALSE;
+		if lParam = 0 then exit;
+		GetQuestionRec(nItem + 1, tQuestion);
+		tQuestion.qX := PRECT(lParam)^.left;
+		tQuestion.qY := PRECT(lParam)^.top;
+		tQuestion.qW := PRECT(lParam)^.right - PRECT(lParam)^.left;
+		tQuestion.qH := PRECT(lParam)^.bottom - PRECT(lParam)^.top;
+		SetQuestionRec(nItem + 1, tQuestion);
+		SetTutorPos := TRUE;
+end;
+
+function DisposeList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		pCur,
+		pNext			: PQuestionList;
+begin
+
+	DisposeList := FALSE;
+	if lParam = 0 then exit;
+
+	pCur := PQuestionList(lParam);
+	while pCur <> nil do begin
+		pNext := pCur^.pNext;
+		Dispose(pCur);
+		pCur := pNext;
+	end;
+
+	{ Only first item ... so return FALSE to stop }
+	DisposeList := FALSE;
+
+end;
+
+function CopyList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		pCur,
+		pNext			: PQuestionList;
+begin
+
+	CopyList := FALSE;
+	if lParam = 0 then exit;
+
+	PQuestionList(lParam)^.nItem := nItem;
+	GetQuestionRec(nItem + 1, PQuestionList(lParam)^.tQuestion);
+	PQuestionList(lParam)^.pNext := New(PQuestionList);
+	FillChar(PQuestionList(lParam)^.pNext^, SizeOf(TQuestionList), 0);
+	lParam := longint(PQuestionList(lParam)^.pNext);
+
+	CopyList := TRUE;
+
+end;
+
+function CutList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		pCur,
+		pNext			: PQuestionList;
+begin
+
+	CutList := FALSE;
+	if lParam = 0 then exit;
+
+	PQuestionList(lParam)^.nItem := nItem;
+	CutQuestionRec(nItem + 1 - PQuestionList(lParam)^.n, PQuestionList(lParam)^.tQuestion);
+	SendDlgItemMessage(Dialog, ID, LB_DELETESTRING, nItem - PQuestionList(lParam)^.n, 0);
+	SendDlgItemMessage(wParam, ID, LB_DELETESTRING, nItem - PQuestionList(lParam)^.n, 0);
+
+	PQuestionList(lParam)^.pNext := New(PQuestionList);
+	FillChar(PQuestionList(lParam)^.pNext^, SizeOf(TQuestionList), 0);
+	PQuestionList(lParam)^.pNext^.n := PQuestionList(lParam)^.n + 1;
+	lParam := longint(PQuestionList(lParam)^.pNext);
+
+	CutList := TRUE;
+
+end;
+
+function UndoList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var pCur,
+		pNext			: PQuestionList;
+		lpSeqProp : PSEQPROP;
+
+begin
+
+	UndoList := FALSE;
+	if lParam = 0 then exit;
+
+	pCur := PQuestionList(lParam);
+	nItem := pCur^.nItem;
+	SendDlgItemMessage(Dialog, ID, LB_SETSEL, WORD(FALSE), MakeLong(WORD(-1), 0));
+	SendDlgItemMessage(wParam, ID, LB_SETSEL, WORD(FALSE), MakeLong(WORD(-1), 0));
+	while (pCur <> nil) AND (pCur^.pNext <> nil) do begin
+		inc(nItem);
+		PasteQuestionRec(nItem, pCur^.tQuestion);
+		lpSeqProp := new(PSEQPROP);
+		if lpSeqProp <> nil then begin
+			lpSeqProp^.pszText := StrNew(pCur^.tQuestion.Nom);
+			if lpSeqProp^.pszText = nil then lpSeqProp^.pszText := StrNew(' ');
+			CopyLogFont16to32(lpSeqProp^.hLogFnt, pCur^.tQuestion.hLogFnt);
+			lpSeqProp^.FrColRef := pCur^.tQuestion.FrColRef;
+			lpSeqProp^.BkColRef := pCur^.tQuestion.BkColRef;
+			SendDlgItemMessage(Dialog, ID, LB_INSERTSTRING, nItem - 1, LongInt(lpSeqProp));
+			SendDlgItemMessage(Dialog, ID, LB_SETSEL, WORD(TRUE), MakeLong(nItem - 1, 0));
+		end;
+		{ Elève aussi ... }
+		lpSeqProp := new(PSEQPROP);
+		if lpSeqProp <> nil then begin
+			lpSeqProp^.pszText := StrNew(pCur^.tQuestion.Nom);
+			if lpSeqProp^.pszText = nil then lpSeqProp^.pszText := StrNew(' ');
+			CopyLogFont16to32(lpSeqProp^.hLogFnt, pCur^.tQuestion.hLogFnt);
+			lpSeqProp^.FrColRef := pCur^.tQuestion.FrColRef;
+			lpSeqProp^.BkColRef := pCur^.tQuestion.BkColRef;
+			SendDlgItemMessage(wParam, ID, LB_INSERTSTRING, nItem - 1, LongInt(lpSeqProp));
+			SendDlgItemMessage(wParam, ID, LB_SETSEL, WORD(TRUE), MakeLong(nItem - 1, 0));
+		end;
+
+
+		pCur := pCur^.pNext;
+	end;
+
+	{ Only first item ... so return FALSE to stop }
+	UndoList := FALSE;
+
+end;
+
+function PasteList(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion,
+		tPasteQuestion : TypeQuestion;
+		pCur,
+		pNext			: PQuestionList;
+		lpSeqProp : PSEQPROP;
+
+begin
+
+	PasteList := FALSE;
+	if lParam = 0 then exit;
+
+	pCur := PQuestionList(lParam);
+	while (pCur <> nil) AND (pCur^.pNext <> nil) do begin
+		inc(nItem);
+		PasteQuestionRec(nItem, pCur^.tQuestion);
+		GetQuestionRec(nItem, tQuestion);
+		tPasteQuestion := pCur^.tQuestion;
+		PasteFromSequenceFiles(tClipLecon, tPasteQuestion, tQuestion, nItem);
+		if tPasteQuestion.FichierQCM[0] <> #0 then begin
+                        {$IFDEF _TUTOR}
+			StrCopy(MainQcmWin^.szFichierQ, tPasteQuestion.FichierQCM);
+			SendMessage(MainQcmWin^.HWindow, UM_LOADQCM, 0, 0);
+			MainQcmWin^.CopyLinkedFiles(tClipLecon.PathLecon, nItem);
+			SendMessage(MainQcmWin^.HWindow, UM_SAVEQCM, 0, 0);
+			SendMessage(MainQcmWin^.HWindow, UM_LOADQCM, 0, 0);
+			SendMessage(MainQcmWin^.HWindow, UM_SAVEQCM, 0, 0);
+                        {$ENDIF}
+		end;
+		SetQuestionRec(nItem, tQuestion);
+		lpSeqProp := new(PSEQPROP);
+		if lpSeqProp <> nil then begin
+			lpSeqProp^.pszText := StrNew(tQuestion.Nom);
+			if lpSeqProp^.pszText = nil then lpSeqProp^.pszText := StrNew(' ');
+			CopyLogFont16to32(lpSeqProp^.hLogFnt, tQuestion.hLogFnt);
+			lpSeqProp^.FrColRef := tQuestion.FrColRef;
+			lpSeqProp^.BkColRef := tQuestion.BkColRef;
+			SendDlgItemMessage(Dialog, ID, LB_INSERTSTRING, nItem - 1, LongInt(lpSeqProp));
+		end;
+		{ Elève aussi ... }
+		lpSeqProp := new(PSEQPROP);
+		if lpSeqProp <> nil then begin
+			lpSeqProp^.pszText := StrNew(tQuestion.Nom);
+			if lpSeqProp^.pszText = nil then lpSeqProp^.pszText := StrNew(' ');
+			CopyLogFont16to32lpSeqProp^.hLogFnt, tQuestion.hLogFnt);
+			lpSeqProp^.FrColRef := tQuestion.FrColRef;
+			lpSeqProp^.BkColRef := tQuestion.BkColRef;
+			SendDlgItemMessage(wParam, ID, LB_INSERTSTRING, nItem - 1, LongInt(lpSeqProp));
+		end;
+
+		pCur := pCur^.pNext;
+	end;
+
+	{ Only first item ... so return FALSE to stop }
+	PasteList := FALSE;
+
+end;
+
+function LinkTutor(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		Dir1: array[0..fsDirectory] of Char;
+		Dir2: array[0..fsDirectory] of Char;
+		Name: array[0..fsFileName] of Char;
+		Ext: array[0..fsExtension] of Char;
+		szText: array[0..255] of Char;
+		nRet	: integer;
+
+const
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = nil;
+
+begin
+		LinkTutor := FALSE;
+
+		if lParam = 0 then exit;
+		if PCHAR(lParam)[0] = #0 then exit;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		{ Liaison que si la liaison n'était pas déjà faite }
+		if (StrComp(StrUpper(tQuestion.FichierQcm),
+								StrUpper(PCHAR(lParam))) <> 0) then begin
+					if (tQuestion.FichierQcm[0] <> #0) then begin
+							MessageBeep(MB_ICONQUESTION);
+							p1 := @tQuestion.FichierQcm;
+							p2 := @tQuestion.Nom;
+							p3 := PCHAR(lParam);
+							wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 5), p1);
+							nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+
+							case nRet of
+								IDCANCEL :
+									begin
+										exit;
+									end;
+
+								IDNO :
+									begin
+										LinkTutor := TRUE;
+										exit;
+									end;
+							end;
+					end;
+					FileSplit(PCHAR(lParam), Dir1, Name, Ext);
+					StrCopy(Dir2, tLecon.PathLecon);
+					StrCat(Dir2, '\');
+					if StrComp(Dir1, Dir2) <> 0 then begin
+						 { Copie le fichier dans le repertoire de la leçon s'il
+							 n'y est pas, en générant un nom de fichier }
+						 CopyInCurLesson(PCHAR(lParam), QCM0000, nItem);
+					end;
+
+					{ Mise à jour du fichier questions.lst}
+					SetWindowText(GetDlgItem(Dialog, 1204), mmLoadString(hInstRes, STR_LINKQCM));
+					PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+					StrCopy (tQuestion.FichierQcm, PCHAR(lParam));
+					SetQuestionRec(nItem + 1, tQuestion);
+		end;
+
+		LinkTutor := TRUE;
+end;
+
+function UnlinkTutor(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		szText: array[0..255] of Char;
+		nRet	: integer;
+
+const
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = '...';
+
+begin
+		UnlinkTutor := FALSE;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		if (tQuestion.FichierQCM[0] <> #0) then begin
+			MessageBeep(MB_ICONQUESTION);
+			p1 := @tQuestion.FichierQCM;
+			p2 := @tQuestion.Nom;
+			wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 5), p1);
+			nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+			case nRet of
+				IDCANCEL :
+					begin
+						exit;
+					end;
+
+				IDNO :
+					begin
+						UnlinkTutor := TRUE;
+						exit;
+					end;
+			end;
+
+			SetWindowText(GetDlgItem(Dialog, 1204), mmLoadString(hInstRes, STR_UNLINKQCM));
+			PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+			StrCopy (tQuestion.FichierQCM, '');
+			SetQuestionRec(nItem + 1, tQuestion);
+
+		end;
+
+		UnlinkTutor := TRUE;
+end;
+
+function LinkImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+const
+	tQuestion : TypeQuestion = ();
+	nRet	: integer = 0;
+	Dir1: array[0..fsDirectory] of Char = '';
+	Dir2: array[0..fsDirectory] of Char = '';
+	Name: array[0..fsFileName] of Char = '';
+	Ext: array[0..fsExtension] of Char = '';
+	szText: array[0..255] of Char = '';
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = nil;
+
+begin
+		LinkImage := FALSE;
+		if lParam = 0 then exit;
+		if PCHAR(lParam)[0] = #0 then exit;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		{ Liaison que si la liaison n'était pas déjà faite }
+		if (StrComp(StrUpper(tQuestion.FichierGraph),
+								StrUpper(PCHAR(lParam))) <> 0) then begin
+					FileSplit(PCHAR(lParam), Dir1, Name, Ext);
+					StrCopy(Dir2, tLecon.PathLecon);
+					StrCat(Dir2, '\');
+					if StrComp(Dir1, Dir2) <> 0 then begin
+						 { Copie le fichier dans le repertoire de la leçon s'il
+							 n'y est pas, en générant un nom de fichier }
+						 CopyInCurLesson(PCHAR(lParam), B000000, nItem);
+					end;
+					if (tQuestion.FichierGraph[0] <> #0) then begin
+							MessageBeep(MB_ICONQUESTION);
+							p1 := @tQuestion.FichierGraph;
+							p2 := @tQuestion.Nom;
+							p3 := PCHAR(lParam);
+							wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 1), p1);
+							nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+							case nRet of
+								IDCANCEL :
+									begin
+										exit;
+									end;
+
+								IDNO :
+									begin
+										LinkImage := TRUE;
+										exit;
+									end;
+							end;
+					end;
+					if StrComp(Dir1, Dir2) <> 0 then begin
+						 SetDlgItemText(wParam, 102, PCHAR(lParam));
+					end;
+					SetDlgItemText(Dialog, 203, PCHAR(lParam));
+
+					{ Mise à jour du fichier questions.lst}
+					SetWindowText(GetDlgItem(Dialog, 1205), mmLoadString(hInstRes, STR_UNLINKAVI));
+					SetWindowText(GetDlgItem(Dialog, 1201), mmLoadString(hInstRes, STR_LINKBMP));
+					PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+					StrCopy (tQuestion.FichierGraph, PCHAR(lParam));
+					SetQuestionRec(nItem + 1, tQuestion);
+		end;
+
+		LinkImage := TRUE;
+end;
+
+function UnlinkImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		szText: array[0..255] of Char;
+		nRet	: integer;
+
+const
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = '...';
+
+begin
+		UnlinkImage := FALSE;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		if (tQuestion.FichierGraph[0] <> #0) AND
+			 NOT IsVideoFile(tQuestion.FichierGraph) then begin
+			MessageBeep(MB_ICONQUESTION);
+			p1 := @tQuestion.FichierGraph;
+			p2 := @tQuestion.Nom;
+			wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 1), p1);
+			nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+			case nRet of
+				IDCANCEL :
+					begin
+						exit;
+					end;
+
+				IDNO :
+					begin
+						UnlinkImage := TRUE;
+						exit;
+					end;
+			end;
+
+			SetDlgItemText(wParam, 102, '');
+			SetDlgItemText(Dialog, 203, '');
+
+			SetWindowText(GetDlgItem(Dialog, 1201), mmLoadString(hInstRes, STR_UNLINKBMP));
+			PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+			StrCopy (tQuestion.FichierGraph, '');
+			SetQuestionRec(nItem + 1, tQuestion);
+
+		end;
+
+		UnlinkImage := TRUE;
+end;
+
+function LinkVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		Dir1: array[0..fsDirectory] of Char;
+		Dir2: array[0..fsDirectory] of Char;
+		Name: array[0..fsFileName] of Char;
+		Ext: array[0..fsExtension] of Char;
+		szText: array[0..255] of Char;
+		nRet	: integer;
+
+const
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = nil;
+
+begin
+		LinkVideo := FALSE;
+		if lParam = 0 then exit;
+		if PCHAR(lParam)[0] = #0 then exit;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		{ Liaison que si la liaison n'était pas déjà faite }
+		if (StrComp(StrUpper(tQuestion.FichierGraph),
+								StrUpper(PCHAR(lParam))) <> 0) then begin
+					FileSplit(PCHAR(lParam), Dir1, Name, Ext);
+					StrCopy(Dir2, tLecon.PathLecon);
+					StrCat(Dir2, '\');
+					if StrComp(Dir1, Dir2) <> 0 then begin
+						 { Copie le fichier dans le repertoire de la leçon s'il
+							 n'y est pas, en générant un nom de fichier }
+						 CopyInCurLesson(PCHAR(lParam), V000000, nItem);
+					end;
+					if (tQuestion.FichierGraph[0] <> #0) then begin
+							MessageBeep(MB_ICONQUESTION);
+							p1 := @tQuestion.FichierGraph;
+							p2 := @tQuestion.Nom;
+							p3 := PCHAR(lParam);
+							wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 2), p1);
+							nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+							case nRet of
+								IDCANCEL :
+									begin
+										exit;
+									end;
+
+								IDNO :
+									begin
+										LinkVideo := TRUE;
+										exit;
+									end;
+							end;
+					end;
+					if StrComp(Dir1, Dir2) <> 0 then begin
+						 SetDlgItemText(wParam, 102, PCHAR(lParam));
+					end;
+					SetDlgItemText(Dialog, 203, PCHAR(lParam));
+
+					{ Mise à jour du fichier questions.lst}
+					SetWindowText(GetDlgItem(Dialog, 1205), mmLoadString(hInstRes, STR_LINKAVI));
+					SetWindowText(GetDlgItem(Dialog, 1201), mmLoadString(hInstRes, STR_UNLINKBMP));
+					PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+					StrCopy (tQuestion.FichierGraph, PCHAR(lParam));
+					SetQuestionRec(nItem + 1, tQuestion);
+		end;
+
+		LinkVideo := TRUE;
+end;
+
+function UnlinkVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		szText: array[0..255] of Char;
+		nRet	: integer;
+
+const
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = '...';
+
+begin
+		UnlinkVideo := FALSE;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		if (tQuestion.FichierGraph[0] <> #0) AND
+				IsVideoFile(tQuestion.FichierGraph) then begin
+			MessageBeep(MB_ICONQUESTION);
+			p1 := @tQuestion.FichierGraph;
+			p2 := @tQuestion.Nom;
+			wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 2), p1);
+			nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+			case nRet of
+				IDCANCEL :
+					begin
+						exit;
+					end;
+
+				IDNO :
+					begin
+						UnlinkVideo := TRUE;
+						exit;
+					end;
+			end;
+
+			SetDlgItemText(wParam, 102, '');
+			SetDlgItemText(Dialog, 203, '');
+
+			SetWindowText(GetDlgItem(Dialog, 1205), mmLoadString(hInstRes, STR_UNLINKAVI));
+			PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+			StrCopy (tQuestion.FichierGraph, '');
+			SetQuestionRec(nItem + 1, tQuestion);
+
+		end;
+
+		UnlinkVideo := TRUE;
+end;
+
+function LinkText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		Dir1: array[0..fsDirectory] of Char;
+		Dir2: array[0..fsDirectory] of Char;
+		Name: array[0..fsFileName] of Char;
+		Ext: array[0..fsExtension] of Char;
+		szText: array[0..255] of Char;
+		nRet	: integer;
+
+const
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = nil;
+
+begin
+		LinkText := FALSE;
+		if lParam = 0 then exit;
+		if PCHAR(lParam)[0] = #0 then exit;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		{ Liaison que si la liaison n'était pas déjà faite }
+		if (StrComp(StrUpper(tQuestion.FichierTexte),
+								StrUpper(PCHAR(lParam))) <> 0) then begin
+					FileSplit(PCHAR(lParam), Dir1, Name, Ext);
+					StrCopy(Dir2, tLecon.PathLecon);
+					StrCat(Dir2, '\');
+					if StrComp(Dir1, Dir2) <> 0 then begin
+						 { Copie le fichier dans le repertoire de la leçon s'il
+							 n'y est pas, en générant un nom de fichier }
+						 CopyInCurLesson(PCHAR(lParam), T000000, nItem);
+					end;
+					if (tQuestion.FichierTexte[0] <> #0) then begin
+							MessageBeep(MB_ICONQUESTION);
+							p1 := @tQuestion.FichierTexte;
+							p2 := @tQuestion.Nom;
+							p3 := PCHAR(lParam);
+							wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 3), p1);
+							nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+							case nRet of
+								IDCANCEL :
+									begin
+										exit;
+									end;
+
+								IDNO :
+									begin
+										LinkText := TRUE;
+										exit;
+									end;
+							end;
+					end;
+					if StrComp(Dir1, Dir2) <> 0 then begin
+						 SetDlgItemText(wParam, 102, PCHAR(lParam));
+					end;
+					SetDlgItemText(Dialog, 204, PCHAR(lParam));
+
+					{ Mise à jour du fichier questions.lst}
+					SetWindowText(GetDlgItem(Dialog, 1202), mmLoadString(hInstRes, STR_LINKTXT));
+					PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+					StrCopy (tQuestion.FichierTexte, PCHAR(lParam));
+					SetQuestionRec(nItem + 1, tQuestion);
+		end;
+
+		LinkText := TRUE;
+end;
+
+function UnlinkText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		szText: array[0..255] of Char;
+		nRet	: integer;
+
+const
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = '...';
+
+begin
+		UnlinkText := FALSE;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		if (tQuestion.FichierTexte[0] <> #0) then begin
+			MessageBeep(MB_ICONQUESTION);
+			p1 := @tQuestion.FichierTexte;
+			p2 := @tQuestion.Nom;
+			wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 3), p1);
+			nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+			case nRet of
+				IDCANCEL :
+					begin
+						exit;
+					end;
+
+				IDNO :
+					begin
+						UnlinkText := TRUE;
+						exit;
+					end;
+			end;
+
+			SetDlgItemText(wParam, 102, PCHAR(lParam));
+			SetDlgItemText(Dialog, 204, PCHAR(lParam));
+
+			SetWindowText(GetDlgItem(Dialog, 1202), mmLoadString(hInstRes, STR_UNLINKTXT));
+			PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+			StrCopy (tQuestion.FichierTexte, '');
+			SetQuestionRec(nItem + 1, tQuestion);
+
+		end;
+
+		UnlinkText := TRUE;
+end;
+
+function LinkSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		Dir1: array[0..fsDirectory] of Char;
+		Dir2: array[0..fsDirectory] of Char;
+		Name: array[0..fsFileName] of Char;
+		Ext: array[0..fsExtension] of Char;
+		szText: array[0..255] of Char;
+		nRet	: integer;
+
+const
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = nil;
+
+begin
+		LinkSound := FALSE;
+		if lParam = 0 then exit;
+		if PCHAR(lParam)[0] = #0 then exit;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		{ Liaison que si la liaison n'était pas déjà faite }
+		if (StrComp(StrUpper(tQuestion.FichierQuestion),
+								StrUpper(PCHAR(lParam))) <> 0) then begin
+					FileSplit(PCHAR(lParam), Dir1, Name, Ext);
+					StrCopy(Dir2, tLecon.PathLecon);
+					StrCat(Dir2, '\');
+					if StrComp(Dir1, Dir2) <> 0 then begin
+						 { Copie le fichier dans le repertoire de la leçon s'il
+							 n'y est pas, en générant un nom de fichier }
+						 CopyInCurLesson(PCHAR(lParam), Q000000, nItem);
+					end;
+					if (tQuestion.FichierQuestion[0] <> #0) then begin
+							MessageBeep(MB_ICONQUESTION);
+							p1 := @tQuestion.FichierQuestion;
+							p2 := @tQuestion.Nom;
+							p3 := PCHAR(lParam);
+							wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 4), p1);
+							nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+							case nRet of
+								IDCANCEL :
+									begin
+										exit;
+									end;
+
+								IDNO :
+									begin
+										LinkSound := TRUE;
+										exit;
+									end;
+							end;
+					end;
+					if StrComp(Dir1, Dir2) <> 0 then begin
+						 SetDlgItemText(wParam, 102, PCHAR(lParam));
+					end;
+					SetDlgItemText(Dialog, 205, PCHAR(lParam));
+
+					{ Mise à jour du fichier questions.lst }
+					SetWindowText(GetDlgItem(Dialog, 1203), mmLoadString(hInstRes, STR_LINKWAV));
+					PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+					StrCopy (tQuestion.FichierQuestion, PCHAR(lParam));
+					SetQuestionRec(nItem + 1, tQuestion);
+		end;
+
+		LinkSound := TRUE;
+end;
+
+function UnlinkSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+		szText: array[0..255] of Char;
+		nRet	: integer;
+
+const
+	p1 : PCHAR = nil;
+	p2 : PCHAR = nil;
+	p3 : PCHAR = '...';
+
+begin
+		UnlinkSound := FALSE;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		if (tQuestion.FichierQuestion[0] <> #0) then begin
+			MessageBeep(MB_ICONQUESTION);
+			p1 := @tQuestion.FichierQuestion;
+			p2 := @tQuestion.Nom;
+			wvsprintf(szText, mmLoadString(hInstRes, STR_MSGFIRST + 4), p1);
+			nRet := MessageBox(GetActiveWindow,
+								szText,
+								mmLoadString(hInstRes, STR_MSGFIRST),
+								MB_YESNOCANCEL OR MB_ICONQUESTION);
+			case nRet of
+				IDCANCEL :
+					begin
+						exit;
+					end;
+
+				IDNO :
+					begin
+						UnlinkSound := TRUE;
+						exit;
+					end;
+			end;
+
+			SetDlgItemText(wParam, 102, PCHAR(lParam));
+			SetDlgItemText(Dialog, 205, PCHAR(lParam));
+
+			SetWindowText(GetDlgItem(Dialog, 1203), mmLoadString(hInstRes, STR_UNLINKWAV));
+			PostMessage(wParam, UM_SETSTATUSTEXT, 0, 0);
+
+			StrCopy (tQuestion.FichierQuestion, '');
+			SetQuestionRec(nItem + 1, tQuestion);
+
+		end;
+
+		UnlinkSound := TRUE;
+end;
+
+function CreateImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+const tQuestion : TypeQuestion = ();
+begin
+		CreateImage := FALSE;
+
+		CreerImage(0, Dialog, PropositionName);
+		if PropositionName[0] <> #0 then begin
+			SetDlgItemText(wParam, 102, PropositionName);
+			lParam :=  longint(@PropositionName);
+			CreateImage := LinkImage(Dialog, ID, nItem, wParam, lParam);
+		end;
+end;
+
+function CreateVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		CreateVideo := FALSE;
+
+		CreerVideo(0, Dialog, PropositionName);
+		if PropositionName[0] <> #0 then begin
+			SetDlgItemText(wParam, 102, PropositionName);
+			lParam :=  longint(@PropositionName);
+			CreateVideo := LinkVideo(Dialog, ID, nItem, wParam, lParam);
+			ItWasVideo := FALSE;
+		end;
+end;
+
+function CreateText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		CreateText := FALSE;
+
+		CreerTexte(0, Dialog, PropositionName);
+		if PropositionName[0] <> #0 then begin
+			SetDlgItemText(wParam, 102, PropositionName);
+			lParam :=  longint(@PropositionName);
+			CreateText := LinkText(Dialog, ID, nItem, wParam, lParam);
+		end;
+end;
+
+function CreateSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		CreateSound := FALSE;
+
+		CreerSon(0, Dialog, PropositionName);
+		if PropositionName[0] <> #0 then begin
+			SetDlgItemText(wParam, 102, PropositionName);
+			lParam :=  longint(@PropositionName);
+			CreateSound := LinkSound(Dialog, ID, nItem, wParam, lParam);
+		end;
+end;
+
+function EditImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		EditImage := FALSE;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		if (tQuestion.FichierGraph[0] <> #0) AND
+			 NOT IsVideoFile(tQuestion.FichierGraph) then begin
+			SetDlgItemText(wParam, 102, tQuestion.FichierGraph);
+			EditerImage(0);
+		end;
+
+		EditImage := TRUE;
+end;
+
+function EditVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		EditVideo := FALSE;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		if (tQuestion.FichierGraph[0] <> #0) AND
+			 IsVideoFile(tQuestion.FichierGraph) then begin
+			SetDlgItemText(wParam, 102, tQuestion.FichierGraph);
+			EditerVideo(0);
+		end;
+
+		EditVideo := TRUE;
+end;
+
+function EditText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		EditText := FALSE;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		if (tQuestion.FichierTexte[0] <> #0) then begin
+			SetDlgItemText(wParam, 102, tQuestion.FichierTexte);
+			EditerTexte(0);
+		end;
+
+		EditText := TRUE;
+end;
+
+function EditSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var tQuestion : TypeQuestion;
+begin
+		EditSound := FALSE;
+
+		GetQuestionRec(nItem + 1, tQuestion);
+
+		if (tQuestion.FichierQuestion[0] <> #0) then begin
+			SetDlgItemText(wParam, 102, tQuestion.FichierQuestion);
+			EditerSon(0);
+		end;
+
+		EditSound := TRUE;
+end;
+
+function GetImage(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var
+		MciCommandStr : TMCISTR;
+		bRet : BOOL;
+begin
+		GetImage := FALSE;
+
+		if PrendreImage(0) then begin
+			GetDlgItemText(wParam, 102, PropositionName, SizeOf(PropositionName));
+			lParam :=  longint(@PropositionName);
+			bRet := LinkImage(Dialog, ID, nItem, wParam, lParam);
+			if bRet then begin
+				StrCopy(MciCommandStr, 'DISPLAY ');
+				StrCat(MciCommandStr,  StrUpper(PropositionName));
+				ProcessOptionsBitmap(tQuestion, MciCommandStr);
+				mciDisplay(MciCommandStr);
+			end;
+			GetImage := bRet;
+		end;
+end;
+
+function GetVideo(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var
+		MciCommandStr : TMCISTR;
+		bRet : BOOL;
+begin
+		GetVideo := FALSE;
+
+		if PrendreVideo(0) then begin
+			GetDlgItemText(wParam, 102, PropositionName, SizeOf(PropositionName));
+			lParam :=  longint(@PropositionName);
+			bRet := LinkVideo(Dialog, ID, nItem, wParam, lParam);
+			if bRet then begin
+				StrCopy(MciCommandStr, 'DISPLAY ');
+				StrCat(MciCommandStr,  StrUpper(PropositionName));
+				ProcessOptionsBitmap(tQuestion, MciCommandStr);
+				mciDisplay(MciCommandStr);
+			end;
+			GetVideo := bRet;
+		end;
+end;
+
+function GetText(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var
+		MciCommandStr : TMCISTR;
+		bRet : BOOL;
+begin
+		GetText := FALSE;
+
+		if PrendreTexte(0) then begin
+			GetDlgItemText(wParam, 102, PropositionName, SizeOf(PropositionName));
+			lParam :=  longint(@PropositionName);
+			bRet := LinkText(Dialog, ID, nItem, wParam, lParam);
+			if bRet then begin
+				StrCopy(MciCommandStr, 'DISPLAY ');
+				StrCat(MciCommandStr,  StrUpper(PropositionName));
+				ProcessOptionsText(tQuestion, MciCommandStr);
+				mciDisplay(MciCommandStr);
+			end;
+			GetText := bRet;
+		end;
+end;
+
+function GetSound(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+begin
+		GetSound := FALSE;
+
+		if PrendreSon(0) then begin
+			GetDlgItemText(wParam, 102, PropositionName, SizeOf(PropositionName));
+			lParam :=  longint(@PropositionName);
+			GetSound := LinkSound(Dialog, ID, nItem, wParam, lParam);
+		end;
+end;
+
+function GetTutor(Dialog : HWND; ID : WORD; nItem : integer; var wParam : DWORD; var lParam : longint) : Bool;
+var
+		pszFile : PCHAR;
+const
+		szPathQcm : szLongName = #0;
+begin
+		GetTutor := FALSE;
+
+		If szPathQcm[0] = #0 Then StrCopy (szPathQcm, PathLecons);
+		SetCurrentDirectory (szPathQcm);
+		pszFile := GetFileName(mmLoadString(hInstRes, STR_QCM), 'qcm');
+		if pszFile <> nil then begin
+                        {$IFDEF _TUTOR}
+			StrCopy (MainQcmWin^.szFichierQ, pszFile);
+                        {$ENDIF}
+			StrDispose(pszFile);
+		end else begin
+                        {$IFDEF _TUTOR}
+			StrCopy (MainQcmWin^.szFichierQ, '');
+                        {$ENDIF}
+		end;
+		GetCurrentDirectory (SizeOf(szPathQcm), szPathQcm);
+                {$IFDEF _TUTOR}
+		If StrLen (MainQcmWin^.szFichierQ) > 0 Then Begin
+			SendMessage (MainQcmWin^.HWindow, UM_LOADQCM, 0, 0);
+			lParam :=  longint(@MainQcmWin^.szFichierQ);
+			GetTutor := LinkTutor(Dialog, ID, nItem, wParam, lParam);
+		End;
+                {$ENDIF}
+end;
+
+END.

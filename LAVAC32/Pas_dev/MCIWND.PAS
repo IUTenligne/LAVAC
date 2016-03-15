@@ -1,0 +1,346 @@
+{*----------------------------------------------------------------------------*\
+ *
+ *  MCIWnd
+ *
+ *    MCIWnd window class header file.
+ *
+ *    the MCIWnd window class is a window class for controling MCI devices
+ *    MCI devices include, wave files, midi files, AVI Video, cd audio,
+ *    vcr, video disc, and others..
+ *
+ *    to learn more about MCI and mci command sets see the
+ *    "Microsoft Multimedia Programmers's guide" in the Win31 SDK
+ *
+ *    the easiest use of the MCIWnd class is like so:
+ *
+ *          hwnd = MCIWndCreate(hwndParent, hInstance, 0, "chimes.wav");
+ *          ...
+ *          MCIWndPlay(hwnd);
+ *          MCIWndStop(hwnd);
+ *          MCIWndPause(hwnd);
+ *          ....
+ *          MCIWndDestroy(hwnd);
+ *
+ *    this will create a window with a play/pause, stop and a playbar
+ *    and start the wave file playing.
+ *
+ *    mciwnd.h defines macros for all the most common MCI commands, but
+ *    any string command can be used if needed.
+ *
+ *    Note: unlike the mciSendString() API, no alias or file name needs
+ *    to be specifed, since the device to use is implied by the window handle.
+ *
+ *          MCIWndSendString(hwnd, "setaudio stream to 2");
+ *
+ *    (C) Copyright Microsoft Corp. 1991, 1992, 1993.  All rights reserved.
+ *
+ *    You have a royalty-free right to use, modify, reproduce and
+ *    distribute the Sample Files (and/or any modified version) in
+ *    any way you find useful, provided that you agree that
+ *    Microsoft has no warranty obligations or liability for any
+ *    Sample Application Files.
+ *
+ *    If you did not get this from Microsoft Sources, then it may not be the
+ *    most current version.  This sample code in particular will be updated
+ *    and include more documentation.
+ *
+ *    Sources are:
+ *       CompuServe: WINSDK forum, MDK section.
+ *       Anonymous FTP from ftp.uu.net vendor\microsoft\multimedia
+ *
+ *----------------------------------------------------------------------------*}
+UNIT MCIWND;
+
+INTERFACE
+
+USES Windows, COMMDLG;
+
+TYPE	DWORD = LongInt;
+			LONG  = LongInt;
+			UINT  = WORD;
+			HANDLE  = THANDLE;
+			WPARAM  = WORD;
+			LPARAM  = DWORD;
+			LPSTR	= PCHAR;
+			THINSTANCE = THANDLE;
+
+CONST MCIWND_WINDOW_CLASS = 'MCIWndClass';
+CONST MCIWND_TOOLBAR_CLASS = 'MCIWndToolBar';
+CONST MCIWND_TRACKBAR_CLASS = 'MCIWndTrackBar';
+
+ { FAR _cdecl _loadds }
+{function MCIWndCreate(hwndParent : HWND; hInstance : THINSTANCE; dwStyle : DWORD; szFile : LPSTR) : HWND;}
+function MCIWndCreate(hwndParent: HWND; hInstance: HINST; dwStyle: DWORd; szFile: LPCSTR): HWND; cdecl;
+//function GetOpenFileNamePreview(var OpenFile: TOpenFilename): Bool;
+function MCIWndRegisterClass : BOOL;    cdecl;
+
+function GetTrackPos(Wnd: HWnd): Integer;
+function SetTrackPos(Wnd: HWnd; Pos: Integer; Redraw: Bool): Integer;
+procedure SetTrackRange(Wnd: HWnd; MinPos, MaxPos: Integer; Redraw: Bool);
+procedure GetTrackRange(Wnd: HWnd; var MinPos, MaxPos: Integer);
+procedure SetTrackMark(Wnd: HWnd; MinPos, MaxPos: Integer; Redraw: Bool);
+
+const
+    VFWDLL      = 'MSVFW32.DLL';
+    AVIFILDLL   = 'AVIFIL32.DLL';
+    AVICAPDLL   = 'AVICAP32.DLL';
+
+ { Flags for the MCIWndOpen command}
+CONST MCIWNDOPENF_NEW	            = $0001; { open a new file}
+
+ { window styles}
+CONST MCIWNDF_NOAUTOSIZEWINDOW    = $0001; { when movie size changes }
+CONST MCIWNDF_NOPLAYBAR           = $0002; { no toolbar }
+CONST MCIWNDF_NOAUTOSIZEMOVIE     = $0004; { when window size changes }
+CONST MCIWNDF_NOMENU              = $0008; { no popup menu from RBUTTONDOWN }
+CONST MCIWNDF_SHOWNAME            = $0010; { show name in caption }
+CONST MCIWNDF_SHOWPOS             = $0020; { show position in caption }
+CONST MCIWNDF_SHOWMODE            = $0040; { show mode in caption }
+CONST MCIWNDF_SHOWALL             = $0070; { show all }
+
+CONST MCIWNDF_NOTIFYMODE          = $0100; { tell parent of mode change }
+CONST MCIWNDF_NOTIFYPOS           = $0200; { tell parent of pos change }
+CONST MCIWNDF_NOTIFYSIZE          = $0400; { tell parent of size change }
+CONST MCIWNDF_NOTIFYMEDIA         = $0800; { tell parent of media change }
+CONST MCIWNDF_NOTIFYERROR         = $1000; { tell parent of an error }
+CONST MCIWNDF_NOTIFYALL           = $1F00; { tell all }
+
+CONST MCIWNDF_RECORD              = $2000; { Give a record button }
+CONST MCIWNDF_NOERRORDLG          = $4000; { Show Error Dlgs for MCI cmds? }
+CONST MCIWNDF_NOOPEN		          = $8000; { Don't allow user to open things }
+
+{ can macros}
+
+{CONST MCIWndCanPlay : procedure(hWin :hWND) = begin BOOL(SendMessage(hWin,MCIWNDM_CAN_PLAY,0,0))
+CONST MCIWndCanRecord(hWin)      := (BOOL)SendMessage(hWin,MCIWNDM_CAN_RECORD,0,0)
+CONST MCIWndCanSave(hWin)        := (BOOL)SendMessage(hWin,MCIWNDM_CAN_SAVE,0,0)
+CONST MCIWndCanWindow(hWin)      := (BOOL)SendMessage(hWin,MCIWNDM_CAN_WINDOW,0,0)
+CONST MCIWndCanEject(hWin)       := (BOOL)SendMessage(hWin,MCIWNDM_CAN_EJECT,0,0)
+CONST MCIWndCanConfig(hWin)      := (BOOL)SendMessage(hWin,MCIWNDM_CAN_CONFIG,0,0)
+CONST MCIWndPaletteKick(hWin)    := (BOOL)SendMessage(hWin,MCIWNDM_PALETTEKICK,0,0)
+
+CONST MCIWndSave(hWin, szFile)   := (LONG)SendMessage(hWin, MCI_SAVE, 0, (LPARAM)(LPVOID)(szFile))
+CONST MCIWndSaveDialog(hWin)      MCIWndSave(hWin, -1)}
+
+ { if you dont give a device it will use the current device....}
+{CONST MCIWndNew(hWin, lp)        := (LONG)SendMessage(hWin, MCIWNDM_NEW, 0, (LPARAM)(LPVOID)(lp))
+
+CONST MCIWndRecord(hWin)         := (LONG)SendMessage(hWin, MCI_RECORD, 0, 0)
+CONST MCIWndOpen(hWin, sz, f)    := (LONG)SendMessage(hWin, MCI_OPEN, (WPARAM)(UINT)(f),(LPARAM)(LPVOID)(sz))
+CONST MCIWndOpenDialog(hWin)      MCIWndOpen(hWin, -1, 0)
+CONST MCIWndClose(hWin)          := (LONG)SendMessage(hWin, MCI_CLOSE, 0, 0)
+CONST MCIWndPlay(hWin)           := (LONG)SendMessage(hWin, MCI_PLAY, 0, 0)
+CONST MCIWndStop(hWin)           := (LONG)SendMessage(hWin, MCI_STOP, 0, 0)
+CONST MCIWndPause(hWin)          := (LONG)SendMessage(hWin, MCI_PAUSE, 0, 0)
+CONST MCIWndResume(hWin)         := (LONG)SendMessage(hWin, MCI_RESUME, 0, 0)
+CONST MCIWndSeek(hWin, lPos)     := (LONG)SendMessage(hWin, MCI_SEEK, 0,:= (LPARAM)(LONG)(lPos))
+CONST MCIWndEject(hWin)          := (LONG)SendMessage(hWin, MCIWNDM_EJECT, 0, 0)
+
+CONST MCIWndHome(hWin)            MCIWndSeek(hWin, MCIWND_START)
+CONST MCIWndEnd(hWin)             MCIWndSeek(hWin, MCIWND_END)
+
+CONST MCIWndGetSource(hWin, prc) := (LONG)SendMessage(hWin, MCIWNDM_GET_SOURCE, 0, (LPARAM)(LPRECT)(prc))
+CONST MCIWndPutSource(hWin, prc) := (LONG)SendMessage(hWin, MCIWNDM_PUT_SOURCE, 0, (LPARAM)(LPRECT)(prc))
+
+CONST MCIWndGetDest(hWin, prc)   := (LONG)SendMessage(hWin, MCIWNDM_GET_DEST, 0, (LPARAM)(LPRECT)(prc))
+CONST MCIWndPutDest(hWin, prc)   := (LONG)SendMessage(hWin, MCIWNDM_PUT_DEST, 0, (LPARAM)(LPRECT)(prc))
+
+CONST MCIWndPlayReverse(hWin)    := (LONG)SendMessage(hWin, MCIWNDM_PLAYREVERSE, 0, 0)
+CONST MCIWndPlayFrom(hWin, lPos) := (LONG)SendMessage(hWin, MCIWNDM_PLAYFROM, 0, (LPARAM)(LONG)(lPos))
+CONST MCIWndPlayTo(hWin, lPos)   := (LONG)SendMessage(hWin, MCIWNDM_PLAYTO,   0, (LPARAM)(LONG)(lPos))
+CONST MCIWndPlayFromTo(hWin, lStart, lEnd):= (MCIWndSeek(hWin, lStart), MCIWndPlayTo(hWin, lEnd))
+
+CONST MCIWndGetDeviceID(hWin)    := (UINT)SendMessage(hWin, MCIWNDM_GETDEVICEID, 0, 0)
+CONST MCIWndGetAlias(hWin)       := (UINT)SendMessage(hWin, MCIWNDM_GETALIAS, 0, 0)
+CONST MCIWndGetMode(hWin, lp, len):= (LONG)SendMessage(hWin, MCIWNDM_GETMODE, (WPARAM)(UINT)(len), (LPARAM)(LPSTR)(lp))
+CONST MCIWndGetPosition(hWin)    := (LONG)SendMessage(hWin, MCIWNDM_GETPOSITION, 0, 0)
+CONST MCIWndGetPositionString(hWin, lp, len):= (LONG)SendMessage(hWin, MCIWNDM_GETPOSITION, (WPARAM)(UINT)(len),
+																	(LPARAM)(LPSTR)(lp))
+CONST MCIWndGetStart(hWin)       := (LONG)SendMessage(hWin, MCIWNDM_GETSTART, 0, 0)
+CONST MCIWndGetLength(hWin)      := (LONG)SendMessage(hWin, MCIWNDM_GETLENGTH, 0, 0)
+CONST MCIWndGetEnd(hWin)         := (LONG)SendMessage(hWin, MCIWNDM_GETEND, 0, 0)
+
+CONST MCIWndStep(hWin, n)        := (LONG)SendMessage(hWin, MCI_STEP, 0,(LPARAM)(long)(n))
+
+CONST MCIWndDestroy(hWin)        := (VOID)SendMessage(hWin, WM_CLOSE, 0, 0)
+CONST MCIWndSetZoom(hWin,iZoom)  := (VOID)SendMessage(hWin, MCIWNDM_SETZOOM, 0, (LPARAM)(UINT)(iZoom))
+CONST MCIWndGetZoom(hWin)        := (UINT)SendMessage(hWin, MCIWNDM_GETZOOM, 0, 0)
+CONST MCIWndSetVolume(hWin,iVol) := (LONG)SendMessage(hWin, MCIWNDM_SETVOLUME, 0, (LPARAM)(UINT)(iVol))
+CONST MCIWndGetVolume(hWin)      := (LONG)SendMessage(hWin, MCIWNDM_GETVOLUME, 0, 0)
+CONST MCIWndSetSpeed(hWin,iSpeed):= (LONG)SendMessage(hWin, MCIWNDM_SETSPEED, 0, (LPARAM)(UINT)(iSpeed))
+CONST MCIWndGetSpeed(hWin)       := (LONG)SendMessage(hWin, MCIWNDM_GETSPEED, 0, 0)
+CONST MCIWndSetTimeFormat(hWin, lp):= (LONG)SendMessage(hWin, MCIWNDM_SETTIMEFORMAT, 0, (LPARAM)(LPSTR)(lp))
+CONST MCIWndGetTimeFormat(hWin, lp, len):= (LONG)SendMessage(hWin, MCIWNDM_GETTIMEFORMAT, (WPARAM)(UINT)(len),
+																(LPARAM)(LPSTR)(lp))
+CONST MCIWndValidateMedia(hWin)  := (VOID)SendMessage(hWin, MCIWNDM_VALIDATEMEDIA, 0, 0)
+
+CONST MCIWndSetRepeat(hWin,f)    := (void)SendMessage(hWin, MCIWNDM_SETREPEAT, 0, (LPARAM)(BOOL)(f))
+CONST MCIWndGetRepeat(hWin)      := (BOOL)SendMessage(hWin, MCIWNDM_GETREPEAT, 0, 0)
+
+CONST MCIWndUseFrames(hWin)       MCIWndSetTimeFormat(hWin, "frames")
+CONST MCIWndUseTime(hWin)         MCIWndSetTimeFormat(hWin, "ms")
+
+CONST MCIWndSetActiveTimer(hWin, active)		(VOID)SendMessage(hWin, MCIWNDM_SETACTIVETIMER,:= (WPARAM)(UINT)(active), 0L)
+CONST MCIWndSetInactiveTimer(hWin, inactive):= (VOID)SendMessage(hWin, MCIWNDM_SETINACTIVETIMER, (WPARAM)(UINT)(inactive), 0L)
+CONST MCIWndSetTimers(hWin, active, inactive)	(VOID)SendMessage(hWin, MCIWNDM_SETTIMERS,(WPARAM)(UINT)(active), (LPARAM)(UINT)
+																				(inactive))
+CONST MCIWndGetActiveTimer(hWin):= (UINT)SendMessage(hWin, MCIWNDM_GETACTIVETIMER,	0, 0L);
+CONST MCIWndGetInactiveTimer(hWin)(UINT)SendMessage(hWin, MCIWNDM_GETINACTIVETIMER, 0, 0L);
+
+CONST MCIWndRealize(hWin, fBkgnd):= (LONG)SendMessage(hWin, MCIWNDM_REALIZE,(WPARAM)(BOOL)(fBkgnd),0)
+
+CONST MCIWndSendString(hWin, sz) := (LONG)SendMessage(hWin, MCIWNDM_SENDSTRING, 0, (LPARAM)(LPSTR)(sz))
+CONST MCIWndReturnString(hWin, lp, len) := (LONG)SendMessage(hWin, MCIWNDM_RETURNSTRING, (WPARAM)(UINT)(len),
+																			(LPARAM)(LPVOID)(lp))
+CONST MCIWndGetError(hWin, lp, len):= (LONG)SendMessage(hWin, MCIWNDM_GETERROR, (WPARAM)(UINT)(len), (LPARAM)(LPVOID)(lp))
+
+CONST MCIWndActivate(hWin, f)    := (void)SendMessage(hWin, WM_ACTIVATE, (WPARAM)(BOOL)(f), 0)
+
+CONST MCIWndGetPalette(hWin)     := (HPALETTE)SendMessage(hWin, MCIWNDM_GETPALETTE, 0, 0)
+CONST MCIWndSetPalette(hWin, hpal):= (LONG)SendMessage(hWin, MCIWNDM_SETPALETTE, (WPARAM)(HPALETTE)(hpal), 0)
+
+CONST MCIWndGetFileName(hWin, lp, len):=
+(LONG)SendMessage(hWin, MCIWNDM_GETFILENAME, (WPARAM)(UINT)(len), (LPARAM)(LPVOID)(lp))
+CONST MCIWndGetDevice(hWin, lp, len)  := (LONG)SendMessage(hWin, MCIWNDM_GETDEVICE, (WPARAM)(UINT)(len), (LPARAM)(LPVOID)(lp))
+
+CONST MCIWndGetStyles(hWin):= (UINT)SendMessage(hWin, MCIWNDM_GETSTYLES, 0, 0L)
+CONST MCIWndChangeStyles(hWin, mask, value):= (LONG)SendMessage(hWin, MCIWNDM_CHANGESTYLES, (WPARAM)(UINT)(mask),
+																(LPARAM)(LONG)(value))
+
+CONST MCIWndOpenInterface(hWin, pUnk) := (LONG)SendMessage(hWin, MCIWNDM_OPENINTERFACE, 0, (LPARAM)(LPUNKNOWN)(pUnk))}
+
+ { Messages an app will send to MCIWND }
+CONST MCIWNDM_GETDEVICEID	 = (WM_USER + 100);
+CONST MCIWNDM_SENDSTRING	 = (WM_USER + 101);
+CONST MCIWNDM_GETPOSITION	 = (WM_USER + 102);
+CONST MCIWNDM_GETSTART	 = (WM_USER + 103);
+CONST MCIWNDM_GETLENGTH	 = (WM_USER + 104);
+CONST MCIWNDM_GETEND		 = (WM_USER + 105);
+CONST MCIWNDM_GETMODE		 = (WM_USER + 106);
+CONST MCIWNDM_EJECT		 = (WM_USER + 107);
+CONST MCIWNDM_SETZOOM		 = (WM_USER + 108);
+CONST MCIWNDM_GETZOOM          = (WM_USER + 109);
+CONST MCIWNDM_SETVOLUME	 = (WM_USER + 110);
+CONST MCIWNDM_GETVOLUME	 = (WM_USER + 111);
+CONST MCIWNDM_SETSPEED	 = (WM_USER + 112);
+CONST MCIWNDM_GETSPEED	 = (WM_USER + 113);
+CONST MCIWNDM_SETREPEAT	 = (WM_USER + 114);
+CONST MCIWNDM_GETREPEAT	 = (WM_USER + 115);
+CONST MCIWNDM_REALIZE          = (WM_USER + 118);
+CONST MCIWNDM_SETTIMEFORMAT    = (WM_USER + 119);
+CONST MCIWNDM_GETTIMEFORMAT    = (WM_USER + 120);
+CONST MCIWNDM_VALIDATEMEDIA    = (WM_USER + 121);
+CONST MCIWNDM_PLAYFROM	 = (WM_USER + 122);
+CONST MCIWNDM_PLAYTO           = (WM_USER + 123);
+CONST MCIWNDM_GETFILENAME      = (WM_USER + 124);
+CONST MCIWNDM_GETDEVICE        = (WM_USER + 125);
+CONST MCIWNDM_GETPALETTE       = (WM_USER + 126);
+CONST MCIWNDM_SETPALETTE       = (WM_USER + 127);
+CONST MCIWNDM_GETERROR         = (WM_USER + 128);
+CONST MCIWNDM_SETTIMERS	 = (WM_USER + 129);
+CONST MCIWNDM_SETACTIVETIMER	 = (WM_USER + 130);
+CONST MCIWNDM_SETINACTIVETIMER  = (WM_USER + 131);
+CONST MCIWNDM_GETACTIVETIMER	 = (WM_USER + 132);
+CONST MCIWNDM_GETINACTIVETIMER  = (WM_USER + 133);
+CONST MCIWNDM_NEW		 = (WM_USER + 134);
+CONST MCIWNDM_CHANGESTYLES	 = (WM_USER + 135);
+CONST MCIWNDM_GETSTYLES	 = (WM_USER + 136);
+CONST MCIWNDM_GETALIAS	 = (WM_USER + 137);
+CONST MCIWNDM_RETURNSTRING	 = (WM_USER + 138);
+CONST MCIWNDM_PLAYREVERSE	 = (WM_USER + 139);
+CONST MCIWNDM_GET_SOURCE       = (WM_USER + 140);
+CONST MCIWNDM_PUT_SOURCE       = (WM_USER + 141);
+CONST MCIWNDM_GET_DEST         = (WM_USER + 142);
+CONST MCIWNDM_PUT_DEST         = (WM_USER + 143);
+CONST MCIWNDM_CAN_PLAY         = (WM_USER + 144);
+CONST MCIWNDM_CAN_WINDOW       = (WM_USER + 145);
+CONST MCIWNDM_CAN_RECORD       = (WM_USER + 146);
+CONST MCIWNDM_CAN_SAVE         = (WM_USER + 147);
+CONST MCIWNDM_CAN_EJECT        = (WM_USER + 148);
+CONST MCIWNDM_CAN_CONFIG       = (WM_USER + 149);
+CONST MCIWNDM_PALETTEKICK      = (WM_USER + 150);
+CONST MCIWNDM_OPENINTERFACE	 = (WM_USER + 151);
+
+ { Messages MCIWND will send to an app }
+ { !!! Use less messages and use a code instead to indicate the type of notify? }
+CONST MCIWNDM_NOTIFYMODE       = (WM_USER + 200); { wp = hwnd, lp = mode }
+CONST MCIWNDM_NOTIFYPOS	 = (WM_USER + 201); { wp = hwnd, lp = pos }
+CONST MCIWNDM_NOTIFYSIZE	 = (WM_USER + 202); { wp = hwnd }
+CONST MCIWNDM_NOTIFYMEDIA      = (WM_USER + 203); { wp = hwnd, lp = fn }
+CONST MCIWNDM_NOTIFYERROR      = (WM_USER + 205); { wp = hwnd, lp = error }
+
+ { special seek values for START and END }
+CONST MCIWND_START             =   -1;
+CONST MCIWND_END               =   -2;
+
+		{* MCI command message identifiers *}
+		CONST MCI_OPEN                        = $0803;
+		CONST MCI_CLOSE                       = $0804;
+		CONST MCI_PLAY                        = $0806;
+		CONST MCI_SEEK                        = $0807;
+		CONST MCI_STOP                        = $0808;
+		CONST MCI_PAUSE                       = $0809;
+		CONST MCI_STEP                        = $080E;
+		CONST MCI_RECORD                      = $080F;
+		CONST MCI_SAVE                        = $0813;
+		CONST MCI_CUT                         = $0851;
+		CONST MCI_COPY                        = $0852;
+		CONST MCI_PASTE                       = $0853;
+		CONST MCI_RESUME                      = $0855;
+		CONST MCI_DELETE                      = $0856;
+
+		{* return values for 'status mode' command *}
+		CONST MCI_MODE_NOT_READY       = (524);
+		CONST MCI_MODE_STOP            = (525);
+		CONST MCI_MODE_PLAY            = (526);
+		CONST MCI_MODE_RECORD          = (527);
+		CONST MCI_MODE_SEEK            = (528);
+		CONST MCI_MODE_PAUSE           = (529);
+		CONST MCI_MODE_OPEN            = (530);
+
+IMPLEMENTATION
+
+{-- MCIWnd -------------------------------------------------------------------}
+
+function    MCIWndCreateA(hwndParent: HWND; hInstance: HINST; dwStyle: DWORd; szFile: LPCSTR): HWND; cdecl; external VFWDLL;
+function    MCIWndCreateW(hwndParent: HWND; hInstance: HINST; dwStyle: DWORd; szFile: LPCWSTR): HWND; cdecl; external VFWDLL;
+
+function    MCIWndCreate(hwndParent: HWND; hInstance: HINST; dwStyle: DWORd; szFile: LPCSTR): HWND; cdecl;  external VFWDLL name 'MCIWndCreateA';
+
+function    MCIWndRegisterClass: BOOL; cdecl; external VFWDLL;
+
+function GetTrackPos(Wnd: HWnd): Integer;
+begin
+	GetTrackPos := SendMessage(Wnd, WM_USER, 0, 0);
+end;
+
+function SetTrackPos(Wnd: HWnd; Pos: Integer; Redraw: Bool): Integer;
+begin
+	SetTrackPos := SendMessage(Wnd, WM_USER + 5, 1, Pos);
+end;
+
+procedure SetTrackRange(Wnd: HWnd; MinPos, MaxPos: Integer; Redraw: Bool);
+begin
+	SendMessage(Wnd, WM_USER + 7, 0, MinPos);
+	SendMessage(Wnd, WM_USER + 8, 0, MaxPos);
+end;
+
+procedure GetTrackRange(Wnd: HWnd; var MinPos, MaxPos: Integer);
+begin
+	MinPos := SendMessage(Wnd, WM_USER + 1, 0, 0); {?????}
+	MaxPos := SendMessage(Wnd, WM_USER + 2, 0, 0); {?????}
+end;
+
+procedure SetTrackMark(Wnd: HWnd; MinPos, MaxPos: Integer; Redraw: Bool);
+begin
+	SendMessage(Wnd, WM_USER + 11, 0, MinPos);
+	SendMessage(Wnd, WM_USER + 12, 0, Maxpos);
+end;
+
+procedure GetTrackMark(Wnd: HWnd; var MinPos, MaxPos: Integer);
+begin
+	MinPos := SendMessage(Wnd, WM_USER + 3, 0, 0); {?????}
+	MaxPos := SendMessage(Wnd, WM_USER + 4, 0, 0); {?????}
+end;
+
+end.

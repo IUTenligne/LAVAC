@@ -1,0 +1,162 @@
+inherited EvaluateDlg: TEvaluateDlg
+  Left = 470
+  Height = 290
+  Top = 393
+  Width = 400
+  ActiveControl = cmbExpression
+  BorderStyle = bsSizeToolWin
+  Caption = 'Evaluate/Modify'
+  ClientHeight = 290
+  ClientWidth = 400
+  Constraints.MinHeight = 200
+  Constraints.MinWidth = 300
+  KeyPreview = True
+  OnClose = FormClose
+  OnKeyDown = FormKeyDown
+  object Label1: TLabel[0]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ToolBar1
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 14
+    Top = 47
+    Width = 72
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 3
+    Caption = '&Expression:'
+    FocusControl = cmbExpression
+    ParentColor = False
+  end
+  object Label2: TLabel[1]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = cmbExpression
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 14
+    Top = 93
+    Width = 47
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = '&Result:'
+    FocusControl = txtResult
+    ParentColor = False
+  end
+  object lblNewValue: TLabel[2]
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = cmbNewValue
+    Left = 6
+    Height = 14
+    Top = 244
+    Width = 69
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 6
+    BorderSpacing.Bottom = 3
+    Caption = '&New value:'
+    FocusControl = cmbNewValue
+    ParentColor = False
+  end
+  object ToolBar1: TToolBar[3]
+    Left = 0
+    Height = 44
+    Top = 0
+    Width = 400
+    AutoSize = True
+    ButtonHeight = 40
+    ButtonWidth = 50
+    Caption = 'ToolBar1'
+    EdgeBorders = [ebTop, ebBottom]
+    Indent = 2
+    ShowCaptions = True
+    TabOrder = 0
+    TabStop = True
+    object tbInspect: TToolButton
+      Left = 156
+      Top = 2
+      Caption = '&Inspect'
+      Enabled = False
+      ImageIndex = 3
+      OnClick = tbInspectClick
+    end
+    object tbWatch: TToolButton
+      Left = 106
+      Top = 2
+      AllowAllUp = True
+      Caption = '&Watch'
+      Enabled = False
+      ImageIndex = 2
+      OnClick = tbWatchClick
+    end
+    object tbModify: TToolButton
+      Left = 56
+      Top = 2
+      Caption = '&Modify'
+      Enabled = False
+      ImageIndex = 1
+      OnClick = tbModifyClick
+    end
+    object tbEvaluate: TToolButton
+      Left = 2
+      Top = 2
+      Caption = 'E&valuate'
+      Enabled = False
+      ImageIndex = 0
+      OnClick = tbEvaluateClick
+    end
+  end
+  object cmbExpression: TComboBox[4]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 6
+    Height = 23
+    Top = 64
+    Width = 388
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 3
+    BorderSpacing.Right = 6
+    ItemHeight = 0
+    OnChange = cmbExpressionChange
+    OnKeyDown = cmbExpressionKeyDown
+    TabOrder = 2
+  end
+  object txtResult: TMemo[5]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = lblNewValue
+    Left = 6
+    Height = 128
+    Top = 110
+    Width = 388
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 3
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    ScrollBars = ssAutoVertical
+    TabOrder = 1
+  end
+  object cmbNewValue: TComboBox[6]
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 6
+    Height = 23
+    Top = 261
+    Width = 388
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    ItemHeight = 0
+    OnKeyDown = cmbNewValueKeyDown
+    TabOrder = 3
+  end
+end

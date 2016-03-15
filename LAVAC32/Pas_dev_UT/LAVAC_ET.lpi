@@ -1,0 +1,739 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="9"/>
+    <PathDelim Value="\"/>
+    <General>
+      <Flags>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+      </Flags>
+      <MainUnit Value="0"/>
+      <Title Value="LAVAC_ET"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <Icon Value="0"/>
+      <ActiveWindowIndexAtStart Value="0"/>
+    </General>
+    <i18n>
+      <EnableI18N LFM="False"/>
+    </i18n>
+    <VersionInfo>
+      <StringTable ProductVersion=""/>
+    </VersionInfo>
+    <BuildModes Count="1" Active="Default">
+      <Item1 Name="Default" Default="True"/>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+      </local>
+    </RunParams>
+    <Units Count="45">
+      <Unit0>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="LAVAC_ET"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="0"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="34"/>
+        <CursorPos X="59" Y="57"/>
+        <UsageCount Value="262"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="LAVAC_CR.PAS"/>
+        <UnitName Value="LAVAC_CR"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1109"/>
+        <CursorPos X="44" Y="1009"/>
+        <UsageCount Value="95"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="MMDIADIR.PAS"/>
+        <UnitName Value="MMDIADIR"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="108" Y="33"/>
+        <UsageCount Value="95"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="MMSTRING.PAS"/>
+        <UnitName Value="MMSTRING"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="43"/>
+        <CursorPos X="28" Y="1"/>
+        <UsageCount Value="96"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="MMDIB.PAS"/>
+        <UnitName Value="MMDIB"/>
+        <EditorIndex Value="5"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="17" Y="1"/>
+        <UsageCount Value="111"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="MMLAVAC.PAS"/>
+        <UnitName Value="MMLAVAC"/>
+        <EditorIndex Value="7"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="9724"/>
+        <CursorPos X="12" Y="9732"/>
+        <UsageCount Value="127"/>
+        <Loaded Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="RICHEDIT.PAS"/>
+        <UnitName Value="RICHEDIT"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="154"/>
+        <CursorPos X="119" Y="163"/>
+        <UsageCount Value="117"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\rtl\win\wininc\func.inc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="365"/>
+        <CursorPos X="10" Y="392"/>
+        <UsageCount Value="9"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\rtl\inc\systemh.inc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="66"/>
+        <CursorPos X="33" Y="93"/>
+        <UsageCount Value="95"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="CTL3D.PAS"/>
+        <UnitName Value="CTL3D"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="9"/>
+        <CursorPos X="3" Y="28"/>
+        <UsageCount Value="109"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="MCIWND.PAS"/>
+        <UnitName Value="MCIWND"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="32" Y="310"/>
+        <UsageCount Value="107"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="VFW.PAS"/>
+        <UnitName Value="VFW"/>
+        <EditorIndex Value="9"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="4100"/>
+        <CursorPos X="35" Y="4139"/>
+        <UsageCount Value="113"/>
+        <Loaded Value="True"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="MMLIC.PAS"/>
+        <UnitName Value="MMLIC"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="46" Y="14"/>
+        <UsageCount Value="107"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="LICDATA.PAS"/>
+        <UnitName Value="licdata"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="13" Y="5"/>
+        <UsageCount Value="107"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="LICENCE.PAS"/>
+        <UnitName Value="Licence"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="756"/>
+        <CursorPos X="63" Y="774"/>
+        <UsageCount Value="112"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="MULTISEL.PAS"/>
+        <UnitName Value="MultiSel"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="14"/>
+        <CursorPos X="26" Y="31"/>
+        <UsageCount Value="7"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="MMMCI.PAS"/>
+        <UnitName Value="MMMCI"/>
+        <EditorIndex Value="8"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="3274"/>
+        <CursorPos X="53" Y="3299"/>
+        <UsageCount Value="124"/>
+        <Loaded Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="MMWAVE.PAS"/>
+        <UnitName Value="MMWAVE"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1512"/>
+        <CursorPos X="57" Y="1536"/>
+        <UsageCount Value="118"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\packages\winunits-base\src\mmsystem.pp"/>
+        <UnitName Value="mmsystem"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="49" Y="2430"/>
+        <UsageCount Value="75"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\rtl\win\wininc\base.inc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="2" Y="48"/>
+        <UsageCount Value="96"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\rtl\win\wininc\struct.inc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="618"/>
+        <CursorPos X="28" Y="629"/>
+        <UsageCount Value="95"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\rtl\win\wininc\defines.inc"/>
+        <EditorIndex Value="3"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="726"/>
+        <CursorPos X="35" Y="736"/>
+        <UsageCount Value="101"/>
+        <Loaded Value="True"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\rtl\objpas\sysutils\filutilh.inc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="21" Y="21"/>
+        <UsageCount Value="10"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\rtl\inc\dosh.inc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="55"/>
+        <CursorPos X="3" Y="85"/>
+        <UsageCount Value="95"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\packages\winunits-base\src\commdlg.pp"/>
+        <UnitName Value="commdlg"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="275"/>
+        <CursorPos X="31" Y="304"/>
+        <UsageCount Value="95"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="MMDEBUG.PAS"/>
+        <UnitName Value="MMDEBUG"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="40" Y="102"/>
+        <UsageCount Value="110"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="LZEXPAND.PAS"/>
+        <UnitName Value="LZExpand"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="7"/>
+        <CursorPos X="45" Y="44"/>
+        <UsageCount Value="96"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="MMDRWDIB.PAS"/>
+        <UnitName Value="MMDRWDIB"/>
+        <EditorIndex Value="6"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="135"/>
+        <CursorPos X="33" Y="152"/>
+        <UsageCount Value="102"/>
+        <Loaded Value="True"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="LAVACINI.PAS"/>
+        <UnitName Value="LAVACINI"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="171"/>
+        <CursorPos X="19" Y="29"/>
+        <UsageCount Value="96"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="MMHELPER.PAS"/>
+        <UnitName Value="mmhelper"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1088"/>
+        <CursorPos X="52" Y="11"/>
+        <UsageCount Value="95"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="UQCMWIN.PAS"/>
+        <UnitName Value="UQcmWin"/>
+        <EditorIndex Value="4"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1075"/>
+        <CursorPos X="62" Y="1093"/>
+        <UsageCount Value="100"/>
+        <Loaded Value="True"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="..\Res_dev\Lavacnt32.rc"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="96"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="unit1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit1"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="13" Y="1"/>
+        <UsageCount Value="200"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="C:\lazarus\fpc\2.6.0\source\rtl\win\wininc\messages.inc"/>
+        <EditorIndex Value="2"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="99"/>
+        <CursorPos X="6" Y="122"/>
+        <UsageCount Value="99"/>
+        <Loaded Value="True"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="C:\BP7\RTL\OWL\BUILDOWL.PAS"/>
+        <UnitName Value="Build"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="34"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="E:\DEVLAVAC.402\PAS_DEV\_DEBUG.PAS"/>
+        <UnitName Value="_debug"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="1" Y="1"/>
+        <UsageCount Value="1"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="E:\DEVLAVAC.402\PAS_DEV\LAVAC_UT.PAS"/>
+        <UnitName Value="LAVAC_MK"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="3147"/>
+        <CursorPos X="13" Y="3166"/>
+        <UsageCount Value="33"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="WINCONST.PAS"/>
+        <UnitName Value="winconst"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="67" Y="38"/>
+        <UsageCount Value="37"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="C:\LAVAC\LECONS\L0000006\M0000000 - Copie.CMD"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="89" Y="3"/>
+        <UsageCount Value="7"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="C:\LAVAC\LECONS\L0000001\M0000000.CMD"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="56" Y="1"/>
+        <UsageCount Value="7"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="C:\LAVAC\LECONS\L0000007\M0000022.CMD"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="56" Y="1"/>
+        <UsageCount Value="7"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="..\xml\libxml2.pas"/>
+        <UnitName Value="libxml2"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="71" Y="8"/>
+        <UsageCount Value="7"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="C:\LAVAC\xml\lessons.xml.txt"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="381367"/>
+        <CursorPos X="46" Y="35"/>
+        <UsageCount Value="7"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="xmlparser.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="xmlparser"/>
+        <EditorIndex Value="10"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="88" Y="14"/>
+        <UsageCount Value="50"/>
+        <Loaded Value="True"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="permonitorapi.pas"/>
+        <UnitName Value="PerMonitorApi"/>
+        <EditorIndex Value="1"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="1"/>
+        <CursorPos X="19" Y="1"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit44>
+    </Units>
+    <JumpHistory Count="30" HistoryIndex="29">
+      <Position1>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1286" Column="42" TopLine="1247"/>
+      </Position1>
+      <Position2>
+        <Filename Value="MMMCI.PAS"/>
+        <Caret Line="8" Column="68" TopLine="1"/>
+      </Position2>
+      <Position3>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="16" Column="36" TopLine="1"/>
+      </Position3>
+      <Position4>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="888" Column="58" TopLine="862"/>
+      </Position4>
+      <Position5>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="4231" Column="26" TopLine="4192"/>
+      </Position5>
+      <Position6>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="8946" Column="33" TopLine="8940"/>
+      </Position6>
+      <Position7>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
+      </Position7>
+      <Position8>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="594" Column="42" TopLine="420"/>
+      </Position8>
+      <Position9>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
+      </Position9>
+      <Position10>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1560" Column="114" TopLine="1554"/>
+      </Position10>
+      <Position11>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="15" Column="41" TopLine="1"/>
+      </Position11>
+      <Position12>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1260" Column="42" TopLine="1221"/>
+      </Position12>
+      <Position13>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1295" Column="42" TopLine="1256"/>
+      </Position13>
+      <Position14>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="9" Column="65" TopLine="1"/>
+      </Position14>
+      <Position15>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="424" Column="37" TopLine="385"/>
+      </Position15>
+      <Position16>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="893" Column="36" TopLine="854"/>
+      </Position16>
+      <Position17>
+        <Filename Value="MMMCI.PAS"/>
+        <Caret Line="12" Column="64" TopLine="1"/>
+      </Position17>
+      <Position18>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="889" Column="29" TopLine="868"/>
+      </Position18>
+      <Position19>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="894" Column="1" TopLine="880"/>
+      </Position19>
+      <Position20>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
+      </Position20>
+      <Position21>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1256" Column="42" TopLine="1217"/>
+      </Position21>
+      <Position22>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1291" Column="42" TopLine="1252"/>
+      </Position22>
+      <Position23>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="2075" Column="7" TopLine="2055"/>
+      </Position23>
+      <Position24>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="10" Column="97" TopLine="1"/>
+      </Position24>
+      <Position25>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="894" Column="39" TopLine="861"/>
+      </Position25>
+      <Position26>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1" Column="1" TopLine="1"/>
+      </Position26>
+      <Position27>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="894" Column="39" TopLine="855"/>
+      </Position27>
+      <Position28>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="895" Column="57" TopLine="856"/>
+      </Position28>
+      <Position29>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="896" Column="32" TopLine="857"/>
+      </Position29>
+      <Position30>
+        <Filename Value="LAVAC_ET.PAS"/>
+        <Caret Line="1208" Column="41" TopLine="1193"/>
+      </Position30>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="9"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="bin\LAVAC_ET.exe"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <CodeGeneration>
+      <TargetCPU Value="i386"/>
+      <TargetOS Value="win32"/>
+      <Optimizations>
+        <OptimizationLevel Value="0"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="True"/>
+      </Debugging>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <Verbosity>
+        <ShoLineNum Value="True"/>
+        <ShowAllProcsOnError Value="True"/>
+      </Verbosity>
+      <CompilerMessages>
+        <UseMsgFile Value="True"/>
+      </CompilerMessages>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <BreakPoints Count="36">
+      <Item1>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="162"/>
+      </Item1>
+      <Item2>
+        <Source Value="LAVAC_CR.PAS"/>
+        <Line Value="153"/>
+      </Item2>
+      <Item3>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="3500"/>
+      </Item3>
+      <Item4>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="3725"/>
+      </Item4>
+      <Item5>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="4092"/>
+      </Item5>
+      <Item6>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="5106"/>
+      </Item6>
+      <Item7>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="5262"/>
+      </Item7>
+      <Item8>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="5590"/>
+      </Item8>
+      <Item9>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="5771"/>
+      </Item9>
+      <Item10>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="5989"/>
+      </Item10>
+      <Item11>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="6145"/>
+      </Item11>
+      <Item12>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="6396"/>
+      </Item12>
+      <Item13>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="6852"/>
+      </Item13>
+      <Item14>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="7607"/>
+      </Item14>
+      <Item15>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="7676"/>
+      </Item15>
+      <Item16>
+        <Source Value="MMLAVAC.PAS"/>
+        <Line Value="1"/>
+      </Item16>
+      <Item17>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="685"/>
+      </Item17>
+      <Item18>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="760"/>
+      </Item18>
+      <Item19>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="2850"/>
+      </Item19>
+      <Item20>
+        <Source Value="MMWAVE.PAS"/>
+        <Line Value="1047"/>
+      </Item20>
+      <Item21>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="8815"/>
+      </Item21>
+      <Item22>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="8833"/>
+      </Item22>
+      <Item23>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="8852"/>
+      </Item23>
+      <Item24>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="3562"/>
+      </Item24>
+      <Item25>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="1003"/>
+      </Item25>
+      <Item26>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="1594"/>
+      </Item26>
+      <Item27>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="3858"/>
+      </Item27>
+      <Item28>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="547"/>
+      </Item28>
+      <Item29>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="2780"/>
+      </Item29>
+      <Item30>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="6627"/>
+      </Item30>
+      <Item31>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="2751"/>
+      </Item31>
+      <Item32>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="3718"/>
+      </Item32>
+      <Item33>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="3841"/>
+      </Item33>
+      <Item34>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="3854"/>
+      </Item34>
+      <Item35>
+        <Source Value="MMMCI.PAS"/>
+        <Line Value="3870"/>
+      </Item35>
+      <Item36>
+        <Source Value="LAVAC_ET.PAS"/>
+        <Line Value="4715"/>
+      </Item36>
+    </BreakPoints>
+    <Exceptions Count="3">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

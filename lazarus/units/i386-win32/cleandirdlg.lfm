@@ -1,0 +1,168 @@
+object CleanDirectoryDialog: TCleanDirectoryDialog
+  Left = 307
+  Height = 309
+  Top = 209
+  Width = 450
+  AutoSize = True
+  BorderIcons = [biSystemMenu]
+  Caption = 'Clean Directory'
+  ClientHeight = 309
+  ClientWidth = 450
+  OnCreate = CleanDirectoryDialogCreate
+  Position = poScreenCenter
+  LCLVersion = '0.9.29'
+  object DirGroupbox: TGroupBox
+    Left = 6
+    Height = 74
+    Top = 6
+    Width = 438
+    Align = alTop
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'Directory'
+    ClientHeight = 56
+    ClientWidth = 434
+    TabOrder = 0
+    object DirCombobox: TComboBox
+      AnchorSideRight.Control = DirBrowseButton
+      Left = 6
+      Height = 21
+      Top = 6
+      Width = 394
+      Anchors = [akTop, akLeft, akRight]
+      AutoCompleteText = [cbactSearchAscending]
+      BorderSpacing.Around = 6
+      ItemHeight = 13
+      TabOrder = 0
+      Text = 'DirCombobox'
+    end
+    object SubDirsCheckbox: TCheckBox
+      AnchorSideTop.Control = DirCombobox
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 17
+      Top = 33
+      Width = 422
+      Align = alBottom
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Around = 6
+      Caption = 'Clean sub directories'
+      TabOrder = 1
+    end
+    object DirBrowseButton: TButton
+      AnchorSideLeft.Control = DirCombobox
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = DirCombobox
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = DirGroupbox
+      AnchorSideRight.Side = asrBottom
+      Left = 406
+      Height = 21
+      Top = 6
+      Width = 23
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 5
+      Caption = '...'
+      OnClick = DirBrowseButtonClick
+      TabOrder = 2
+    end
+  end
+  object RemoveGroupbox: TGroupBox
+    Left = 6
+    Height = 74
+    Top = 86
+    Width = 438
+    Align = alTop
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'Remove files matching filter:'
+    ClientHeight = 56
+    ClientWidth = 434
+    TabOrder = 1
+    object RemoveCombobox: TComboBox
+      Left = 6
+      Height = 21
+      Top = 6
+      Width = 422
+      Align = alTop
+      AutoCompleteText = [cbactSearchAscending]
+      BorderSpacing.Around = 6
+      ItemHeight = 13
+      TabOrder = 0
+      Text = 'RemoveCombobox'
+    end
+    object SimpleSyntaxRemoveCheckbox: TCheckBox
+      Left = 6
+      Height = 17
+      Top = 33
+      Width = 422
+      Align = alTop
+      BorderSpacing.Around = 6
+      Caption = 'Simple syntax (e.g. * instead of .*)'
+      TabOrder = 1
+    end
+  end
+  object KeepGroupbox: TGroupBox
+    Left = 6
+    Height = 105
+    Top = 166
+    Width = 438
+    Align = alClient
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'Keep files matching filter:'
+    ClientHeight = 87
+    ClientWidth = 434
+    TabOrder = 2
+    object KeepCombobox: TComboBox
+      Left = 6
+      Height = 21
+      Top = 6
+      Width = 422
+      Align = alTop
+      AutoCompleteText = [cbactSearchAscending]
+      BorderSpacing.Around = 6
+      ItemHeight = 13
+      TabOrder = 0
+      Text = 'KeepCombobox'
+    end
+    object SimpleSyntaxKeepCheckbox: TCheckBox
+      Left = 6
+      Height = 17
+      Top = 33
+      Width = 422
+      Align = alTop
+      BorderSpacing.Around = 6
+      Caption = 'Simple syntax (e.g. * instead of .*)'
+      TabOrder = 1
+    end
+    object KeepTextFilesCheckbox: TCheckBox
+      Left = 6
+      Height = 17
+      Top = 56
+      Width = 422
+      Align = alTop
+      BorderSpacing.Around = 6
+      Caption = 'Keep Text Files'
+      TabOrder = 2
+    end
+  end
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 26
+    Top = 277
+    Width = 438
+    OKButton.Name = 'OKButton'
+    OKButton.Caption = '&ОК'
+    HelpButton.Name = 'HelpButton'
+    HelpButton.Caption = '&Справка'
+    CloseButton.Name = 'CloseButton'
+    CloseButton.Caption = '&Закрыть'
+    CloseButton.Enabled = False
+    CancelButton.Name = 'CancelButton'
+    CancelButton.Caption = 'Отмена'
+    TabOrder = 3
+    ShowButtons = [pbOK, pbCancel, pbHelp]
+    ShowBevel = False
+  end
+end

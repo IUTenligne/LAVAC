@@ -1,0 +1,205 @@
+inherited CodeObserverOptionsFrame: TCodeObserverOptionsFrame
+  Height = 428
+  Width = 531
+  ClientHeight = 428
+  ClientWidth = 531
+  TabOrder = 0
+  DesignLeft = 220
+  DesignTop = 220
+  object CodeObsIgnoreConstantsLabel: TLabel[0]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = CodeObsCategoriesCheckGroup
+    AnchorSideTop.Side = asrBottom
+    Left = 0
+    Height = 16
+    Top = 196
+    Width = 165
+    BorderSpacing.Top = 6
+    Caption = 'CodeObsIgnoreConstantsLabel'
+    ParentColor = False
+  end
+  object COIgnoreConstInFuncsLabel: TLabel[1]
+    AnchorSideLeft.Control = CodeObsLeftPanel
+    AnchorSideTop.Control = CodeObsCategoriesCheckGroup
+    AnchorSideTop.Side = asrBottom
+    Left = 269
+    Height = 16
+    Top = 196
+    Width = 152
+    BorderSpacing.Top = 6
+    Caption = 'COIgnoreConstInFuncsLabel'
+    ParentColor = False
+  end
+  object Label1: TLabel[2]
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 265
+    Height = 1
+    Top = 40
+    Width = 1
+    ParentColor = False
+  end
+  object CodeObsCategoriesCheckGroup: TCheckGroup[3]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Label1
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 190
+    Top = 0
+    Width = 262
+    Anchors = [akTop, akLeft, akRight]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Right = 3
+    Caption = 'CodeObsCategoriesCheckGroup'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    Constraints.MinHeight = 190
+    OnItemClick = CodeObsCategoriesCheckGroupItemClick
+    TabOrder = 0
+  end
+  object CodeObsIgnoreConstantsMemo: TMemo[4]
+    AnchorSideLeft.Control = CodeObsIgnoreConstantsLabel
+    AnchorSideTop.Control = CodeObsIgnoreConstantsLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = CodeObsCategoriesCheckGroup
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 213
+    Top = 215
+    Width = 262
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 3
+    Lines.Strings = (
+      'CodeObsIgnoreConstantsMemo'
+    )
+    TabOrder = 1
+  end
+  object CodeObsLeftPanel: TPanel[5]
+    AnchorSideLeft.Control = Label1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    Left = 269
+    Height = 169
+    Top = 0
+    Width = 177
+    AutoSize = True
+    BorderSpacing.Left = 3
+    BevelOuter = bvNone
+    ClientHeight = 169
+    ClientWidth = 177
+    TabOrder = 2
+    object NestedProcCountLabel: TLabel
+      AnchorSideLeft.Control = CodeObsLeftPanel
+      AnchorSideTop.Control = LongParamListCountSpinEdit
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 16
+      Top = 102
+      Width = 123
+      BorderSpacing.Top = 6
+      Caption = 'NestedProcCountLabel'
+      ParentColor = False
+    end
+    object LongParamListCountLabel: TLabel
+      AnchorSideLeft.Control = CodeObsLeftPanel
+      AnchorSideTop.Control = LongProcLineCountSpinEdit
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 16
+      Top = 54
+      Width = 141
+      BorderSpacing.Top = 6
+      Caption = 'LongParamListCountLabel'
+      ParentColor = False
+    end
+    object LongProcLineCountLabel: TLabel
+      AnchorSideLeft.Control = CodeObsLeftPanel
+      AnchorSideTop.Control = CodeObsLeftPanel
+      Left = 0
+      Height = 16
+      Top = 6
+      Width = 135
+      BorderSpacing.Top = 6
+      Caption = 'LongProcLineCountLabel'
+      ParentColor = False
+    end
+    object CodeObsCharConstCheckBox: TCheckBox
+      AnchorSideLeft.Control = CodeObsLeftPanel
+      AnchorSideTop.Control = NestedProcCountSpinEdit
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 19
+      Top = 150
+      Width = 177
+      BorderSpacing.Top = 6
+      Caption = 'CodeObsCharConstCheckBox'
+      TabOrder = 0
+    end
+    object NestedProcCountSpinEdit: TSpinEdit
+      AnchorSideLeft.Control = CodeObsCharConstCheckBox
+      AnchorSideTop.Control = NestedProcCountLabel
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 121
+      Width = 60
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 3
+      TabOrder = 1
+    end
+    object LongParamListCountSpinEdit: TSpinEdit
+      AnchorSideLeft.Control = CodeObsLeftPanel
+      AnchorSideTop.Control = LongParamListCountLabel
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 73
+      Width = 60
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 3
+      TabOrder = 2
+    end
+    object LongProcLineCountSpinEdit: TSpinEdit
+      AnchorSideLeft.Control = CodeObsLeftPanel
+      AnchorSideTop.Control = LongProcLineCountLabel
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 25
+      Width = 60
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 3
+      TabOrder = 3
+    end
+  end
+  object COIgnoreConstInFuncsMemo: TMemo[6]
+    AnchorSideLeft.Control = CodeObsLeftPanel
+    AnchorSideTop.Control = COIgnoreConstInFuncsLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 269
+    Height = 213
+    Top = 215
+    Width = 262
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 3
+    Lines.Strings = (
+      'COIgnoreConstInFuncsMemo'
+    )
+    TabOrder = 3
+  end
+end

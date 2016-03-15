@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Compiler Value="C:\lazarus\fpc\2.6.0\bin\i386-win32\fpc.exe" Date="1080972742"/>
+  <Params Value=" -MObjFPC -Scghi -Twin32 -Pi386 -Pi386 -g -gl -WG -vewnhilb -l -FiC:\LAVAC32\Pas_dev\lib\i386-win32 -FuC:\LAVAC32\Pas_dev\ -Fu. -FUC:\LAVAC32\Pas_dev\lib\i386-win32\ -FEC:\LAVAC32\Pas_dev\bin\ -oLAVAC_ET.exe LAVAC_ET.PAS"/>
+</CONFIG>

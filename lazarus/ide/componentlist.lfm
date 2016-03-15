@@ -1,0 +1,173 @@
+object ComponentListForm: TComponentListForm
+  Left = 542
+  Height = 556
+  Top = 269
+  Width = 224
+  ActiveControl = Panel6
+  Caption = 'Components'
+  ClientHeight = 556
+  ClientWidth = 224
+  KeyPreview = True
+  OnKeyDown = FormKeyDown
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '0.9.29'
+  object PageControl: TPageControl
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel3
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ButtonPanel
+    Left = 6
+    Height = 471
+    Top = 39
+    Width = 212
+    ActivePage = TabSheetListBox
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 6
+    TabIndex = 0
+    TabOrder = 0
+    object TabSheetListBox: TTabSheet
+      Caption = 'List'
+      ClientHeight = 445
+      ClientWidth = 204
+      object Panel7: TPanel
+        Left = 0
+        Height = 445
+        Top = 0
+        Width = 204
+        Align = alClient
+        BevelOuter = bvNone
+        BorderWidth = 5
+        ClientHeight = 445
+        ClientWidth = 204
+        TabOrder = 0
+        object ListboxComponents: TListBox
+          Left = 5
+          Height = 435
+          Top = 5
+          Width = 194
+          Align = alClient
+          ItemHeight = 0
+          OnDblClick = ListboxComponentsDblClick
+          OnKeyDown = ListboxComponentsKeyDown
+          Sorted = True
+          TabOrder = 0
+        end
+      end
+    end
+    object TabSheetPaletteTree: TTabSheet
+      Caption = 'Palette'
+      ClientHeight = 445
+      ClientWidth = 204
+      object Panel5: TPanel
+        Left = 0
+        Height = 445
+        Top = 0
+        Width = 204
+        Align = alClient
+        BevelOuter = bvNone
+        BorderWidth = 5
+        ClientHeight = 445
+        ClientWidth = 204
+        TabOrder = 0
+        object TreePallette: TTreeView
+          Left = 5
+          Height = 435
+          Top = 5
+          Width = 194
+          Align = alClient
+          DefaultItemHeight = 15
+          ReadOnly = True
+          ShowLines = False
+          TabOrder = 0
+          OnDblClick = TreePalletteDblClick
+          OnKeyDown = TreePalletteKeyDown
+          Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowRoot, tvoToolTips, tvoThemedDraw, tvoNoDoubleClickExpand]
+        end
+      end
+    end
+    object TabSheetInheritance: TTabSheet
+      Caption = 'Inheritance'
+      ClientHeight = 445
+      ClientWidth = 204
+      object Panel6: TPanel
+        Left = 0
+        Height = 445
+        Top = 0
+        Width = 204
+        Align = alClient
+        BevelOuter = bvNone
+        BorderWidth = 5
+        ClientHeight = 445
+        ClientWidth = 204
+        TabOrder = 0
+        object TreeInheritance: TTreeView
+          Left = 5
+          Height = 435
+          Top = 5
+          Width = 194
+          Align = alClient
+          DefaultItemHeight = 15
+          ReadOnly = True
+          TabOrder = 0
+          OnDblClick = TreeInheritanceDblClick
+          OnKeyDown = TreeInheritanceKeyDown
+          Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw, tvoNoDoubleClickExpand]
+        end
+      end
+    end
+  end
+  object Panel3: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 33
+    Top = 0
+    Width = 224
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BevelOuter = bvNone
+    BorderWidth = 8
+    ClientHeight = 33
+    ClientWidth = 224
+    TabOrder = 1
+    object LabelSearch: TLabel
+      AnchorSideLeft.Control = Panel3
+      AnchorSideTop.Control = Panel3
+      Left = 6
+      Height = 14
+      Top = 6
+      Width = 59
+      BorderSpacing.Around = 6
+      Caption = 'LabelSearch'
+      ParentColor = False
+    end
+    object PatternEdit: TEdit
+      AnchorSideLeft.Control = LabelSearch
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Panel3
+      AnchorSideRight.Control = Panel3
+      AnchorSideRight.Side = asrBottom
+      Left = 71
+      Height = 21
+      Top = 6
+      Width = 147
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Around = 6
+      OnChange = PatternEditChange
+      TabOrder = 0
+    end
+  end
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 34
+    Top = 516
+    Width = 212
+    TabOrder = 2
+    ShowButtons = [pbClose]
+  end
+end

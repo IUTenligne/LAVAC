@@ -1,0 +1,336 @@
+{************************************************}
+{                                                }
+{   Unité MMDib                                  }
+{                                                }
+{   Projet LAVAC                                 }
+{                                                }
+{  (c) 1992-94 C Puissance 3 Informatique        }
+{              MORGAN MULTIMEDIA                 }
+{                                                }
+{  par Guillaume de Bailliencourt                }
+{                                                }
+{  02/02/1994                                    }
+{                                                }
+{************************************************}
+
+unit MMDIB;
+
+{ This unit augments the HBitmap type by implementing load and store of the
+  bitmap to a file.
+
+  Presently operates only on Windows format for bitmaps.
+}
+{$S-,R-}
+
+interface
+
+uses Windows
+		 {$IFDEF _DEBUG}
+		 ,MMDEBUG
+		 {$ENDIF};
+
+{ Read a bitmap from file (full pathname).
+  Returns 0 if error or HBitmap.
+}
+const
+	MaxIO = 65534;	{ Max number bytes handled in single IO operation }
+	OneIO = 32768;  { Number bytes handled per huge IO operation }
+	BMType = $4D42;  { = 'BM' }
+
+type
+	PtrRec = record
+		Lo, Hi: Word
+	end;
+
+	IOFunction = function(FP: integer; Buf: PChar; Size: Integer): Word;
+
+//function HugeIO(IOFunc: IOFunction; F: Integer; P: Pointer; Size: Longint) : Word;
+function _LFileSize(F : integer) : longint;
+
+function LoadBitmapFile(FileName: PChar;	var hLoadDIB: THandle): Bool;
+
+function LoadBitmapResource(hInst : THandle;
+														ResourceName: PChar;
+												var hLoadDIB: THandle;
+												var pLoadDIB: PBitmapInfo;
+												var pLoadBits : Pointer;
+												var hLoadPal : THandle;
+												var pLoadPal : PLOGPALETTE;
+												var LoadPalette : HPalette
+												): Bool;
+
+function ReleaseBitmap(var hLoadDIB: THandle): Bool;
+function ReleaseBitmapRessource(var hLoadDIB: THandle; var hLoadPal : HPalette): Bool;
+
+{ Write a bitmap to file (full pathname).
+	Returns 0 if error else non-zero.
+}
+function StoreBitmapFile(FileName: PChar; HBM: HBitmap): Integer;
+
+implementation
+
+function _LFileSize(F : integer) : longint;
+{- an equivalent to TP's FileSize() function }
+var                                                
+  CurPos : longint;                                
+begin                                               
+	CurPos := _llseek(F,0,1);
+	_LFileSize := _llseek(F,0,2);
+	_llseek(F,CurPos,0);
+end;
+
+{ Read a bitmap from file (full pathname).
+	Returns 0 if error or HBitmap.
+}
+function LoadBitmapFile(FileName: PChar;	var hLoadDIB: THandle): Bool;
+var
+	F: Integer;			{ File Handle for Windows file functions }
+	Header: TBitmapFileHeader;    { Bitmap file header }
+	i, palSize, Size, N: Longint;	  { Size of bitmap, Size of color spec }
+	TPE : TPaletteEntry;
+	pLoadDIB: PBitmapInfo;
+
+begin
+
+	LoadBitmapFile := FALSE;
+	F := _LOpen(FileName, of_Read);
+	if F = -1 then Exit;
+
+	{ read in the Bitmap file header }
+	if (_LRead(F, @Header, SizeOf(Header)) <> SizeOf(Header)) or
+		(Header.bfType <> BMType) then
+	begin
+		_LClose(F);
+		Exit;
+	end;
+
+	{ read the rest of the file }
+  Size := _LFileSize(F) - SizeOf(TBitmapFileHeader);
+	ReleaseBitmap(hLoadDIB);
+	hLoadDIB := GlobalAlloc(gmem_Moveable+gmem_Share, Size);	{ Allocate the memory }
+	if (hLoadDIB = 0) then
+  begin
+		_LClose(F);
+		ReleaseBitmap(hLoadDIB);
+		Exit;
+	end;
+
+	pLoadDIB := GlobalLock(hLoadDIB);				{ Lock it down }
+
+	if (_LRead( F, pLoadDIB, Size) <> 0) and
+		( pLoadDIB^.bmiHeader.biSize = SizeOf(TBitmapInfoHeader)) then	begin
+		LoadBitmapFile := TRUE;
+  end else begin
+		ReleaseBitmap(hLoadDIB);
+	end;
+
+	_LClose(F);
+end;
+
+function LoadBitmapResource(hInst : THandle;
+														ResourceName: PChar;
+												var hLoadDIB: THandle;
+												var pLoadDIB: PBitmapInfo;
+												var pLoadBits : Pointer;
+												var hLoadPal : THandle;
+												var pLoadPal : PLOGPALETTE;
+												var LoadPalette : HPalette
+												): Bool;
+var
+	F: Integer;			{ File Handle for Windows file functions }
+	i, palSize, Size, N: Longint;	  { Size of bitmap, Size of color spec }
+	TPE : TPaletteEntry;
+	hRes : THandle;
+
+begin
+
+	LoadBitmapResource := FALSE;
+	hRes := FindResource(hInst, ResourceName, RT_BITMAP);
+        {
+	F := AccessResource(hInst, hRes);
+	if F = -1 then begin
+		Exit;
+	end;         }
+
+	{ Release Old Bitmap }
+	ReleaseBitmapRessource(hLoadDIB,hLoadPal);
+	{ read the rest of the file }
+	Size := SizeOfResource(hInst, hRes);
+	{ Allocate the memory }
+	hLoadPal := GlobalAlloc(gPtr,	SizeOf(TLogPalette)+SizeOf(TPaletteEntry)*256);
+	hLoadDIB := GlobalAlloc(gPtr, Size);
+	if (hLoadDIB = 0) OR (hLoadPal = 0) then
+  begin
+		_LClose(F);
+		ReleaseBitmapRessource(hLoadDIB,hLoadPal);
+		Exit;
+  end;
+
+  pLoadDIB := GlobalLock(hLoadDIB);				{ Lock it down }
+  pLoadPal := GlobalLock(hLoadPal);				{ Lock it down}
+
+		if (_LRead(F, pLoadDIB, Size) <> 0) and
+		 (pLoadDIB^.bmiHeader.biSize = SizeOf(TBitmapInfoHeader)) then
+	begin
+
+		{ Create the palette }
+		if pLoadDIB^.bmiHeader.biBitCount = 8 then begin
+				pLoadPal^.palVersion := $300;
+				pLoadPal^.palNumEntries := 256;
+				LoadPalette := CreatePalette(pLoadPal^);
+				{$IFOPT R+}
+					 {$R-}
+					 {$DEFINE _RANGE_ON}
+				{$ENDIF}
+				for i := 0 to 255 do begin
+				 TPE.peRed := pLoadDIB^.bmiColors[i].rgbRed;
+				 TPE.peGreen := pLoadDIB^.bmiColors[i].rgbGreen;
+				 TPE.peBlue := pLoadDIB^.bmiColors[i].rgbBlue;
+				 TPE.peFlags := PC_NOCOLLAPSE;
+				 SetPaletteEntries(LoadPalette,i,1,TPE);
+				end;
+				{$IFDEF _RANGE_ON}
+						 {$R+}
+				{$ENDIF}
+		end else begin
+			if pLoadDIB^.bmiHeader.biBitCount = 4 then begin
+				pLoadPal^.palNumEntries := 16;
+			end else begin
+				pLoadPal^.palNumEntries := 0;
+			end;
+			LoadPalette := 0;
+		end;
+		{ Compute the offset from the beginning of P^ }
+		{ where the actual image begins }
+		N := SizeOf(TBitmapInfoHeader) + pLoadPal^.palNumEntries * SizeOf(TRGBQUAD);
+		pLoadBits := pLoadDIB + N; {Ptr(PtrRec(pLoadDIB).Hi,N); }
+
+		{ actually create the Bitmap }
+
+		LoadBitmapResource := TRUE;
+	end else begin
+		ReleaseBitmapRessource(hLoadDIB,hLoadPal);
+	end;
+
+	_LClose(F);
+end;
+
+function ReleaseBitmap(var hLoadDIB: THandle): Bool;
+begin
+	GlobalUnlock(hLoadDIB);
+	GlobalFree(hLoadDIB);
+	hLoadDIB := 0;
+end;
+
+function ReleaseBitmapRessource(var hLoadDIB: THandle; var hLoadPal : HPalette): Bool;
+begin
+	GlobalUnlock(hLoadDIB);
+	GlobalFree(hLoadDIB);
+	GlobalUnlock(hLoadPal);
+	GlobalFree(hLoadPal);
+	hLoadDIB := 0;
+	hLoadPal := 0;
+end;
+
+{ Write a bitmap to file (full pathname).
+	Returns 0 if error else non-zero.
+}
+function StoreBitmapFile(FileName: PChar; HBM: HBitmap): Integer;
+	var
+		BM:   TBitmap;		{ Bitmap information }
+		BFH:  TBitmapFileHeader;	{ Bitmap file information }
+		BIP:  PBitmapInfo;		{ Part of bitmap file information }
+		DC:   HDC;			{ Drawing context }
+
+		HMem: THandle;		{ Handle to memory for bitmap }
+		Buf:  Pointer;		{ Memory for bitmap }
+
+		ColorSize, DataSize: Longint; { Size needed to store Color/Data }
+		BitCount: Word;		{ Number of bits per pixel }
+		FP: Integer;		{ File }
+
+	{ Takes the size in bits and returns the (aligned) size in bytes.
+    Bitmap data format requires word alignment.
+	}
+	function bmAlignDouble(Size: Longint): Longint;
+	begin
+    bmAlignDouble := (Size + 31) div 32 * 4;
+  end;
+
+begin
+	 StoreBitmapFile := 0;
+
+	 { Get the information about the Bitmap }
+	 if GetObject(HBM, SizeOf(TBitmap), @BM) = 0 then Exit;
+
+   BitCount := bm.bmPlanes * bm.bmBitsPixel;
+   if (BitCount <> 24) then
+     ColorSize := SizeOf(TRGBQuad) * (1 shl BitCount)
+   else
+     ColorSize := 0;
+	 DataSize := bmAlignDouble(bm.bmWidth * BitCount) * bm.bmHeight;
+
+   { Create the file }
+   FP := _lcreat(FileName, 0);
+   if FP = -1 then Exit;
+
+   { Allocate memory for the bitmap info structure }
+	 GetMem(BIP, SizeOf(TBitmapInfoHeader) + ColorSize);
+	 if BIP <> nil then
+   begin
+     { Fill in the Bitmap info header }
+     with BIP^.bmiHeader do
+		 begin
+			 biSize := SizeOf(TBitmapInfoHeader);
+       biWidth := bm.bmWidth;
+       biHeight := bm.bmHeight;
+       biPlanes := 1;
+       biBitCount := BitCount;
+       biCompression := 0;
+			 biSizeImage := DataSize;
+       biXPelsPerMeter := 0;
+       biYPelsPerMeter := 0;
+       biClrUsed := 0;
+       biClrImportant := 0;
+     end;
+
+     { Fill in the file header }
+     with BFH do
+     begin
+			 bfOffBits := SizeOf(BFH) + SizeOf(TBitmapInfo) + ColorSize;
+       bfReserved1 := 0;
+       bfReserved2 := 0;
+			 bfSize :=  bfOffBits + DataSize;
+       bfType := BMType;
+     end;
+
+     { Create the memory Bitmap }
+		 HMem := GlobalAlloc(gmem_Fixed, DataSize);
+     if HMem <> 0 then
+		 begin
+       Buf := GlobalLock(HMem);
+
+			 { Get the bitmap bits in device independent format }
+       DC := GetDC(0);
+			 if GetDIBits(DC, hbm, 0, DataSize, Buf, BIP^, dib_RGB_Colors) <> 0 then
+			 begin
+				 ReleaseDC(0, DC);
+         { Write to file }
+         _lwrite(FP, @BFH, SizeOf(BFH));
+         _lwrite(FP, PChar(BIP), SizeOf(TBitmapInfo) + ColorSize);
+         _lwrite(FP, Buf, DataSize);
+				 StoreBitmapFile := 1;
+       end;
+
+       { Clean up }
+       GlobalUnlock(HMem);
+       GlobalFree(HMem);
+     end;
+
+     FreeMem(BIP, SizeOf(TBitmapInfoHeader) + ColorSize);
+   end;
+
+	 _lclose(FP);
+
+end;
+end.

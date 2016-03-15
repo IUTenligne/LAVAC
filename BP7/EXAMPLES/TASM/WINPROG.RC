@@ -1,0 +1,8 @@
+#include "WINPROG.H"
+
+STRINGTABLE
+     BEGIN
+          IDS_HELLOSTRING  "Hello Windows , from Winprog.Rc file!"
+     END
+
+WinProg  ICON     WinProg.ico

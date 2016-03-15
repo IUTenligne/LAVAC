@@ -1,0 +1,62 @@
+#   $Id: Makefile.fpc 16910 2008-10-07 12:05:16Z mattias $
+#
+#   Makefile.fpc for Lazarus for Free Pascal
+#
+
+[package]
+name=lazarus-tools
+version=0.9b
+
+[target]
+dirs=apiwizz
+programs=lazres svn2revisioninc updatepofiles lrstolfm
+
+[require]
+libc=y
+packages=rtl
+
+[compiler]
+options=-gl $(LAZARUS_LIBPATHS)
+unitdir=. $(LAZDIR)/lcl/units/$(CPU_TARGET)-$(OS_TARGET) \
+          $(LAZDIR)/lcl/units/$(CPU_TARGET)-$(OS_TARGET)/$(LCL_PLATFORM)
+unittargetdir=.
+targetdir=.
+
+[prerules]
+LAZDIR=..
+
+# LCL Platform
+ifndef LCL_PLATFORM
+ifneq ($(findstring $(OS_TARGET),win32 win64),)
+LCL_PLATFORM=win32
+else
+ifeq ($(OS_TARGET),wince)
+LCL_PLATFORM=wince
+else
+ifeq ($(OS_TARGET),darwin)
+LCL_PLATFORM=carbon
+else
+LCL_PLATFORM=gtk2
+endif
+endif
+endif
+endif
+export LCL_PLATFORM
+
+ifeq ($(OS_TARGET),darwin)
+LAZARUS_LIBPATHS=-Fl/usr/X11R6/lib -Fl/sw/lib
+endif
+
+
+[rules]
+.PHONY: all
+
+all: apiwizz_all
+        echo $(LAZARUS_LIBPATHS)
+        $(MAKE) --assume-new=lazres.pp lazres$(EXEEXT)
+        $(MAKE) --assume-new=svn2revisioninc.pas svn2revisioninc$(EXEEXT)
+        $(MAKE) --assume-new=updatepofiles.pas updatepofiles$(EXEEXT)
+        $(MAKE) --assume-new=lrstolfm.lpr lrstolfm$(EXEEXT)
+
+# end.
+

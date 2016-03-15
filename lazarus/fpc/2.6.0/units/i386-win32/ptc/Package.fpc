@@ -1,0 +1,8 @@
+[package]
+name=ptc
+version=2.6.0
+[require]
+packages=rtl hermes fcl-base
+packages_linux=x11
+packages_freebsd=x11
+packages_win32_i386=

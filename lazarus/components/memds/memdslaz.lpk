@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Package Version="3">
+    <Name Value="MemDSLaz"/>
+    <Author Value="Michael Van Canneyt"/>
+    <CompilerOptions>
+      <Version Value="5"/>
+      <SearchPaths>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)/$(LCLWidgetType)"/>
+      </SearchPaths>
+      <CodeGeneration>
+        <Generate Value="Faster"/>
+      </CodeGeneration>
+      <Other>
+        <CompilerPath Value="$(CompPath)"/>
+        <CreateMakefileOnBuild Value="True"/>
+      </Other>
+    </CompilerOptions>
+    <Description Value="Memory (TMemDataset) dataset package for Lazarus
+"/>
+    <License Value="LGPL
+"/>
+    <Version Major="1" Minor="2" Release="1"/>
+    <Files Count="4">
+      <Item1>
+        <Filename Value="memds.pp"/>
+        <Type Value="Virtual Unit"/>
+        <UnitName Value="memds"/>
+      </Item1>
+      <Item2>
+        <Filename Value="frmselectdataset.lfm"/>
+        <Type Value="LFM"/>
+      </Item2>
+      <Item3>
+        <Filename Value="frmselectdataset.pp"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="frmSelectDataset"/>
+      </Item3>
+      <Item4>
+        <Filename Value="memdsicons.lrs"/>
+        <Type Value="LRS"/>
+      </Item4>
+    </Files>
+    <i18n>
+      <EnableI18N Value="True"/>
+      <OutDir Value="languages"/>
+    </i18n>
+    <Type Value="RunAndDesignTime"/>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="IDEIntf"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="LCL"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)/"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

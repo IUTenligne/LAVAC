@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <EnvironmentOptions>
+    <Version Value="102"/>
+    <LazarusDirectory Value="C:\lazarus">
+    </LazarusDirectory>
+    <CompilerFilename Value="C:\lazarus\fpc\2.6.0\bin\i386-win32\\fpc.exe">
+    </CompilerFilename>
+    <FPCSourceDirectory Value="$(LazarusDir)fpc\$(FPCVer)\source">
+    </FPCSourceDirectory>
+    <MakeFilename Value="C:\lazarus\fpc\2.6.0\bin\i386-win32\\make.exe">
+    </MakeFilename>
+    <TestBuildDirectory Value="C:\Users\GUILLA~1\AppData\Local\Temp\">
+    </TestBuildDirectory>
+    <Debugger Class="TGDBMIDebugger"/>
+    <DebuggerFilename Value="C:\lazarus\mingw\bin\gdb.exe">
+    </DebuggerFilename>
+  </EnvironmentOptions>
+</CONFIG>

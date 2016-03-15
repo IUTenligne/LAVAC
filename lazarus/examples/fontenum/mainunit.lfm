@@ -1,0 +1,199 @@
+object frmMain: TfrmMain
+  Left = 33
+  Height = 440
+  Top = 116
+  Width = 714
+  HorzScrollBar.Page = 713
+  VertScrollBar.Page = 439
+  ActiveControl = lbFamily
+  Caption = 'frmMain'
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnShow = FormShow
+  ShowHint = True
+  object Label3: TLabel
+    Left = 548
+    Height = 13
+    Top = 257
+    Width = 29
+    Caption = 'Filtro'
+    Color = clNone
+    ParentColor = False
+  end
+  object Label4: TLabel
+    Left = 216
+    Height = 13
+    Top = 16
+    Width = 73
+    Caption = 'Face font list'
+    Color = clNone
+    ParentColor = False
+  end
+  object Label5: TLabel
+    Left = 424
+    Height = 13
+    Top = 11
+    Width = 35
+    Caption = 'Styles'
+    Color = clNone
+    ParentColor = False
+  end
+  object Sizes: TLabel
+    Left = 648
+    Height = 13
+    Top = 11
+    Width = 31
+    Caption = 'Sizes'
+    Color = clNone
+    ParentColor = False
+  end
+  object lblCharset: TLabel
+    Left = 424
+    Height = 13
+    Top = 176
+    Width = 57
+    Caption = 'lblCharset'
+    Color = clNone
+    ParentColor = False
+  end
+  object Label6: TLabel
+    Left = 11
+    Height = 13
+    Top = 16
+    Width = 29
+    Caption = 'Filter'
+    Color = clNone
+    ParentColor = False
+  end
+  object lbFamily: TListBox
+    Left = 216
+    Height = 272
+    Top = 32
+    Width = 200
+    OnClick = lbFamilyClick
+    TabOrder = 0
+    TopIndex = -1
+  end
+  object cbCharset: TComboBox
+    Left = 8
+    Height = 21
+    Top = 37
+    Width = 194
+    AutoCompleteText = [cbactEndOfLineComplete, cbactSearchAscending]
+    MaxLength = 0
+    TabOrder = 1
+    Text = 'ANSI_CHARSET'
+  end
+  object Button2: TButton
+    Left = 8
+    Height = 25
+    Top = 96
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = 'apply filter'
+    OnClick = Button2Click
+    TabOrder = 2
+  end
+  object lbStyles: TListBox
+    Left = 424
+    Height = 128
+    Top = 32
+    Width = 208
+    OnClick = lbStylesClick
+    TabOrder = 3
+    TopIndex = -1
+  end
+  object lbSizes: TListBox
+    Left = 640
+    Height = 272
+    Top = 32
+    Width = 56
+    OnClick = lbSizesClick
+    TabOrder = 4
+    TopIndex = -1
+  end
+  object lbCharset: TListBox
+    Left = 424
+    Height = 112
+    Top = 192
+    Width = 208
+    OnClick = lbCharsetClick
+    TabOrder = 5
+    TopIndex = -1
+  end
+  object cbPitch: TComboBox
+    Left = 8
+    Height = 21
+    Top = 61
+    Width = 194
+    AutoCompleteText = [cbactEndOfLineComplete, cbactSearchAscending]
+    ItemIndex = 0
+    Items.Strings = (
+      'DEFAULT_PITCH'
+      'FIXED_PITCH'
+      'VARIABLE_PITCH'
+      'MONO_FONT'
+    )
+    MaxLength = 0
+    TabOrder = 6
+    Text = 'DEFAULT_PITCH'
+  end
+  object BtnFontDlg: TButton
+    Left = 56
+    Height = 40
+    Top = 368
+    Width = 152
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Font Dlg'
+    OnClick = BtnFontDlgClick
+    TabOrder = 7
+  end
+  object chkStrike: TCheckBox
+    Left = 591
+    Height = 20
+    Top = 312
+    Width = 72
+    Caption = 'Strikeout'
+    TabOrder = 8
+  end
+  object chkUnderLine: TCheckBox
+    Left = 592
+    Height = 20
+    Top = 336
+    Width = 81
+    Caption = 'UnderLine'
+    TabOrder = 9
+  end
+  object Button1: TButton
+    Left = 56
+    Height = 41
+    Top = 312
+    Width = 153
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Reset Sample Text'
+    OnClick = Button1Click
+    TabOrder = 10
+  end
+  object grid: TStringGrid
+    Left = 216
+    Height = 120
+    Top = 312
+    Width = 368
+    AutoFillColumns = True
+    ColCount = 1
+    DefaultRowHeight = 17
+    FixedColor = clBtnFace
+    FixedCols = 0
+    FixedRows = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
+    RowCount = 5
+    ScrollBars = ssAutoBoth
+    TabOrder = 11
+    TabStop = True
+  end
+  object FontDialog1: TFontDialog
+    Title = 'Select a font'
+    left = 312
+    top = 384
+  end
+end

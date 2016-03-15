@@ -1,0 +1,568 @@
+inherited DesktopOptionsFrame: TDesktopOptionsFrame
+  Height = 512
+  Width = 597
+  ClientHeight = 512
+  ClientWidth = 597
+  TabOrder = 0
+  Visible = False
+  DesignLeft = 573
+  DesignTop = 261
+  object Bevel1: TBevel[0]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblLanguage
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = lblLanguage
+    Left = 0
+    Height = 3
+    Top = 8
+    Width = 64
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 6
+  end
+  object lblLanguage: TLabel[1]
+    AnchorSideTop.Control = Owner
+    Left = 70
+    Height = 18
+    Top = 0
+    Width = 92
+    Caption = 'lblLanguage'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Bevel2: TBevel[2]
+    AnchorSideLeft.Control = lblLanguage
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblLanguage
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 168
+    Height = 3
+    Top = 8
+    Width = 429
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 6
+  end
+  object Bevel3: TBevel[3]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblAutoSave
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = lblAutoSave
+    Left = 0
+    Height = 3
+    Top = 69
+    Width = 64
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 6
+  end
+  object lblAutoSave: TLabel[4]
+    AnchorSideTop.Control = LanguageComboBox
+    AnchorSideTop.Side = asrBottom
+    Left = 70
+    Height = 18
+    Top = 61
+    Width = 88
+    BorderSpacing.Top = 6
+    Caption = 'lblAutoSave'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Bevel4: TBevel[5]
+    AnchorSideLeft.Control = lblAutoSave
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblAutoSave
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 164
+    Height = 3
+    Top = 69
+    Width = 433
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 6
+  end
+  object AutoSaveIntervalInSecsLabel: TLabel[6]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = AutoSaveProjectCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 18
+    Top = 135
+    Width = 186
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'AutoSaveIntervalInSecsLabel'
+    Enabled = False
+    ParentColor = False
+  end
+  object Bevel5: TBevel[7]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblDesktopFiles
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = lblDesktopFiles
+    Left = 0
+    Height = 3
+    Top = 202
+    Width = 64
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 6
+  end
+  object lblDesktopFiles: TLabel[8]
+    AnchorSideTop.Control = AutoSaveIntervalInSecsComboBox
+    AnchorSideTop.Side = asrBottom
+    Left = 70
+    Height = 18
+    Top = 194
+    Width = 115
+    BorderSpacing.Top = 6
+    Caption = 'lblDesktopFiles'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Bevel6: TBevel[9]
+    AnchorSideLeft.Control = lblDesktopFiles
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblDesktopFiles
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 191
+    Height = 3
+    Top = 202
+    Width = 406
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 6
+  end
+  object Bevel7: TBevel[10]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblGlyphs
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = lblGlyphs
+    Left = 0
+    Height = 3
+    Top = 261
+    Width = 64
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 6
+  end
+  object lblGlyphs: TLabel[11]
+    AnchorSideTop.Control = SaveDesktopSettingsToFileButton
+    AnchorSideTop.Side = asrBottom
+    Left = 70
+    Height = 18
+    Top = 253
+    Width = 69
+    BorderSpacing.Top = 6
+    Caption = 'lblGlyphs'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Bevel8: TBevel[12]
+    AnchorSideLeft.Control = lblGlyphs
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblGlyphs
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 145
+    Height = 3
+    Top = 261
+    Width = 452
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 6
+  end
+  object Bevel9: TBevel[13]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblHints
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = lblHints
+    Left = 0
+    Height = 3
+    Top = 338
+    Width = 64
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 6
+  end
+  object lblHints: TLabel[14]
+    AnchorSideTop.Control = Panel2
+    AnchorSideTop.Side = asrBottom
+    Left = 70
+    Height = 18
+    Top = 330
+    Width = 57
+    BorderSpacing.Top = 6
+    Caption = 'lblHints'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Bevel10: TBevel[15]
+    AnchorSideLeft.Control = lblHints
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblHints
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 133
+    Height = 3
+    Top = 338
+    Width = 464
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 6
+  end
+  object Bevel11: TBevel[16]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblMisc
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = lblMisc
+    Left = 0
+    Height = 3
+    Top = 412
+    Width = 64
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 6
+  end
+  object lblMisc: TLabel[17]
+    AnchorSideTop.Control = ShowHintsForMainSpeedButtonsCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 70
+    Height = 18
+    Top = 404
+    Width = 52
+    BorderSpacing.Top = 6
+    Caption = 'lblMisc'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Bevel12: TBevel[18]
+    AnchorSideLeft.Control = lblMisc
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblMisc
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 128
+    Height = 3
+    Top = 412
+    Width = 469
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 6
+  end
+  object lblButtons: TLabel[19]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrCenter
+    Left = 6
+    Height = 18
+    Top = 279
+    Width = 76
+    BorderSpacing.Left = 6
+    Caption = 'lblButtons'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object lblMenus: TLabel[20]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel2
+    AnchorSideTop.Side = asrCenter
+    Left = 6
+    Height = 18
+    Top = 304
+    Width = 67
+    BorderSpacing.Left = 6
+    Caption = 'lblMenus'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object CheckDiskChangesWithLoadingCheckBox: TCheckBox[21]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = MsgViewFocusCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 22
+    Top = 472
+    Width = 286
+    BorderSpacing.Left = 6
+    Caption = 'CheckDiskChangesWithLoadingCheckBox'
+    TabOrder = 0
+  end
+  object ShowHintsForComponentPaletteCheckBox: TCheckBox[22]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblHints
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 22
+    Top = 354
+    Width = 293
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'ShowHintsForComponentPaletteCheckBox'
+    TabOrder = 1
+  end
+  object ShowHintsForMainSpeedButtonsCheckBox: TCheckBox[23]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ShowHintsForComponentPaletteCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 22
+    Top = 376
+    Width = 295
+    BorderSpacing.Left = 6
+    Caption = 'ShowHintsForMainSpeedButtonsCheckBox'
+    TabOrder = 2
+  end
+  object MsgViewDblClickJumpsCheckBox: TCheckBox[24]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblMisc
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 22
+    Top = 428
+    Width = 231
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'MsgViewDblClickJumpsCheckBox'
+    TabOrder = 3
+  end
+  object MsgViewFocusCheckBox: TCheckBox[25]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = MsgViewDblClickJumpsCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 22
+    Top = 450
+    Width = 179
+    BorderSpacing.Left = 6
+    Caption = 'MsgViewFocusCheckBox'
+    TabOrder = 4
+  end
+  object LanguageComboBox: TComboBox[26]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblLanguage
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 6
+    Height = 31
+    Top = 24
+    Width = 585
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    ItemHeight = 0
+    Style = csDropDownList
+    TabOrder = 5
+  end
+  object AutoSaveIntervalInSecsComboBox: TComboBox[27]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = AutoSaveIntervalInSecsLabel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 6
+    Height = 29
+    Top = 159
+    Width = 585
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Around = 6
+    Enabled = False
+    ItemHeight = 0
+    Items.Strings = (
+      '1200'
+      '600'
+      '300'
+      '120'
+    )
+    TabOrder = 6
+  end
+  object AutoSaveProjectCheckBox: TCheckBox[28]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = AutoSaveEditorFilesCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 22
+    Top = 107
+    Width = 193
+    BorderSpacing.Left = 6
+    Caption = 'AutoSaveProjectCheckBox'
+    Enabled = False
+    TabOrder = 7
+  end
+  object AutoSaveEditorFilesCheckBox: TCheckBox[29]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblAutoSave
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 22
+    Top = 85
+    Width = 213
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'AutoSaveEditorFilesCheckBox'
+    Enabled = False
+    TabOrder = 8
+  end
+  object LoadDesktopSettingsFromFileButton: TButton[30]
+    AnchorSideLeft.Control = SaveDesktopSettingsToFileButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblDesktopFiles
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 299
+    Height = 29
+    Top = 218
+    Width = 292
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    Caption = 'LoadDesktopSettingsFromFileButton'
+    OnClick = LoadDesktopSettingsFromFileButtonClick
+    TabOrder = 9
+  end
+  object SaveDesktopSettingsToFileButton: TButton[31]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblDesktopFiles
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = lblCenter
+    Left = 6
+    Height = 29
+    Top = 218
+    Width = 287
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 3
+    Caption = 'SaveDesktopSettingsToFileButton'
+    OnClick = SaveDesktopSettingsToFileButtonClick
+    TabOrder = 10
+  end
+  object Panel1: TPanel[32]
+    AnchorSideLeft.Control = lblButtons
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblGlyphs
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 88
+    Height = 22
+    Top = 277
+    Width = 503
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    BevelOuter = bvNone
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 3
+    ClientHeight = 22
+    ClientWidth = 503
+    TabOrder = 11
+    object rbBtnGlyphShowSystem: TRadioButton
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 22
+      Top = 0
+      Width = 178
+      Caption = 'rbBtnGlyphShowSystem'
+      Checked = True
+      State = cbChecked
+      TabOrder = 0
+    end
+    object rbBtnGlyphShowNever: TRadioButton
+      AnchorSideLeft.Side = asrCenter
+      Left = 178
+      Height = 22
+      Top = 0
+      Width = 167
+      Caption = 'rbBtnGlyphShowNever'
+      TabOrder = 1
+      TabStop = False
+    end
+    object rbBtnGlyphShowAlways: TRadioButton
+      Left = 345
+      Height = 22
+      Top = 0
+      Width = 172
+      Caption = 'rbBtnGlyphShowAlways'
+      TabOrder = 2
+      TabStop = False
+    end
+  end
+  object Panel2: TPanel[33]
+    AnchorSideLeft.Control = Panel1
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 88
+    Height = 22
+    Top = 302
+    Width = 503
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 3
+    BorderSpacing.Right = 6
+    BevelOuter = bvNone
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 3
+    ClientHeight = 22
+    ClientWidth = 503
+    TabOrder = 12
+    object rbMenuGlyphShowSystem: TRadioButton
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      Left = 0
+      Height = 22
+      Top = 0
+      Width = 191
+      Caption = 'rbMenuGlyphShowSystem'
+      Checked = True
+      State = cbChecked
+      TabOrder = 0
+    end
+    object rbMenuGlyphShowNever: TRadioButton
+      AnchorSideLeft.Side = asrCenter
+      Left = 191
+      Height = 22
+      Top = 0
+      Width = 180
+      Caption = 'rbMenuGlyphShowNever'
+      TabOrder = 1
+      TabStop = False
+    end
+    object rbMenuGlyphShowAlways: TRadioButton
+      Left = 371
+      Height = 22
+      Top = 0
+      Width = 185
+      Caption = 'rbMenuGlyphShowAlways'
+      TabOrder = 2
+      TabStop = False
+    end
+  end
+  object lblCenter: TLabel[34]
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = lblDesktopFiles
+    AnchorSideTop.Side = asrBottom
+    Left = 296
+    Height = 5
+    Top = 212
+    Width = 5
+    AutoSize = False
+    ParentColor = False
+  end
+end

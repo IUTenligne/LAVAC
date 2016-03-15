@@ -1,0 +1,100 @@
+object ProjectInspectorForm: TProjectInspectorForm
+  Left = 457
+  Height = 309
+  Top = 399
+  Width = 223
+  ActiveControl = ItemsTreeView
+  Caption = 'ProjectInspectorForm'
+  ClientHeight = 309
+  ClientWidth = 223
+  OnShow = ProjectInspectorFormShow
+  LCLVersion = '0.9.29'
+  object ItemsTreeView: TTreeView
+    AnchorSideTop.Side = asrBottom
+    Left = 0
+    Height = 283
+    Top = 26
+    Width = 223
+    Align = alClient
+    BorderSpacing.Top = 2
+    DefaultItemHeight = 19
+    PopupMenu = ItemsPopupMenu
+    ReadOnly = True
+    RightClickSelect = True
+    TabOrder = 0
+    OnDblClick = ItemsTreeViewDblClick
+    OnKeyDown = ItemsTreeViewKeyDown
+    OnSelectionChanged = ItemsTreeViewSelectionChanged
+    Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoRightClickSelect, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+  end
+  object BtnPanel: TPanel
+    Left = 0
+    Height = 24
+    Top = 0
+    Width = 223
+    Align = alTop
+    AutoSize = True
+    ChildSizing.EnlargeHorizontal = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 10
+    ClientHeight = 24
+    ClientWidth = 223
+    TabOrder = 1
+    object OpenBitBtn: TSpeedButton
+      Left = 0
+      Height = 23
+      Top = 0
+      Width = 53
+      Constraints.MinWidth = 25
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = OpenBitBtnClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object AddBitBtn: TSpeedButton
+      AnchorSideLeft.Side = asrBottom
+      Left = 53
+      Height = 23
+      Top = 0
+      Width = 53
+      Constraints.MinWidth = 25
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = AddBitBtnClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object RemoveBitBtn: TSpeedButton
+      AnchorSideLeft.Side = asrBottom
+      Left = 106
+      Height = 23
+      Top = 0
+      Width = 53
+      Constraints.MinWidth = 25
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = RemoveBitBtnClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object OptionsBitBtn: TSpeedButton
+      AnchorSideLeft.Side = asrBottom
+      Left = 159
+      Height = 23
+      Top = 0
+      Width = 53
+      Constraints.MinWidth = 25
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = OptionsBitBtnClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+  end
+  object ItemsPopupMenu: TPopupMenu
+    OnPopup = ItemsPopupMenuPopup
+    left = 40
+    top = 59
+  end
+end

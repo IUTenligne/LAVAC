@@ -1,0 +1,140 @@
+object ImExportCompOptsDlg: TImExportCompOptsDlg
+  Left = 316
+  Height = 235
+  Top = 212
+  Width = 554
+  Caption = 'ImExportCompOptsDlg'
+  ClientHeight = 235
+  ClientWidth = 554
+  OnClose = ImExportCompOptsDlgCLOSE
+  OnCreate = ImExportCompOptsDlgCREATE
+  LCLVersion = '0.9.27'
+  object OpenRecentGroupbox: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = CancelButton
+    Left = 6
+    Height = 191
+    Top = 6
+    Width = 542
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 6
+    Caption = 'OpenRecentGroupbox'
+    ClientHeight = 173
+    ClientWidth = 538
+    TabOrder = 0
+    object RecentListbox: TListBox
+      AnchorSideLeft.Control = OpenRecentGroupbox
+      AnchorSideTop.Control = OpenRecentGroupbox
+      AnchorSideRight.Control = OpenRecentGroupbox
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = OpenRecentButton
+      Left = 6
+      Height = 132
+      Top = 6
+      Width = 526
+      Align = alTop
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Around = 6
+      ClickOnSelChange = False
+      ItemHeight = 0
+      OnClick = RecentListboxCLICK
+      OnDblClick = RecentListboxDBLCLICK
+      TabOrder = 0
+    end
+    object OpenRecentButton: TButton
+      AnchorSideLeft.Control = OpenRecentGroupbox
+      AnchorSideBottom.Control = OpenRecentGroupbox
+      AnchorSideBottom.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 144
+      Width = 118
+      Anchors = [akLeft, akBottom]
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'OpenRecentButton'
+      Constraints.MinWidth = 75
+      OnClick = OpenRecentButtonCLICK
+      TabOrder = 1
+    end
+    object SaveToRecentButton: TButton
+      AnchorSideLeft.Control = OpenRecentButton
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = OpenRecentGroupbox
+      AnchorSideBottom.Side = asrBottom
+      Left = 130
+      Height = 23
+      Top = 144
+      Width = 130
+      Anchors = [akLeft, akBottom]
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'SaveToRecentButton'
+      OnClick = SaveToRecentButtonCLICK
+      TabOrder = 2
+    end
+  end
+  object OpenButton: TBitBtn
+    AnchorSideTop.Control = CancelButton
+    AnchorSideRight.Control = SaveButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 293
+    Height = 26
+    Top = 203
+    Width = 84
+    Anchors = [akTop, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    Caption = 'OpenButton'
+    Constraints.MinWidth = 75
+    NumGlyphs = 0
+    OnClick = OpenButtonCLICK
+    TabOrder = 1
+  end
+  object SaveButton: TBitBtn
+    AnchorSideTop.Control = CancelButton
+    AnchorSideRight.Control = CancelButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 383
+    Height = 26
+    Top = 203
+    Width = 82
+    Anchors = [akTop, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
+    Caption = 'SaveButton'
+    Constraints.MinWidth = 75
+    NumGlyphs = 0
+    OnClick = SaveButtonCLICK
+    TabOrder = 2
+  end
+  object CancelButton: TBitBtn
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 471
+    Height = 26
+    Top = 203
+    Width = 77
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Cancel = True
+    Caption = 'Cancel'
+    Constraints.MinWidth = 75
+    Kind = bkCancel
+    ModalResult = 2
+    NumGlyphs = 0
+    TabOrder = 3
+  end
+end

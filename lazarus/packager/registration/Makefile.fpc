@@ -1,0 +1,39 @@
+#   $Id: Makefile.fpc 12495 2007-10-16 22:47:51Z mattias $
+#
+#   Makefile.fpc for Lazarus for Free Pascal
+#
+
+[package]
+name=lazpkgreg
+version=0.9b
+
+[compiler]
+unitdir=.
+unittargetdir=../units/$(CPU_TARGET)-$(OS_TARGET)
+options=-gl
+
+[target]
+units=lazaruspackageintf
+
+[clean]
+files=$(wildcard $(COMPILER_UNITTARGETDIR)/*$(OEXT)) \
+      $(wildcard $(COMPILER_UNITTARGETDIR)/*$(PPUEXT)) \
+      $(wildcard $(COMPILER_UNITTARGETDIR)/*$(RSTEXT)) \
+      $(wildcard *$(OEXT)) $(wildcard *$(PPUEXT)) $(wildcard *$(RSTEXT))
+
+[require]
+packages=
+
+[rules]
+cleanlaz: clean
+
+[rules]
+.PHONY: cleartarget all
+
+cleartarget:
+        -$(DEL) $(COMPILER_UNITTARGETDIR)/lazaruspackageintf$(PPUEXT)
+
+all: cleartarget $(COMPILER_UNITTARGETDIR) lazaruspackageintf$(PPUEXT)
+
+# end.
+

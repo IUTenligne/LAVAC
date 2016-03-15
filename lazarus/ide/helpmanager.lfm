@@ -1,0 +1,44 @@
+object HelpSelectorDialog: THelpSelectorDialog
+  Left = 328
+  Height = 283
+  Top = 414
+  Width = 500
+  Caption = 'HelpSelectorDialog'
+  ClientHeight = 283
+  ClientWidth = 500
+  OnClose = HelpSelectorDialogClose
+  Position = poScreenCenter
+  LCLVersion = '0.9.27'
+  object NodesGroupBox: TGroupBox
+    Left = 6
+    Height = 239
+    Top = 6
+    Width = 488
+    Align = alClient
+    BorderSpacing.Around = 6
+    Caption = 'NodesGroupBox'
+    ClientHeight = 221
+    ClientWidth = 484
+    TabOrder = 0
+    object NodesListBox: TListBox
+      Left = 6
+      Height = 209
+      Top = 6
+      Width = 472
+      Align = alClient
+      BorderSpacing.Around = 6
+      ItemHeight = 0
+      OnDblClick = NodesListBoxDblClick
+      TabOrder = 0
+    end
+  end
+  object BtnPanel: TButtonPanel
+    Left = 6
+    Height = 26
+    Top = 251
+    Width = 488
+    TabOrder = 1
+    ShowButtons = [pbOK, pbCancel]
+    ShowBevel = False
+  end
+end

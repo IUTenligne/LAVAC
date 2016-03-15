@@ -1,0 +1,296 @@
+                  Turbo Pascal 7 Help Compiler Instructions
+                 -------------------------------------------
+
+                    by Barry Naujok, copyright (c) 1993/4
+
+
+Introduction
+------------
+
+I am writing an SVGA graphics library (soon to be released), and I wanted to
+create the ultimate documentation for it... On-line help!  So I looked around
+for something to create a .TPH file, but found nothing I liked.
+
+So with some information of the .TPH file format (from `Borland Open
+Architecture Handbook for Pascal' pages 170-177), I set about writing a
+program to write one.  This is the final result of my toiling!
+
+Inluding in this ZIP file is the main help file compiler (TPHC.EXE), an
+interface program for the IDE (TPHC2MSG.EXE) and an index list generator
+(GENINDEX.EXE).  To help with your creation of a .TPH file, I have included
+the original text file used to create the .TPH file for the graphics library
+(TG.TXT).
+
+I require no payment for the use of this program or for the distribution of
+help files created using this program, it is supplied as is, without any
+restrictions.
+
+Of course, like everyone, any payments made to me are greatly appreciated,
+but is completely optional, e-mail, or any other type of acknowledgement of
+the use of this program is also appreciated (postcards seem to be quite
+common!).
+
+Suggestions, bugs, anything at all, you can contact me at the following
+addresses:
+
+EMail:  naujok@barney.eng.monash.edu.au
+
+Snail Mail:  Barry Naujok
+             40 Frederick Street
+             Caulfield South,  Vic,  3162
+             Australia
+
+                 -------------------------------------------
+
+Disclaimer
+----------
+
+This program is provided on an "as-is" basis, and its author makes no
+warranty or representation, express or implied, with respect to its quality
+performance or fitness for a particular purpose.  In no event will the
+author of this program be liable for direct, indirect, special, incidental,
+or consequential damages arising out of the use or inability to use the
+program contained within.  Use of this program is at your own risk.
+
+This file may be used and copied freely so long as the applicable copyright
+notices are retained.  No money shall be charged for its distribution beyond
+reasonable shipping, handling and duplication costs, nor shall proprietary
+changes be made to this program so that it cannot be distributed freely.
+
+                 -------------------------------------------
+
+Installing
+----------
+
+You can put this program where ever you like, I would suggest the "bin"
+directory where the compiler itself is located, or you could make another
+directory.  Ideally, the program should be located in a location specified
+in your path statement.
+
+                 -------------------------------------------
+
+Making TPHC and GenIndex a Tool in the IDE
+------------------------------------------
+
+After the file has been unzipped, start your IDE.  Select the Options/Tools
+menu item, press New.  The entries are:
+
+Title: ~T~PH Compiler
+Program path: TPHC      (you may have to specify the full path)
+Command line: $EDNAME $NOSWAP $CAP MSG(TPHC2MSG) $SAVE ALL
+
+I use the Shift-F8 hotkey, but you can choose that.
+
+Press Ok.
+
+Now, to add the GenIndex program, make a new tool, the entries are:
+
+Title: TPH ~I~ndexer
+Program path: GENINDEX
+Command line: $EDNAME $NOSWAP $SAVE ALL $CAP EDIT
+
+I use the Shift-F7 hotkey.
+
+Press Ok.
+
+That is all that is required for installing the program.
+
+                 -------------------------------------------
+
+Using TPHC
+----------
+
+From within the IDE, make sure the active window is the text file that you
+want to compile, and then simply select the TPH Compiler tool from the
+Tools menu (or the hot-key).
+
+The Message window will pop up showing the results of compilation.  In an
+ideal situation, there should be only one or two messages:
+
+  Successfully opened output file <name>
+  Description found <description>
+
+If there are more, they are error messages (more info later).
+
+
+From the command line, execute by: TPHC <name>
+
+The same info is shown as in the message window.
+
+                 -------------------------------------------
+
+Using GenIndex
+--------------
+
+GenIndex is a simple utility that reads a text file and generates a list
+of all the context numbers in the file and the line following the context
+number statement.
+
+The output of the program can be used to quickly generate an index (but
+reformatting is required).
+
+                 -------------------------------------------
+
+Installing a TPH file in the IDE
+--------------------------------
+
+To add a .TPH file to the on-line help in the IDE, select the Help/Files
+menu item, and add the .TPH file to include.
+
+                 -------------------------------------------
+
+Writing a Text File to make a TPH File
+--------------------------------------
+
+
+The first line must contain the output file (TPHC is case-insensitve)...
+
+%OUTFILE <file>.TPH
+
+This is the name of the final .TPH file that is generated.
+
+
+Next, an optional description can be added...
+
+%DESCRIPTION <description>
+
+This is used when there are index entries with the same name, the
+description is used to determine which file to use.  It may not be apparent
+what I just said, but for an example, compile the TG.TXT, add it to the
+on-line help in the IDE (see above), press Shift-F1 and type "GetPixel".
+There you will see what the description does.
+
+
+Contexts, a help page, are now added...
+
+Each context is identified by a number, this number can be anything you
+choose.  This number is also used for cross references in a context.
+
+The start of each context is specified by: %<context>
+
+The first three contexts are special...
+
+The first context (%0 in TG.TXT) is a blank context that can never be
+accessed.
+
+The second context is something I cannot explain!  It is suggested to leave
+it blank like the first.
+
+The third context (%3 in TG.TXT) is the main contents context, it is the
+first screen shown when using the .TPH from THelp.COM.
+
+All other contexts can now be added to make your .TPH file.
+
+
+To make a cross reference in a context, surround the context label (the
+text that is highlighted) in a ~ character, followed by a colon then the
+context number, for example, ~text~:10.
+
+A character may follow the context number immediately.
+
+
+Another thing you can do is highlight text like sample code, the character
+to activate/deactivate this highlight, press Ctrl-U to get a  character.
+(This works in the TP/BP IDE, but may not work in other editors.)
+
+
+After all the context entries have been added, the index entry has to be
+added.
+
+The line to start the index is: %INDEX
+
+The index entry text is specified (no spaces), then the context number.
+There can be several index entries that point to the same context
+(such as the CRT colours in the standard help file).
+
+The order does not have to be alphabetical, it is sorted by the TPH compiler.
+
+
+The last line in the help file is: %END
+
+Anything following %END is ignored (can be used for anything!)
+
+
+See TG.TXT for a complete example of making a .TPH file.
+
+                 -------------------------------------------
+
+Error Messages
+--------------
+
+Input file was not specified
+
+  The input text file (the command line arguement) was not specifed.
+
+
+Fatal Error: Cannot find input file <file>
+
+  The input text file that was specified could not be found.
+
+
+Fatal Error: Cannot find output file name
+
+  The %OUTFILE statement was not found on the first line.
+
+
+Fatal Error: Cannot open output file <file>
+
+  The file specified by %OUTFILE could not be created.
+
+
+Successfully opened output file <file>
+
+  This is not an error, this specifies the .TPH file that is being created.
+
+
+Description found <description>
+
+  This is not an error, but states the .TPH description used in the index.
+
+
+Duplicate Context label found <number>
+
+  A previous context has already been defined with the specified number.
+  A different number has to be chosen for one of the contexts.
+
+
+Invalid Context label or Command <statement>
+
+  A % character was the first character on the line, and the rest of the
+  line was not a recognized statement or number.  The only accepted
+  statements are %OUTFILE, %DESCRIPTION, %INDEX, %END and %0 to %65535.
+
+
+Invalid Context label in Index list <entry>
+
+  A non-numerical entry was specified after the index label.  No spaces
+  can be used in an index entry label.
+
+
+Context label in index doesn't exist <entry>
+
+  A context number in the index section has not been previously defined.
+
+
+Unexpected end of file, should end with %END
+
+  The end of the file was reached without a %END statement being found.
+  A %END should be the last line in the text file.
+
+
+Fatal Error: Index Table was not found
+
+  An index table was not found, one must be added (following a %INDEX).
+
+
+Context label not found after keyword <line>
+
+  A word(s) was highlighted with a ~ character but no context number was
+  specified after the ~ (after a colon).
+  If a ~ character is wanted in the text, you should use ~~.
+
+
+End of Keyword not found <line>
+
+  A ~ was in the text file, but a matching one was not found in the line.
+

@@ -1,0 +1,304 @@
+object ExternalToolOptionDlg: TExternalToolOptionDlg
+  Left = 348
+  Height = 501
+  Top = 210
+  Width = 661
+  Caption = 'ExternalToolOptionDlg'
+  ClientHeight = 501
+  ClientWidth = 661
+  Constraints.MinHeight = 350
+  Constraints.MinWidth = 350
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  LCLVersion = '0.9.29'
+  object TitleLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = TitleEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 6
+    Height = 14
+    Top = 9
+    Width = 46
+    BorderSpacing.Left = 6
+    Caption = 'TitleLabel'
+    ParentColor = False
+  end
+  object FilenameLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = FilenameEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 6
+    Height = 14
+    Top = 36
+    Width = 68
+    BorderSpacing.Left = 6
+    Caption = 'FilenameLabel'
+    ParentColor = False
+  end
+  object ParametersLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ParametersEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 6
+    Height = 14
+    Top = 63
+    Width = 81
+    BorderSpacing.Left = 6
+    Caption = 'ParametersLabel'
+    ParentColor = False
+  end
+  object WorkingDirLabel: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = WorkingDirEdit
+    AnchorSideTop.Side = asrCenter
+    Left = 6
+    Height = 14
+    Top = 90
+    Width = 78
+    BorderSpacing.Left = 6
+    Caption = 'WorkingDirLabel'
+    ParentColor = False
+  end
+  object TitleEdit: TEdit
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 128
+    Height = 21
+    Top = 6
+    Width = 527
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Around = 6
+    TabOrder = 0
+    Text = 'TitleEdit'
+  end
+  object FilenameEdit: TEdit
+    AnchorSideLeft.Control = TitleEdit
+    AnchorSideTop.Control = TitleEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = OpenButton
+    Left = 128
+    Height = 21
+    Top = 33
+    Width = 483
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    TabOrder = 1
+    Text = 'FilenameEdit'
+  end
+  object OpenButton: TButton
+    AnchorSideTop.Control = FilenameEdit
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = FilenameEdit
+    AnchorSideBottom.Side = asrBottom
+    Left = 617
+    Height = 21
+    Top = 33
+    Width = 38
+    Anchors = [akTop, akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Right = 6
+    Caption = '...'
+    OnClick = OpenButtonClick
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 2
+  end
+  object ParametersEdit: TEdit
+    AnchorSideLeft.Control = TitleEdit
+    AnchorSideTop.Control = FilenameEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 128
+    Height = 21
+    Top = 60
+    Width = 527
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    TabOrder = 3
+    Text = 'ParametersEdit'
+  end
+  object WorkingDirEdit: TEdit
+    AnchorSideLeft.Control = TitleEdit
+    AnchorSideTop.Control = ParametersEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 128
+    Height = 21
+    Top = 87
+    Width = 527
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    TabOrder = 4
+    Text = 'WorkingDirEdit'
+  end
+  object OptionsGroupBox: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = WorkingDirEdit
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 6
+    Height = 105
+    Top = 114
+    Width = 649
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'OptionsGroupBox'
+    ChildSizing.Layout = cclTopToBottomThenLeftToRight
+    ChildSizing.ControlsPerLine = 5
+    ClientHeight = 87
+    ClientWidth = 645
+    TabOrder = 5
+    object OptionScanOutputForFPCMessagesCheckBox: TCheckBox
+      Left = 6
+      Height = 17
+      Top = 6
+      Width = 242
+      BorderSpacing.Around = 6
+      Caption = 'OptionScanOutputForFPCMessagesCheckBox'
+      TabOrder = 0
+    end
+    object OptionScanOutputForMakeMessagesCheckBox: TCheckBox
+      AnchorSideTop.Side = asrBottom
+      AnchorSideBottom.Side = asrBottom
+      Left = 6
+      Height = 17
+      Top = 29
+      Width = 242
+      BorderSpacing.Around = 6
+      Caption = 'OptionScanOutputForMakeMessagesCheckBox'
+      TabOrder = 1
+    end
+    object ScannersButton: TButton
+      AnchorSideLeft.Control = OptionsGroupBox
+      AnchorSideTop.Control = OptionScanOutputForMakeMessagesCheckBox
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 29
+      Top = 52
+      Width = 323
+      BorderSpacing.Around = 6
+      Caption = 'ScannersButton'
+      OnClick = ScannersButtonClick
+      TabOrder = 2
+    end
+    object chkHideMainForm: TCheckBox
+      AnchorSideLeft.Control = OptionScanOutputForFPCMessagesCheckBox
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = OptionScanOutputForFPCMessagesCheckBox
+      Left = 254
+      Height = 17
+      Top = 6
+      Width = 101
+      BorderSpacing.Left = 6
+      Caption = 'chkHideMainForm'
+      TabOrder = 3
+    end
+  end
+  object KeyGroupBox: TGroupBox
+    AnchorSideLeft.Control = OptionsGroupBox
+    AnchorSideTop.Control = OptionsGroupBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = OptionsGroupBox
+    AnchorSideRight.Side = asrBottom
+    Left = 6
+    Height = 25
+    Top = 225
+    Width = 649
+    Anchors = [akTop, akLeft, akRight]
+    AutoSize = True
+    BorderSpacing.Top = 6
+    Caption = 'KeyGroupBox'
+    Constraints.MinHeight = 25
+    TabOrder = 6
+  end
+  object MacrosGroupbox: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = KeyGroupBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = ButtonPanel
+    Left = 6
+    Height = 207
+    Top = 256
+    Width = 649
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 6
+    Caption = 'MacrosGroupbox'
+    ClientHeight = 189
+    ClientWidth = 645
+    TabOrder = 7
+    object MacrosListbox: TListBox
+      AnchorSideLeft.Control = MacrosGroupbox
+      AnchorSideTop.Control = MacrosInsertButton
+      AnchorSideRight.Control = MacrosInsertButton
+      AnchorSideBottom.Control = MacrosGroupbox
+      AnchorSideBottom.Side = asrBottom
+      Left = 6
+      Height = 181
+      Top = 2
+      Width = 506
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Left = 6
+      BorderSpacing.Right = 6
+      BorderSpacing.Bottom = 6
+      ItemHeight = 0
+      OnClick = MacrosListboxClick
+      OnDblClick = MacrosListboxDblClick
+      TabOrder = 0
+    end
+    object MacrosInsertButton: TButton
+      AnchorSideTop.Control = MacrosGroupbox
+      AnchorSideRight.Control = MacrosGroupbox
+      AnchorSideRight.Side = asrBottom
+      Left = 518
+      Height = 23
+      Top = 2
+      Width = 121
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Top = 2
+      BorderSpacing.Right = 6
+      Caption = 'MacrosInsertButton'
+      Enabled = False
+      OnClick = MacrosInsertButtonClick
+      TabOrder = 1
+    end
+  end
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 26
+    Top = 469
+    Width = 649
+    OKButton.Name = 'OKButton'
+    OKButton.Caption = '&OK'
+    OKButton.OnClick = OKButtonClick
+    HelpButton.Name = 'HelpButton'
+    HelpButton.Caption = '&Help'
+    HelpButton.OnClick = HelpButtonClick
+    CloseButton.Name = 'CloseButton'
+    CloseButton.Caption = '&Close'
+    CloseButton.Enabled = False
+    CancelButton.Name = 'CancelButton'
+    CancelButton.Caption = 'Cancel'
+    TabOrder = 8
+    ShowButtons = [pbOK, pbCancel, pbHelp]
+    ShowBevel = False
+  end
+  object OpenDialog: TOpenDialog
+    Options = [ofPathMustExist, ofFileMustExist, ofEnableSizing, ofViewDetail]
+    left = 88
+    top = 32
+  end
+end

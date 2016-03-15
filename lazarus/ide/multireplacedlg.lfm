@@ -1,0 +1,177 @@
+object MultiReplaceDialog: TMultiReplaceDialog
+  Caption = 'Multiple Replace'
+  ClientHeight = 419
+  ClientWidth = 609
+  HorzScrollBar.Page = 610
+  VertScrollBar.Page = 420
+  Left = 362
+  Height = 419
+  Top = 230
+  Width = 609
+  object ReplaceButton: TButton
+    Caption = 'Replace'
+    TabStop = True
+    TabOrder = 0
+    Left = 144
+    Height = 25
+    Top = 384
+    Width = 107
+  end
+  object CancelButton: TButton
+    ModalResult = 2
+    Caption = 'Cancel'
+    TabStop = True
+    TabOrder = 1
+    Left = 280
+    Height = 25
+    Top = 384
+    Width = 96
+  end
+  object OptionsGroupbox: TGroupBox
+    Caption = 'Options'
+    ClientHeight = 66
+    ClientWidth = 500
+    ParentColor = True
+    ParentCtl3D = False
+    TabOrder = 2
+    Left = 8
+    Height = 83
+    Top = 8
+    Width = 504
+    object ScopeRadiogroup: TRadioGroup
+      Caption = 'Scope'
+      ItemIndex = 0
+      Items.Strings = (
+        'Entire Text'
+        'Selected Text'
+      )
+      Left = 7
+      Height = 63
+      Width = 152
+    end
+    object OriginRadiogroup: TRadioGroup
+      Caption = 'Origin'
+      ItemIndex = 0
+      Items.Strings = (
+        'Entire Scope'
+        'From Cursor'
+      )
+      Left = 175
+      Height = 63
+      Width = 162
+    end
+    object DirectionRadiogroup: TRadioGroup
+      Caption = 'Direction'
+      ItemIndex = 1
+      Items.Strings = (
+        'Up'
+        'Down'
+      )
+      Left = 351
+      Height = 63
+      Width = 138
+    end
+  end
+  object ItemsGroupbox: TGroupBox
+    Anchors = [aktop, akleft, akright, akbottom]
+    Caption = 'Items'
+    ClientHeight = 260
+    ClientWidth = 593
+    ParentColor = True
+    ParentCtl3D = False
+    TabOrder = 3
+    Left = 8
+    Height = 277
+    Top = 99
+    Width = 597
+    object PropertiesGroupbox: TGroupBox
+      Align = albottom
+      Caption = 'Properties'
+      ClientHeight = 133
+      ClientWidth = 589
+      ParentColor = True
+      ParentCtl3D = False
+      TabOrder = 0
+      Height = 150
+      Top = 110
+      Width = 593
+      object Edit1: TEdit
+        Anchors = [aktop, akleft, akright]
+        Text = 'FindTextEdit'
+        TabStop = True
+        TabOrder = 0
+        Left = 108
+        Height = 23
+        Top = 1
+        Width = 474
+      end
+      object FindTextLabel: TLabel
+        Caption = 'Find Text'
+        Layout = tltop
+        Left = 8
+        Height = 17
+        Top = 4
+        Width = 100
+      end
+      object ReplaceWithLabel: TLabel
+        Caption = 'Replace With'
+        Layout = tltop
+        Left = 8
+        Height = 17
+        Top = 34
+        Width = 100
+      end
+      object Edit2: TEdit
+        Anchors = [aktop, akleft, akright]
+        Text = 'ReplaceWithEdit'
+        TabStop = True
+        TabOrder = 3
+        Left = 108
+        Height = 23
+        Top = 33
+        Width = 474
+      end
+      object ItemOptionsCheckgroup: TCheckGroup
+        Align = albottom
+        Caption = 'Options for this item'
+        Items.Strings = (
+          'Case Sensitive'
+          'Whole Words Only'
+          'Regular Expressions'
+          'Multi Line'
+          'Prompt On Replace'
+          'Active'
+        )
+        Columns = 3
+        Height = 70
+        Top = 63
+        Width = 589
+        Data = {
+          06000000020202020202
+        }
+      end
+    end
+    object ItemsListview: TListView
+      Align = alclient
+      Columns = <      
+        item
+          Caption = 'Find Text'
+          Visible = True
+          Width = 250
+        end      
+        item
+          Caption = 'Replace With'
+          Visible = True
+          Width = 150
+        end      
+        item
+          Caption = 'Options'
+          Visible = True
+          Width = 50
+        end>
+      ViewStyle = vsreport
+      Height = 110
+      Width = 593
+    end
+  end
+end

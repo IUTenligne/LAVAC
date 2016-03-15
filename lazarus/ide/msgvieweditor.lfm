@@ -1,0 +1,116 @@
+object MsgViewEditorDlg: TMsgViewEditorDlg
+  Left = 343
+  Height = 345
+  Top = 264
+  Width = 548
+  Caption = 'Messages Editor'
+  ClientHeight = 345
+  ClientWidth = 548
+  OnCreate = MsgViewEditorDlgCreate
+  ParentFont = False
+  LCLVersion = '0.9.25'
+  object FilterSetGroupBox: TGroupBox
+    Left = 8
+    Height = 112
+    Top = 8
+    Width = 534
+    Anchors = [akTop, akLeft, akRight]
+    Caption = 'Filter Set:'
+    ClientHeight = 94
+    ClientWidth = 530
+    ParentCtl3D = False
+    TabOrder = 0
+    object FilterSetsListBox: TListBox
+      Height = 94
+      Width = 358
+      Align = alLeft
+      TabOrder = 0
+    end
+    object AddNewSetButton: TBitBtn
+      Left = 366
+      Height = 25
+      Width = 155
+      Caption = 'AddNewSetButton'
+      NumGlyphs = 0
+      OnClick = AddNewSetButtonClick
+      TabOrder = 1
+    end
+    object DeleteSetButton: TBitBtn
+      Left = 366
+      Height = 25
+      Top = 31
+      Width = 155
+      Caption = 'DeleteSetButton'
+      NumGlyphs = 0
+      OnClick = DeleteSetButtonClick
+      TabOrder = 2
+    end
+    object RenameSetButton: TBitBtn
+      Left = 366
+      Height = 25
+      Top = 63
+      Width = 155
+      Caption = 'RenameSetButton'
+      NumGlyphs = 0
+      OnClick = RenameSetButtonClick
+      TabOrder = 3
+    end
+  end
+  object ActiveFilterSetGroupBox: TGroupBox
+    Left = 8
+    Height = 179
+    Top = 128
+    Width = 535
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Caption = 'ActiveFilterSetGroupBox'
+    ClientHeight = 161
+    ClientWidth = 531
+    ParentCtl3D = False
+    TabOrder = 1
+    object RulesListView: TListView
+      Height = 161
+      Width = 531
+      Align = alClient
+      Columns = <      
+        item
+          Caption = 'Rule'
+          Width = 250
+        end      
+        item
+        end      
+        item
+          Caption = 'Action'
+        end      
+        item
+        end      
+        item
+        end      
+        item
+        end>
+      TabOrder = 0
+      ViewStyle = vsReport
+    end
+  end
+  object CancelButton: TBitBtn
+    Left = 299
+    Height = 25
+    Top = 312
+    Width = 133
+    Anchors = [akLeft, akBottom]
+    Caption = 'CancelButton'
+    ModalResult = 2
+    NumGlyphs = 0
+    TabOrder = 2
+  end
+  object OkButton: TBitBtn
+    Left = 128
+    Height = 25
+    Top = 312
+    Width = 131
+    Anchors = [akLeft, akBottom]
+    Caption = 'OkButton'
+    NumGlyphs = 0
+    OnClick = OkButtonClick
+    TabOrder = 3
+  end
+end

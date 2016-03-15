@@ -1,0 +1,78 @@
+object ViewUnitDialog: TViewUnitDialog
+  Left = 330
+  Height = 301
+  Top = 280
+  Width = 378
+  HorzScrollBar.Page = 377
+  HorzScrollBar.Range = 112
+  VertScrollBar.Page = 300
+  VertScrollBar.Range = 163
+  BorderIcons = [biSystemMenu]
+  Caption = 'View Project Units'
+  ClientHeight = 301
+  ClientWidth = 378
+  Position = poScreenCenter
+  LCLVersion = '0.9.29'
+  object Edit: TEdit
+    Left = 6
+    Height = 25
+    Top = 6
+    Width = 366
+    Align = alTop
+    AutoSize = False
+    AutoSelect = False
+    BorderSpacing.Around = 6
+    OnChange = EditChange
+    OnEnter = EditEnter
+    OnKeyDown = EditKeyDown
+    TabOrder = 0
+  end
+  object Listbox: TListBox
+    Left = 6
+    Height = 218
+    Top = 37
+    Width = 366
+    Align = alClient
+    BorderSpacing.Around = 6
+    ClickOnSelChange = False
+    ItemHeight = 0
+    OnClick = ListboxClick
+    OnDblClick = OKButtonClick
+    OnKeyDown = ListboxKeyDown
+    PopupMenu = popListBox
+    TabOrder = 1
+  end
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 34
+    Top = 261
+    Width = 366
+    OKButton.Name = 'OKButton'
+    OKButton.Caption = '&ОК'
+    OKButton.OnClick = OKButtonClick
+    HelpButton.Name = 'HelpButton'
+    HelpButton.Caption = '&Справка'
+    HelpButton.OnClick = HelpButtonClick
+    CloseButton.Name = 'CloseButton'
+    CloseButton.Caption = '&Закрыть'
+    CloseButton.Enabled = False
+    CancelButton.Name = 'CancelButton'
+    CancelButton.Caption = 'Отмена'
+    CancelButton.OnClick = CancelButtonClick
+    TabOrder = 2
+    ShowButtons = [pbOK, pbCancel, pbHelp]
+  end
+  object popListBox: TPopupMenu
+    left = 144
+    top = 112
+    object mniMultiSelect: TMenuItem
+      AutoCheck = True
+      Caption = 'Multi Select'
+      OnClick = MultiselectCheckBoxClick
+    end
+    object mniSort: TMenuItem
+      Caption = 'Sort'
+      OnClick = mniSortClick
+    end
+  end
+end

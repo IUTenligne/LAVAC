@@ -1,0 +1,180 @@
+inherited BuildModesEditorFrame: TBuildModesEditorFrame
+  Height = 421
+  Width = 550
+  ClientHeight = 421
+  ClientWidth = 550
+  TabOrder = 0
+  DesignLeft = 460
+  DesignTop = 269
+  object BuildMacroValuesGroupBox: TGroupBox[0]
+    Left = 6
+    Height = 234
+    Top = 181
+    Width = 538
+    Align = alClient
+    BorderSpacing.Around = 6
+    Caption = 'BuildMacroValuesGroupBox'
+    ClientHeight = 212
+    ClientWidth = 530
+    TabOrder = 0
+    object BuildMacroValuesStringGrid: TStringGrid
+      Left = 0
+      Height = 212
+      Top = 0
+      Width = 530
+      Align = alClient
+      AutoFillColumns = True
+      ColCount = 2
+      DefaultColWidth = 120
+      FixedCols = 0
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goAlwaysShowEditor, goSmoothScroll]
+      RowCount = 2
+      TabOrder = 0
+      OnEditingDone = BuildMacroValuesStringGridEditingDone
+      OnSelectEditor = BuildMacroValuesStringGridSelectEditor
+      OnSelection = BuildMacroValuesStringGridSelection
+      ColWidths = (
+        265
+        265
+      )
+    end
+  end
+  object BuildModesGroupBox: TGroupBox[1]
+    Left = 6
+    Height = 158
+    Top = 6
+    Width = 538
+    Align = alTop
+    BorderSpacing.Around = 6
+    Caption = 'BuildModesGroupBox'
+    ClientHeight = 136
+    ClientWidth = 530
+    TabOrder = 1
+    object BuildModesStringGrid: TStringGrid
+      AnchorSideTop.Control = BuildModeAddSpeedButton
+      AnchorSideTop.Side = asrBottom
+      Left = 0
+      Height = 114
+      Top = 22
+      Width = 530
+      Align = alBottom
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      AutoFillColumns = True
+      ColCount = 3
+      Columns = <      
+        item
+          ButtonStyle = cbsCheckboxColumn
+          MaxSize = 50
+          Title.Caption = 'Active'
+          Width = 176
+        end      
+        item
+          ButtonStyle = cbsCheckboxColumn
+          MaxSize = 50
+          Title.Caption = 'InSession'
+          Width = 176
+        end      
+        item
+          MaxSize = 500
+          SizePriority = 100
+          Title.Caption = 'Title'
+          Width = 178
+        end>
+      FixedCols = 0
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
+      TabOrder = 0
+      OnCheckboxToggled = BuildModesStringGridCheckboxToggled
+      OnSelection = BuildModesStringGridSelection
+      OnSelectCell = BuildModesStringGridSelectCell
+      OnValidateEntry = BuildModesStringGridValidateEntry
+      ColWidths = (
+        176
+        176
+        178
+      )
+    end
+    object BuildModeAddSpeedButton: TSpeedButton
+      AnchorSideLeft.Control = BuildModesGroupBox
+      AnchorSideTop.Control = BuildModesGroupBox
+      Left = 0
+      Height = 22
+      Top = 0
+      Width = 23
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = BuildModeAddSpeedButtonClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object BuildModeDeleteSpeedButton: TSpeedButton
+      AnchorSideLeft.Control = BuildModeAddSpeedButton
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BuildModesGroupBox
+      Left = 23
+      Height = 22
+      Top = 0
+      Width = 23
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = BuildModeDeleteSpeedButtonClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object BuildModeMoveUpSpeedButton: TSpeedButton
+      AnchorSideLeft.Control = BuildModeDeleteSpeedButton
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BuildModesGroupBox
+      Left = 46
+      Height = 22
+      Top = 0
+      Width = 23
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = BuildModeMoveUpSpeedButtonClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object BuildModeMoveDownSpeedButton: TSpeedButton
+      AnchorSideLeft.Control = BuildModeMoveUpSpeedButton
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BuildModesGroupBox
+      Left = 69
+      Height = 22
+      Top = 0
+      Width = 23
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = BuildModeMoveDownSpeedButtonClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+    object BuildModeDiffSpeedButton: TSpeedButton
+      AnchorSideLeft.Control = BuildModeMoveDownSpeedButton
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = BuildModesGroupBox
+      Left = 102
+      Height = 22
+      Top = 0
+      Width = 23
+      BorderSpacing.Left = 10
+      Color = clBtnFace
+      NumGlyphs = 0
+      OnClick = BuildModeDiffSpeedButtonClick
+      ShowHint = True
+      ParentShowHint = False
+    end
+  end
+  object Splitter1: TSplitter[2]
+    Cursor = crVSplit
+    Left = 0
+    Height = 5
+    Top = 170
+    Width = 550
+    Align = alTop
+    ResizeAnchor = akTop
+  end
+  object BuildModesPopupMenu: TPopupMenu[3]
+    left = 180
+    top = 60
+  end
+end

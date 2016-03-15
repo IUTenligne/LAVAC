@@ -1,0 +1,511 @@
+inherited EditorGeneralOptionsFrame: TEditorGeneralOptionsFrame
+  Height = 423
+  Width = 434
+  ClientHeight = 423
+  ClientWidth = 434
+  TabOrder = 0
+  Visible = False
+  DesignLeft = 295
+  DesignTop = 212
+  object BlockIndentLabel: TLabel[0]
+    AnchorSideLeft.Control = BlockIndentComboBox
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = BlockIndentComboBox
+    AnchorSideTop.Side = asrCenter
+    Left = 112
+    Height = 18
+    Top = 232
+    Width = 109
+    BorderSpacing.Around = 6
+    Caption = 'BlockIndentLabel'
+    ParentColor = False
+  end
+  object TabWidthsLabel: TLabel[1]
+    AnchorSideLeft.Control = TabWidthsComboBox
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = TabWidthsComboBox
+    AnchorSideTop.Side = asrCenter
+    Left = 324
+    Height = 18
+    Top = 232
+    Width = 98
+    BorderSpacing.Around = 6
+    Caption = 'TabWidthsLabel'
+    ParentColor = False
+  end
+  object UndoLimitLabel: TLabel[2]
+    AnchorSideLeft.Control = UndoLimitComboBox
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = UndoLimitComboBox
+    AnchorSideTop.Side = asrCenter
+    Left = 324
+    Height = 18
+    Top = 27
+    Width = 100
+    BorderSpacing.Around = 6
+    Caption = 'UndoLimitLabel'
+    ParentColor = False
+  end
+  object BlockIndentTypeLabel: TLabel[3]
+    AnchorSideLeft.Control = BlockIndentTypeComboBox
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = BlockIndentTypeComboBox
+    AnchorSideTop.Side = asrCenter
+    Left = 112
+    Height = 18
+    Top = 263
+    Width = 137
+    BorderSpacing.Around = 6
+    Caption = 'BlockIndentTypeLabel'
+    ParentColor = False
+  end
+  object BlockIndentComboBox: TComboBox[4]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = TabIndentBlocksCheckBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = TabWidthsComboBox
+    Left = 6
+    Height = 27
+    Top = 228
+    Width = 100
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 3
+    ItemHeight = 0
+    Items.Strings = (
+      '1'
+      '2'
+      '4'
+      '8'
+    )
+    OnChange = ComboboxOnChange
+    OnExit = ComboBoxOnExit
+    OnKeyDown = ComboboxOnKeyDown
+    TabOrder = 0
+  end
+  object TabWidthsComboBox: TComboBox[5]
+    AnchorSideLeft.Control = SmartTabsCheckBox
+    AnchorSideTop.Control = BlockIndentComboBox
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 218
+    Height = 27
+    Top = 228
+    Width = 100
+    ItemHeight = 0
+    Items.Strings = (
+      '1'
+      '2'
+      '4'
+      '8'
+    )
+    OnChange = ComboboxOnChange
+    OnExit = ComboBoxOnExit
+    OnKeyDown = ComboboxOnKeyDown
+    TabOrder = 1
+  end
+  object UndoLimitComboBox: TComboBox[6]
+    AnchorSideLeft.Control = CenterLabel
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = UndoGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 218
+    Height = 27
+    Top = 23
+    Width = 100
+    BorderSpacing.Top = 6
+    ItemHeight = 0
+    Items.Strings = (
+      '32767'
+      '4096'
+      '512'
+    )
+    OnChange = ComboboxOnChange
+    OnExit = ComboBoxOnExit
+    OnKeyDown = ComboboxOnKeyDown
+    TabOrder = 2
+  end
+  object GroupUndoCheckBox: TCheckBox[7]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = UndoAfterSaveCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 44
+    Width = 158
+    BorderSpacing.Left = 6
+    Caption = 'GroupUndoCheckBox'
+    OnChange = GroupUndoCheckBoxChange
+    TabOrder = 3
+  end
+  object UndoAfterSaveCheckBox: TCheckBox[8]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = UndoGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 23
+    Width = 182
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'UndoAfterSaveCheckBox'
+    TabOrder = 4
+  end
+  object ScrollPastEndFileCheckBox: TCheckBox[9]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ScrollGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 94
+    Width = 191
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'ScrollPastEndFileCheckBox'
+    OnChange = ScrollPastEndFileCheckBoxChange
+    TabOrder = 5
+  end
+  object ScrollPastEndLineCheckBox: TCheckBox[10]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = AlwaysVisibleCursorCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 379
+    Width = 197
+    BorderSpacing.Left = 6
+    Caption = 'ScrollPastEndLineCheckBox'
+    OnChange = ScrollPastEndLineCheckBoxChange
+    TabOrder = 6
+  end
+  object ScrollByOneLessCheckBox: TCheckBox[11]
+    AnchorSideLeft.Control = UndoLimitComboBox
+    AnchorSideTop.Control = ScrollGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 218
+    Height = 21
+    Top = 94
+    Width = 191
+    BorderSpacing.Top = 6
+    Caption = 'ScrollByOneLessCheckBox'
+    OnChange = ScrollByOneLessCheckBoxChange
+    TabOrder = 7
+  end
+  object HalfPageScrollCheckBox: TCheckBox[12]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ScrollPastEndFileCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 115
+    Width = 176
+    BorderSpacing.Left = 6
+    Caption = 'HalfPageScrollCheckBox'
+    OnChange = HalfPageScrollCheckBoxChange
+    TabOrder = 8
+  end
+  object AutoIndentCheckBox: TCheckBox[13]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = IndentsTabsGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 165
+    Width = 155
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'AutoIndentCheckBox'
+    OnChange = AutoIndentCheckBoxChange
+    TabOrder = 9
+  end
+  object TabIndentBlocksCheckBox: TCheckBox[14]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = AutoIndentLink
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 204
+    Width = 187
+    BorderSpacing.Left = 6
+    Caption = 'TabIndentBlocksCheckBox'
+    OnChange = TabIndentBlocksCheckBoxChange
+    TabOrder = 10
+  end
+  object SmartTabsCheckBox: TCheckBox[15]
+    AnchorSideLeft.Control = UndoLimitComboBox
+    AnchorSideTop.Control = IndentsTabsGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 218
+    Height = 21
+    Top = 165
+    Width = 153
+    BorderSpacing.Top = 6
+    Caption = 'SmartTabsCheckBox'
+    OnChange = SmartTabsCheckBoxChange
+    TabOrder = 11
+  end
+  object TabsToSpacesCheckBox: TCheckBox[16]
+    AnchorSideLeft.Control = SmartTabsCheckBox
+    AnchorSideTop.Control = SmartTabsCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 218
+    Height = 21
+    Top = 186
+    Width = 173
+    Caption = 'TabsToSpacesCheckBox'
+    OnChange = TabsToSpacesCheckBoxChange
+    TabOrder = 12
+  end
+  object KeepCursorXCheckBox: TCheckBox[17]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = CaretGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 316
+    Width = 165
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'KeepCursorXCheckBox'
+    OnChange = KeepCursorXCheckBoxChange
+    TabOrder = 13
+  end
+  object PersistentCursorCheckBox: TCheckBox[18]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = KeepCursorXCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 337
+    Width = 191
+    BorderSpacing.Left = 6
+    Caption = 'PersistentCursorCheckBox'
+    OnChange = PersistentCursorCheckBoxChange
+    TabOrder = 14
+  end
+  object AlwaysVisibleCursorCheckBox: TCheckBox[19]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = PersistentCursorCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 358
+    Width = 211
+    BorderSpacing.Left = 6
+    Caption = 'AlwaysVisibleCursorCheckBox'
+    OnChange = AlwaysVisibleCursorCheckBoxChange
+    TabOrder = 15
+  end
+  object CursorSkipsSelectionCheckBox: TCheckBox[20]
+    AnchorSideLeft.Control = UndoLimitComboBox
+    AnchorSideTop.Control = CaretGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 218
+    Height = 21
+    Top = 316
+    Width = 220
+    BorderSpacing.Top = 6
+    Caption = 'CursorSkipsSelectionCheckBox'
+    OnChange = CursorSkipsSelectionCheckBoxChange
+    TabOrder = 16
+  end
+  object HomeKeyJumpsToNearestStartCheckBox: TCheckBox[21]
+    AnchorSideLeft.Control = CursorSkipsSelectionCheckBox
+    AnchorSideTop.Control = AlwaysVisibleCursorCheckBox
+    Left = 218
+    Height = 21
+    Top = 358
+    Width = 281
+    Caption = 'HomeKeyJumpsToNearestStartCheckBox'
+    OnChange = HomeKeyJumpsToNearestStartCheckBoxChange
+    TabOrder = 17
+  end
+  object EndKeyJumpsToNearestStartCheckBox: TCheckBox[22]
+    AnchorSideLeft.Control = HomeKeyJumpsToNearestStartCheckBox
+    AnchorSideTop.Control = ScrollPastEndLineCheckBox
+    Left = 218
+    Height = 21
+    Top = 379
+    Width = 266
+    Caption = 'EndKeyJumpsToNearestStartCheckBox'
+    OnChange = EndKeyJumpsToNearestStartCheckBoxChange
+    TabOrder = 18
+  end
+  object BlockIndentTypeComboBox: TComboBox[23]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = BlockIndentComboBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = TabWidthsComboBox
+    Left = 6
+    Height = 29
+    Top = 258
+    Width = 100
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 3
+    ItemHeight = 0
+    ItemWidth = 200
+    OnChange = ComboboxOnChange
+    OnExit = ComboBoxOnExit
+    OnKeyDown = ComboboxOnKeyDown
+    Style = csDropDownList
+    TabOrder = 19
+  end
+  object PersistentBlockCheckBox: TCheckBox[24]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = BlockGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 21
+    Top = 429
+    Width = 183
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'PersistentBlockCheckBox'
+    OnChange = PersistentBlockCheckBoxChange
+    TabOrder = 20
+  end
+  object OverwriteBlockCheckBox: TCheckBox[25]
+    AnchorSideLeft.Control = UndoLimitComboBox
+    AnchorSideTop.Control = BlockGroupDivider
+    AnchorSideTop.Side = asrBottom
+    Left = 218
+    Height = 21
+    Top = 429
+    Width = 179
+    BorderSpacing.Top = 6
+    Caption = 'OverwriteBlockCheckBox'
+    OnChange = OverwriteBlockCheckBoxChange
+    TabOrder = 21
+  end
+  object CursorSkipsTabCheckBox: TCheckBox[26]
+    AnchorSideLeft.Control = CursorSkipsSelectionCheckBox
+    AnchorSideTop.Control = PersistentCursorCheckBox
+    Left = 218
+    Height = 21
+    Top = 337
+    Width = 182
+    Caption = 'CursorSkipsTabCheckBox'
+    OnChange = CursorSkipsTabCheckBoxChange
+    TabOrder = 22
+  end
+  object AutoIndentLink: TLabel[27]
+    AnchorSideLeft.Control = AutoIndentCheckBox
+    AnchorSideTop.Control = AutoIndentCheckBox
+    AnchorSideTop.Side = asrBottom
+    Cursor = crHandPoint
+    Left = 24
+    Height = 18
+    Top = 186
+    Width = 96
+    BorderSpacing.Left = 18
+    Caption = 'AutoIndentLink'
+    Font.Color = clBlue
+    ParentColor = False
+    ParentFont = False
+    OnClick = AutoIndentLinkClick
+    OnMouseEnter = AutoIndentLinkMouseEnter
+    OnMouseLeave = AutoIndentLinkMouseLeave
+  end
+  object CenterLabel: TLabel[28]
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    Left = 217
+    Height = 1
+    Top = -513
+    Width = 1
+    ParentColor = False
+  end
+  object UndoGroupDivider: TDividerBevel[29]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 17
+    Top = 0
+    Width = 434
+    Caption = 'UndoGroupDivider'
+    Autosize = True
+    Anchors = [akTop, akLeft, akRight]
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object ScrollGroupDivider: TDividerBevel[30]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = GroupUndoCheckBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 17
+    Top = 71
+    Width = 434
+    Caption = 'ScrollGroupDivider'
+    Autosize = True
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 6
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object IndentsTabsGroupDivider: TDividerBevel[31]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = HalfPageScrollCheckBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 17
+    Top = 142
+    Width = 434
+    Caption = 'IndentsTabsGroupDivider'
+    Autosize = True
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 6
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object CaretGroupDivider: TDividerBevel[32]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = BlockIndentTypeComboBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 17
+    Top = 293
+    Width = 434
+    Caption = 'CaretGroupDivider'
+    Autosize = True
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 6
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object BlockGroupDivider: TDividerBevel[33]
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ScrollPastEndLineCheckBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 17
+    Top = 406
+    Width = 434
+    Caption = 'BlockGroupDivider'
+    Autosize = True
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 6
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object chkScrollHint: TCheckBox[34]
+    AnchorSideLeft.Control = ScrollByOneLessCheckBox
+    AnchorSideTop.Control = ScrollByOneLessCheckBox
+    AnchorSideTop.Side = asrBottom
+    Left = 218
+    Height = 21
+    Top = 115
+    Width = 87
+    Caption = 'Scroll Hint'
+    TabOrder = 23
+  end
+end

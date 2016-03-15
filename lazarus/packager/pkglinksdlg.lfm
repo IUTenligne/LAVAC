@@ -1,0 +1,92 @@
+object PackageLinksDialog: TPackageLinksDialog
+  Left = 290
+  Height = 451
+  Top = 189
+  Width = 659
+  ActiveControl = CloseBitBtn
+  Caption = 'PackageLinksDialog'
+  ClientHeight = 451
+  ClientWidth = 659
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '0.9.27'
+  object CloseBitBtn: TBitBtn
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 582
+    Height = 26
+    Top = 419
+    Width = 71
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = '&Close'
+    Kind = bkClose
+    ModalResult = 1
+    NumGlyphs = 0
+    TabOrder = 0
+  end
+  object ScopeGroupBox: TGroupBox
+    Left = 0
+    Height = 93
+    Top = 0
+    Width = 659
+    Align = alTop
+    AutoSize = True
+    Caption = 'ScopeGroupBox'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 6
+    ChildSizing.HorizontalSpacing = 6
+    ChildSizing.VerticalSpacing = 6
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ClientHeight = 75
+    ClientWidth = 655
+    TabOrder = 1
+    object FileMustExistCheckBox: TCheckBox
+      Left = 6
+      Height = 17
+      Top = 6
+      Width = 149
+      Caption = 'FileMustExistCheckBox'
+      OnChange = FileMustExistCheckBoxChange
+      TabOrder = 0
+    end
+    object ShowGlobalLinksCheckBox: TCheckBox
+      Left = 6
+      Height = 17
+      Top = 29
+      Width = 149
+      Caption = 'ShowGlobalLinksCheckBox'
+      Checked = True
+      OnChange = ShowGlobalLinksCheckBoxChange
+      State = cbChecked
+      TabOrder = 1
+    end
+    object ShowUserLinksCheckBox: TCheckBox
+      Left = 6
+      Height = 17
+      Top = 52
+      Width = 149
+      Caption = 'ShowUserLinksCheckBox'
+      Checked = True
+      OnChange = ShowUserLinksCheckBoxChange
+      State = cbChecked
+      TabOrder = 2
+    end
+  end
+  object PkgStringGrid: TStringGrid
+    AnchorSideBottom.Control = CloseBitBtn
+    Left = 0
+    Height = 320
+    Top = 93
+    Width = 659
+    Align = alTop
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ColCount = 4
+    FixedCols = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goTabs, goColSpanning, goDblClickAutoSize, goSmoothScroll]
+    TabOrder = 2
+  end
+end

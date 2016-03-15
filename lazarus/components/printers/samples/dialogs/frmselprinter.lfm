@@ -1,0 +1,183 @@
+object Form1: TForm1
+  Left = 335
+  Height = 504
+  Top = 141
+  Width = 340
+  ActiveControl = Button7
+  Caption = 'Form1'
+  ClientHeight = 504
+  ClientWidth = 340
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '0.9.27'
+  object Label1: TLabel
+    Left = 12
+    Height = 14
+    Top = 4
+    Width = 230
+    Caption = 'This sample show how to use the printer dialogs'
+    ParentColor = False
+  end
+  object Button2: TButton
+    Left = 8
+    Height = 27
+    Top = 51
+    Width = 176
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Execute TPrinterSetupDialog'
+    OnClick = Button2Click
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 8
+    Height = 27
+    Top = 78
+    Width = 176
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Execute TPrintDialog'
+    OnClick = Button1Click
+    TabOrder = 1
+  end
+  object SGrid: TStringGrid
+    Left = 8
+    Height = 304
+    Top = 192
+    Width = 320
+    AlternateColor = clCream
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoFillColumns = True
+    ColCount = 2
+    Columns = <    
+      item
+        Color = clBtnFace
+        SizePriority = 0
+        Title.Caption = 'Property'
+        Width = 120
+      end    
+      item
+        MinSize = 60
+        MaxSize = 350
+        ReadOnly = True
+        Title.Caption = 'Value'
+        Width = 196
+      end>
+    DefaultColWidth = 120
+    FixedCols = 0
+    FixedRows = 0
+    Options = [goVertLine, goRangeSelect, goSmoothScroll]
+    RowCount = 15
+    TabOrder = 7
+    TitleStyle = tsNative
+    OnSelectCell = SGridSelectCell
+    ColWidths = (
+      120
+      196
+    )
+  end
+  object Button3: TButton
+    Left = 8
+    Height = 27
+    Top = 105
+    Width = 176
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Get default printer info'
+    OnClick = Button3Click
+    TabOrder = 2
+  end
+  object Button4: TButton
+    Left = 200
+    Height = 27
+    Top = 155
+    Width = 88
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Print test'
+    OnClick = Button4Click
+    TabOrder = 3
+  end
+  object Button5: TButton
+    Left = 8
+    Height = 25
+    Top = 132
+    Width = 176
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Update printer state info'
+    OnClick = Button5Click
+    TabOrder = 4
+  end
+  object Button6: TButton
+    Left = 8
+    Height = 25
+    Top = 157
+    Width = 176
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Show printer properties'
+    OnClick = Button6Click
+    TabOrder = 5
+  end
+  object Button7: TButton
+    Left = 8
+    Height = 27
+    Top = 24
+    Width = 176
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Execute TPageSetupDialog'
+    OnClick = Button7Click
+    TabOrder = 6
+  end
+  object chkTestImgs: TCheckBox
+    Left = 200
+    Height = 17
+    Top = 133
+    Width = 65
+    Caption = 'Test Imgs'
+    TabOrder = 8
+  end
+  object chkOutputFile: TCheckBox
+    Left = 195
+    Height = 17
+    Top = 27
+    Width = 71
+    Caption = 'Output File'
+    TabOrder = 9
+  end
+  object txtOutputFile: TFileNameEdit
+    Left = 195
+    Height = 23
+    Top = 48
+    Width = 109
+    DialogKind = dkSave
+    DialogOptions = []
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonWidth = 23
+    NumGlyphs = 0
+    TabOrder = 10
+  end
+  object PSD: TPrinterSetupDialog
+    Title = 'Testing dialog title'
+    left = 176
+    top = 240
+  end
+  object PD: TPrintDialog
+    Title = 'Testing title'
+    Collate = True
+    Copies = 1
+    FromPage = 2
+    MinPage = 2
+    MaxPage = 5
+    Options = [poPrintToFile, poPageNums, poSelection, poWarning, poHelp]
+    PrintToFile = True
+    ToPage = 3
+    left = 176
+    top = 272
+  end
+  object PopupMenu1: TPopupMenu
+    left = 216
+    top = 240
+  end
+  object PAGED: TPageSetupDialog
+    Title = 'Ustawienie strony raportu'
+    left = 176
+    top = 304
+  end
+end

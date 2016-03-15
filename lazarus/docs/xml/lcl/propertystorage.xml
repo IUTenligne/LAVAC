@@ -1,0 +1,820 @@
+<?xml version="1.0"?>
+<fpdoc-descriptions>
+  <package name="lcl">
+    <!--
+  ====================================================================
+    PropertyStorage
+  ====================================================================
+-->
+    <module name="PropertyStorage">
+      <short/>
+      <descr/>
+      <!-- unresolved type reference Visibility: default -->
+      <element name="Classes">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- unresolved type reference Visibility: default -->
+      <element name="SysUtils">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- unresolved type reference Visibility: default -->
+      <element name="RTLConst">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- enumeration type Visibility: default -->
+      <element name="TPlacementOperation">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- enumeration value Visibility: default -->
+      <element name="TPlacementOperation.poSave"><short/></element>
+      <!-- enumeration value Visibility: default -->
+      <element name="TPlacementOperation.poRestore"><short/></element>
+      <!-- object Visibility: default -->
+      <element name="TCustomPropertyStorage">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- object Visibility: default -->
+      <element name="TStoredValue">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- object Visibility: default -->
+      <element name="TStoredValues">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- alias type Visibility: default -->
+      <element name="TStoredType">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- procedure type Visibility: default -->
+      <element name="TStoredValueEvent">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValueEvent.Sender"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValueEvent.Value"><short/></element>
+      <!-- object Visibility: default -->
+      <element name="TStoredValue">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TStoredValue.FName">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TStoredValue.FValue">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TStoredValue.FKeyString">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TStoredValue.FOnSave">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TStoredValue.FOnRestore">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- function Visibility: private -->
+      <element name="TStoredValue.IsValueStored">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TStoredValue.IsValueStored.Result"><short/></element>
+      <!-- function Visibility: private -->
+      <element name="TStoredValue.GetStoredValues">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TStoredValue.GetStoredValues.Result"><short/></element>
+      <!-- function Visibility: protected -->
+      <element name="TStoredValue.GetDisplayName">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TStoredValue.GetDisplayName.Result"><short/></element>
+      <!-- procedure Visibility: protected -->
+      <element name="TStoredValue.SetDisplayName">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValue.SetDisplayName.Value"><short/></element>
+      <!-- constructor Visibility: public -->
+      <element name="TStoredValue.Create">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValue.Create.ACollection"><short/></element>
+      <!-- procedure Visibility: public -->
+      <element name="TStoredValue.Assign">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValue.Assign.Source"><short/></element>
+      <!-- procedure Visibility: public -->
+      <element name="TStoredValue.Clear">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: public -->
+      <element name="TStoredValue.Save">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: public -->
+      <element name="TStoredValue.Restore">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TStoredValue.StoredValues">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: published -->
+      <element name="TStoredValue.Name">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: published -->
+      <element name="TStoredValue.Value">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: published -->
+      <element name="TStoredValue.KeyString">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: published -->
+      <element name="TStoredValue.OnSave">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: published -->
+      <element name="TStoredValue.OnRestore">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- object Visibility: default -->
+      <element name="TStoredValues">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TStoredValues.FStorage">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- function Visibility: private -->
+      <element name="TStoredValues.GetValue">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TStoredValues.GetValue.Result"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.GetValue.AName"><short/></element>
+      <!-- procedure Visibility: private -->
+      <element name="TStoredValues.SetValue">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.SetValue.AName"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.SetValue.StoredValue"><short/></element>
+      <!-- function Visibility: private -->
+      <element name="TStoredValues.GetStoredValue">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TStoredValues.GetStoredValue.Result"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.GetStoredValue.AName"><short/></element>
+      <!-- procedure Visibility: private -->
+      <element name="TStoredValues.SetStoredValue">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.SetStoredValue.AName"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.SetStoredValue.Value"><short/></element>
+      <!-- function Visibility: private -->
+      <element name="TStoredValues.GetItem">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TStoredValues.GetItem.Result"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.GetItem.Index"><short/></element>
+      <!-- procedure Visibility: private -->
+      <element name="TStoredValues.SetItem">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.SetItem.Index"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.SetItem.StoredValue"><short/></element>
+      <!-- constructor Visibility: public -->
+      <element name="TStoredValues.Create">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.Create.AOwner"><short/></element>
+      <!-- function Visibility: public -->
+      <element name="TStoredValues.IndexOf">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TStoredValues.IndexOf.Result"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.IndexOf.AName"><short/></element>
+      <!-- procedure Visibility: public -->
+      <element name="TStoredValues.SaveValues">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: public -->
+      <element name="TStoredValues.RestoreValues">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TStoredValues.Storage">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TStoredValues.Items">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.Items.Index"><short/></element>
+      <!-- property Visibility: public -->
+      <element name="TStoredValues.Values">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.Values.Name"><short/></element>
+      <!-- property Visibility: public -->
+      <element name="TStoredValues.StoredValue">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TStoredValues.StoredValue.Name"><short/></element>
+      <!-- object Visibility: default -->
+      <element name="TPropertyStorageLink">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TPropertyStorageLink.FStorage">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TPropertyStorageLink.FOnSave">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TPropertyStorageLink.FOnLoad">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- function Visibility: private -->
+      <element name="TPropertyStorageLink.GetRootSection">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TPropertyStorageLink.GetRootSection.Result"><short/></element>
+      <!-- procedure Visibility: private -->
+      <element name="TPropertyStorageLink.SetStorage">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TPropertyStorageLink.SetStorage.Value"><short/></element>
+      <!-- procedure Visibility: protected -->
+      <element name="TPropertyStorageLink.SaveProperties">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: protected -->
+      <element name="TPropertyStorageLink.LoadProperties">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- destructor Visibility: public -->
+      <element name="TPropertyStorageLink.Destroy">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TPropertyStorageLink.Storage">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TPropertyStorageLink.RootSection">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TPropertyStorageLink.OnSave">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TPropertyStorageLink.OnLoad">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- object Visibility: default -->
+      <element name="TCustomPropertyStorage">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TCustomPropertyStorage.FStoredValues">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TCustomPropertyStorage.FActive">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TCustomPropertyStorage.FLinks">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TCustomPropertyStorage.FSaved">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TCustomPropertyStorage.FRestored">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TCustomPropertyStorage.FOnSaveProperties">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TCustomPropertyStorage.FOnRestoreProperties">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: private -->
+      <element name="TCustomPropertyStorage.AddLink">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.AddLink.ALink"><short/></element>
+      <!-- procedure Visibility: private -->
+      <element name="TCustomPropertyStorage.RemoveLink">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.RemoveLink.ALink"><short/></element>
+      <!-- procedure Visibility: private -->
+      <element name="TCustomPropertyStorage.NotifyLinks">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.NotifyLinks.Operation"><short/></element>
+      <!-- procedure Visibility: private -->
+      <element name="TCustomPropertyStorage.SetStoredValues">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.SetStoredValues.Value"><short/></element>
+      <!-- function Visibility: private -->
+      <element name="TCustomPropertyStorage.GetStoredValue">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TCustomPropertyStorage.GetStoredValue.Result"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.GetStoredValue.AName"><short/></element>
+      <!-- procedure Visibility: private -->
+      <element name="TCustomPropertyStorage.SetStoredValue">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.SetStoredValue.AName"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.SetStoredValue.Value"><short/></element>
+      <!-- function Visibility: protected -->
+      <element name="TCustomPropertyStorage.GetRoot">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TCustomPropertyStorage.GetRoot.Result"><short/></element>
+      <!-- procedure Visibility: protected -->
+      <element name="TCustomPropertyStorage.StorageNeeded">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.StorageNeeded.ReadOnly"><short/></element>
+      <!-- procedure Visibility: protected -->
+      <element name="TCustomPropertyStorage.FreeStorage">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function Visibility: protected -->
+      <element name="TCustomPropertyStorage.RootSection">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TCustomPropertyStorage.RootSection.Result"><short/></element>
+      <!-- procedure Visibility: protected -->
+      <element name="TCustomPropertyStorage.SaveProperties">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: protected -->
+      <element name="TCustomPropertyStorage.RestoreProperties">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: protected -->
+      <element name="TCustomPropertyStorage.GetPropertyList">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.GetPropertyList.List"><short/></element>
+      <!-- procedure Visibility: protected -->
+      <element name="TCustomPropertyStorage.FinishPropertyList">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.FinishPropertyList.List"><short/></element>
+      <!-- function Visibility: protected -->
+      <element name="TCustomPropertyStorage.DoReadInteger">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TCustomPropertyStorage.DoReadInteger.Result"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoReadInteger.Section"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoReadInteger.Ident"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoReadInteger.Default"><short/></element>
+      <!-- function Visibility: protected -->
+      <element name="TCustomPropertyStorage.DoReadString">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TCustomPropertyStorage.DoReadString.Result"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoReadString.Section"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoReadString.Ident"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoReadString.Default"><short/></element>
+      <!-- procedure Visibility: protected -->
+      <element name="TCustomPropertyStorage.DoWriteString">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoWriteString.Section"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoWriteString.Ident"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoWriteString.Value"><short/></element>
+      <!-- procedure Visibility: protected -->
+      <element name="TCustomPropertyStorage.DoWriteInteger">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoWriteInteger.Section"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoWriteInteger.Ident"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoWriteInteger.Value"><short/></element>
+      <!-- procedure Visibility: protected -->
+      <element name="TCustomPropertyStorage.DoEraseSections">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.DoEraseSections.ARootSection"><short/></element>
+      <!-- constructor Visibility: public -->
+      <element name="TCustomPropertyStorage.Create">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.Create.AOwner"><short/></element>
+      <!-- destructor Visibility: public -->
+      <element name="TCustomPropertyStorage.Destroy">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: public -->
+      <element name="TCustomPropertyStorage.Save">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: public -->
+      <element name="TCustomPropertyStorage.Restore">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function Visibility: public -->
+      <element name="TCustomPropertyStorage.ReadString">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TCustomPropertyStorage.ReadString.Result"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.ReadString.Ident"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.ReadString.Default"><short/></element>
+      <!-- function Visibility: public -->
+      <element name="TCustomPropertyStorage.ReadInteger">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TCustomPropertyStorage.ReadInteger.Result"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.ReadInteger.Ident"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.ReadInteger.Default"><short/></element>
+      <!-- procedure Visibility: public -->
+      <element name="TCustomPropertyStorage.WriteString">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.WriteString.Ident"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.WriteString.Value"><short/></element>
+      <!-- procedure Visibility: public -->
+      <element name="TCustomPropertyStorage.WriteInteger">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.WriteInteger.Ident"><short/></element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.WriteInteger.Value"><short/></element>
+      <!-- procedure Visibility: public -->
+      <element name="TCustomPropertyStorage.EraseSections">
+        <short/>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TCustomPropertyStorage.StoredValue">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TCustomPropertyStorage.StoredValue.AName"><short/></element>
+      <!-- property Visibility: public -->
+      <element name="TCustomPropertyStorage.Root">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TCustomPropertyStorage.Active">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TCustomPropertyStorage.StoredValues">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TCustomPropertyStorage.OnSaveProperties">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: public -->
+      <element name="TCustomPropertyStorage.OnRestoreProperties">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+    </module>
+    <!-- PropertyStorage -->
+  </package>
+</fpdoc-descriptions>

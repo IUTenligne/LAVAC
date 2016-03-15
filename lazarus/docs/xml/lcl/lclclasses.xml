@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<fpdoc-descriptions>
+  <package name="lcl">
+    <!--
+  ====================================================================
+    LCLClasses
+  ====================================================================
+-->
+    <module name="LCLClasses">
+      <short>Defines the base class for all LCL TComponents including controls</short>
+      <descr/>
+      <!-- unresolved type reference Visibility: default -->
+      <element name="Classes">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- unresolved type reference Visibility: default -->
+      <element name="WSLCLClasses">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- object Visibility: default -->
+      <element name="TLCLComponent">
+        <short>
+          <var>TLCLComponent</var> - base class for LCL components</short>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- variable Visibility: private -->
+      <element name="TLCLComponent.FWidgetSetClass">
+        <short/>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- property Visibility: protected -->
+      <element name="TLCLComponent.WidgetSetClass">
+        <short>
+          <var>WidgetSetClass</var> - the set of Widgets to be used by this Component</short>
+        <descr/>
+        <seealso/>
+      </element>
+      <!-- procedure Visibility: public -->
+      <element name="TLCLComponent.BeforeDestruction">
+        <short>
+          <var>BeforeDestruction</var> - code to execute before destruction of Control: performs inherited <var>Destroying</var> method</short>
+        <descr/>
+        <errors/>
+        <seealso>
+          <link id="#rtl.Classes.TComponent.Destroying">TComponent.Destroying</link>
+        </seealso>
+      </element>
+      <!-- function Visibility: public -->
+      <element name="TLCLComponent.NewInstance">
+        <short>
+          <var>NewInstance</var> - performs inherited <var>NewInstance</var> to allocate space on the heap, and loads the correct WidgetSet</short>
+        <descr/>
+        <errors/>
+        <seealso>
+          <link id="#rtl.Classes.TObject.NewInstance">TObject.NewInstance</link>
+        </seealso>
+      </element>
+      <!-- function result Visibility: default -->
+      <element name="TLCLComponent.NewInstance.Result">
+        <short/>
+      </element>
+      <!-- procedure Visibility: public -->
+      <element name="TLCLComponent.RemoveAllHandlersOfObject">
+        <short>
+          <var>RemoveAllHandlersOfObject</var> - method for removing all of an object's handlers: part of a clean-up procedure</short>
+        <descr/>
+        <errors/>
+        <seealso/>
+      </element>
+      <!-- argument Visibility: default -->
+      <element name="TLCLComponent.RemoveAllHandlersOfObject.AnObject">
+        <short/>
+      </element>
+      <element name="TLCLComponent.Create">
+        <short>
+          <var>Create</var> - constructor for <var>TLCLComponent</var>: calls inherited <var>Create</var>
+        </short>
+        <seealso>
+          <link id="#rtl.Classes.TComponent.Create">TComponent.Create</link>
+        </seealso>
+      </element>
+      <element name="TLCLComponent.Destroy">
+        <short>
+          <var>Destroy</var> - destructor for <var>TLCLComponent</var>: calls inherited <var>Destroy</var>
+        </short>
+        <seealso>
+          <link id="#rtl.Classes.TComponent.Destroy">TComponent.Destroy</link>
+        </seealso>
+      </element>
+      <element name="TLCLReferenceComponent">
+        <short>Base class for all components having a handle.</short>
+        <descr>Apart from the OS/window manager specific window Handle, LCL components can include a Reference to an widgetset specific object.
+
+Application use is restricted to sending messages to a windowed control, using its window Handle.
+</descr>
+      </element>
+      <element name="TLCLReferenceComponent.Destroy">
+        <short>Destroys the Reference, prior to calling the inherited destructor.</short>
+        <seealso>
+          <link id="#LCL.LCLClasses.TLCLComponent.Destroy">TLCLComponent.Destroy</link>
+        </seealso>
+      </element>
+      <element name="TLCLReferenceComponent.Handle">
+        <short>Get the Handle of this component.</short>
+        <descr>The Handle is  sort of pointer or reference, allocated by the operating system or widgetset to this component.
+
+A window handle can be used for sending messages to the component.[?]</descr>
+      </element>
+      <element name="TLCLReferenceComponent.HandleAllocated">
+        <short>
+          <var>HandleAllocated</var> - if True, a handle (reference) has been allocated to this component</short>
+      </element>
+      <element name="TLCLReferenceComponent.ReferenceAllocated">
+        <short>
+          <var>ReferenceAllocated</var> - if True, a handle (reference) has been allocated to this component</short>
+      </element>
+      <element name="TLCLReferenceComponent.CreateParams">
+        <short>
+          <var>CreateParams</var> - create parameters</short>
+      </element>
+      <element name="TLCLReferenceComponent.GetReferenceHandle">
+        <short>
+          <var>GetReferenceHandle</var> - returns the Handle for this reference</short>
+      </element>
+      <element name="TLCLReferenceComponent.DestroyReference">
+        <short>
+          <var>DestroyReference</var> - destroys the reference if it has been allocated and adjusts the pointers</short>
+      </element>
+      <element name="TLCLReferenceComponent.ReferenceDestroying">
+        <short>
+          <var>ReferenceDestroying</var> - the reference is being destroyed;  gets called before the Handle is destroyed</short>
+      </element>
+      <element name="TLCLReferenceComponent.ReferenceNeeded">
+        <short>If <var>ReferenceNeeded</var> and not yet allocated, creates a reference using the correct widgetset and parameters</short>
+      </element>
+      <element name="TLCLComponent.IncLCLRefCount">
+        <short>
+          <var>IncLCLRefCount</var> - method for incrementing the reference count</short>
+      </element>
+      <element name="TLCLComponent.DecLCLRefCount">
+        <short>
+          <var>DecLCLRefCount</var> - method for decrementing the reference count</short>
+      </element>
+      <element name="TLCLComponent.LCLRefCount">
+        <short>
+          <var>LCLRefCount</var> - the number of references to this component</short>
+      </element>
+      <element name="TLCLReferenceComponent.ReferenceCreated">
+        <short>
+          <var>ReferenceCreated</var> - gets called after the Handle is created</short>
+      </element>
+      <element name="TLCLReferenceComponent.WSCreateReference">
+        <short>
+          <var>WSCreateReference</var> - returns a widget set reference</short>
+        <descr>this function returns nil and should be overriden in derrived class
+</descr>
+      </element>
+      <element name="TLCLReferenceComponent.WSDestroyReference">
+        <short>
+          <var>WSDestroyReference</var> - destroys widget set reference</short>
+      </element>
+      <element name="TLCLComponent.WSRegisterClass">
+        <short>
+          <var>WSRegisterClass</var> - Register this Class for the current Widget Set</short>
+      </element>
+    </module>
+    <!-- LCLClasses -->
+  </package>
+</fpdoc-descriptions>

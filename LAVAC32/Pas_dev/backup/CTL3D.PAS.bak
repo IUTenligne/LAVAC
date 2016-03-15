@@ -1,0 +1,62 @@
+{*-----------------------------------------------------------------------
+|	CTL3D.DLL
+|
+|	Adds 3d effects to Windows controls
+|
+|	See ctl3d.doc for info
+|
+-----------------------------------------------------------------------*}
+UNIT CTL3D;
+
+INTERFACE
+
+USES Windows;
+
+TYPE	DWORD = LongInt;
+			LONG  = LongInt;
+			UINT  = WORD;
+			HANDLE  = THANDLE;
+			WPARAM  = WORD;
+			LPARAM  = DWORD;
+
+
+function Ctl3dAutoSubclass(h : HANDLE) : BOOL;
+function Ctl3dRegister(h : HANDLE) : BOOL;
+function Ctl3dUnregister(h : HANDLE) : BOOL;
+
+{//begin DBCS: far east short cut key support}
+procedure Ctl3dWinIniChange;
+{//end DBCS}
+
+
+{/* Ctl3dSubclassDlg3d flags */}
+CONST CTL3D_BUTTONS				= $0001;
+CONST CTL3D_LISTBOXES			=	$0002;
+CONST CTL3D_EDITS					= $0004;
+CONST CTL3D_COMBOS				=	$0008;
+CONST CTL3D_STATICTEXTS		=	$0010;
+CONST CTL3D_STATICFRAMES	=	$0020;
+
+CONST CTL3D_NODLGWINDOW   = $00010000;
+CONST CTL3D_ALL						= $ffff;
+
+CONST WM_DLGBORDER 			= (WM_USER+3567);
+{/* WM_DLGBORDER *(int FAR *)lParam return codes */}
+CONST CTL3D_NOBORDER		= 0;
+CONST CTL3D_BORDER			= 1;
+
+CONST WM_DLGSUBCLASS 		= (WM_USER+3568);
+{/* WM_DLGSUBCLASS *(int FAR *)lParam return codes */}
+CONST CTL3D_NOSUBCLASS	= 0;
+CONST CTL3D_SUBCLASS		= 1;
+
+{/* Resource ID for 3dcheck.bmp (for .lib version of ctl3d) */}
+CONST CTL3D_3DCHECK = 26567;
+
+IMPLEMENTATION
+
+function Ctl3dAutoSubclass(h : HANDLE) : BOOL; begin end;
+function Ctl3dRegister(h : HANDLE) : BOOL;  begin end;
+function Ctl3dUnregister(h : HANDLE) : BOOL;  begin end;
+
+end.

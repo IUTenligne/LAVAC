@@ -1,0 +1,1 @@
+#define IDS_HELLOSTRING 1

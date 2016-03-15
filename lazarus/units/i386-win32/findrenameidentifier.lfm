@@ -1,0 +1,165 @@
+object FindRenameIdentifierDialog: TFindRenameIdentifierDialog
+  Left = 283
+  Height = 496
+  Top = 160
+  Width = 452
+  BorderStyle = bsDialog
+  Caption = 'FindRenameIdentifierDialog'
+  ClientHeight = 496
+  ClientWidth = 452
+  OnClose = FindRenameIdentifierDialogClose
+  OnCreate = FindRenameIdentifierDialogCreate
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '0.9.29'
+  object CurrentGroupBox: TGroupBox
+    Left = 6
+    Height = 134
+    Top = 6
+    Width = 440
+    Align = alClient
+    BorderSpacing.Around = 6
+    Caption = 'CurrentGroupBox'
+    ClientHeight = 116
+    ClientWidth = 436
+    TabOrder = 0
+    object CurrentListBox: TListBox
+      Left = 6
+      Height = 104
+      Top = 6
+      Width = 424
+      Align = alClient
+      BorderSpacing.Around = 6
+      ClickOnSelChange = False
+      ItemHeight = 0
+      TabOrder = 0
+    end
+  end
+  object NewGroupBox: TGroupBox
+    Left = 6
+    Height = 78
+    Top = 146
+    Width = 440
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'NewGroupBox'
+    ClientHeight = 60
+    ClientWidth = 436
+    TabOrder = 1
+    object NewEdit: TEdit
+      Left = 6
+      Height = 23
+      Top = 31
+      Width = 424
+      Align = alTop
+      BorderSpacing.Around = 6
+      TabOrder = 0
+      Text = 'NewEdit'
+    end
+    object RenameCheckBox: TCheckBox
+      Left = 6
+      Height = 19
+      Top = 6
+      Width = 424
+      Align = alTop
+      BorderSpacing.Around = 6
+      Caption = 'RenameCheckBox'
+      OnChange = RenameCheckBoxChange
+      TabOrder = 1
+    end
+  end
+  object ScopeGroupBox: TGroupBox
+    Left = 6
+    Height = 220
+    Top = 230
+    Width = 440
+    Align = alBottom
+    AutoSize = True
+    BorderSpacing.Around = 6
+    Caption = 'ScopeGroupBox'
+    ClientHeight = 202
+    ClientWidth = 436
+    TabOrder = 2
+    object ScopeCommentsCheckBox: TCheckBox
+      Left = 6
+      Height = 19
+      Top = 177
+      Width = 424
+      Align = alTop
+      BorderSpacing.Around = 6
+      Caption = 'ScopeCommentsCheckBox'
+      TabOrder = 0
+    end
+    object ScopeRadioGroup: TRadioGroup
+      Left = 6
+      Height = 106
+      Top = 6
+      Width = 424
+      Align = alTop
+      AutoFill = True
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'ScopeRadioGroup'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 88
+      ClientWidth = 420
+      Items.Strings = (
+        'in current unit'
+        'in main project'
+        'in project/package owning file'
+        'in all open projects and packages'
+      )
+      TabOrder = 1
+    end
+    object ExtraFilesGroupBox: TGroupBox
+      Left = 6
+      Height = 53
+      Top = 118
+      Width = 424
+      Align = alTop
+      AutoSize = True
+      BorderSpacing.Around = 6
+      Caption = 'ExtraFilesGroupBox'
+      ClientHeight = 35
+      ClientWidth = 420
+      TabOrder = 2
+      object ExtraFilesEdit: TEdit
+        Left = 6
+        Height = 23
+        Top = 6
+        Width = 408
+        Align = alTop
+        BorderSpacing.Around = 6
+        TabOrder = 0
+        Text = 'ExtraFilesEdit'
+      end
+    end
+  end
+  object ButtonPanel1: TButtonPanel
+    Left = 6
+    Height = 34
+    Top = 456
+    Width = 440
+    OKButton.Name = 'OKButton'
+    OKButton.Caption = '&OK'
+    OKButton.OnClick = FindOrRenameButtonClick
+    HelpButton.Name = 'HelpButton'
+    HelpButton.Caption = '&Help'
+    HelpButton.Enabled = False
+    CloseButton.Name = 'CloseButton'
+    CloseButton.Caption = '&Close'
+    CloseButton.Enabled = False
+    CancelButton.Name = 'CancelButton'
+    CancelButton.Caption = 'Cancel'
+    TabOrder = 3
+    ShowButtons = [pbOK, pbCancel]
+  end
+end

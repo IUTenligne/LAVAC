@@ -1,0 +1,335 @@
+{************************************************}
+{                                                }
+{   Unité MMDRWDIB                               }
+{                                                }
+{   Projet LAVAC                                 }
+{                                                }
+{  (c) 1992-94 C Puissance 3 Informatique        }
+{              MORGAN MULTIMEDIA                 }
+{                                                }
+{  par Guillaume de Bailliencourt                }
+{                                                }
+{  18/11/1994                                    }
+{                                                }
+{************************************************}
+
+UNIT MMDRWDIB;
+
+interface
+
+{************************************************}
+uses Windows, Dos, SysUtils,
+		 CommDlg,
+		 Dlgs,
+		 mmsystem, VFW, Strings, {toolhelp,}
+		 LZExpand,
+		 {BWCC,} MMDIB, MMSTRING, MMLAVAC
+		 {$IFDEF _DEBUG}
+		 ,MMDEBUG
+		 {$ENDIF};
+
+{************************************************}
+TYPE	DWORD = LongInt;
+			LONG  = LongInt;
+			UINT  = WORD;
+			HANDLE  = THANDLE;
+			WPARAM  = WORD;
+			LPARAM  = DWORD;
+
+CONST
+ DDF_0001            = $0001;          { } { Internal }
+ DDF_UPDATE          = $0002;          { re-draw the last DIB }
+ DDF_SAME_HDC        = $0004;          { HDC same as last call (all setup) }
+ DDF_SAME_DRAW       = $0008;          { draw params are the same }
+ DDF_DONTDRAW        = $0010;          { dont draw frame, just decompress }
+ DDF_ANIMATE         = $0020;          { allow palette animation }
+ DDF_BUFFER          = $0040;          { always buffer image }
+ DDF_JUSTDRAWIT      = $0080;          { just draw it with GDI }
+ DDF_FULLSCREEN      = $0100;          { use DisplayDib }
+ DDF_BACKGROUNDPAL   = $0200;	    		{ Realize palette in background }
+ DDF_NOTKEYFRAME     = $0400;          { this is a partial frame update, hint }
+ DDF_HURRYUP         = $0800;          { hurry up please! }
+ DDF_HALFTONE        = $1000;          { always halftone }
+ DDF_2000            = $2000;          { } { Internal }
+
+ DDF_PREROLL         = DDF_DONTDRAW;    { Builing up a non-keyframe }
+ DDF_SAME_DIB        = DDF_SAME_DRAW;
+ DDF_SAME_SIZE       = DDF_SAME_DRAW;
+
+ ZOOM = 100;
+ aZOOM : ARRAY [0..5] of integer = (0, 50, 75, 100, 150, 200);
+
+
+procedure GetRealClientRect(hwin : HWND; var rc : TRECT);
+procedure InitSize(var di : TDIBINFO);
+function InitDib(var di : TDIBINFO; hdib : HANDLE; bResize : BOOLEAN) : BOOL;
+procedure SizeWindowToImage(var di : TDIBINFO);
+function BOUND(x,min,max : longint) : longint;
+function ALIGNB(x : longint) : longint;
+function MKFOURCC( ch0, ch1, ch2, ch3 : char) : DWORD;
+{
+function DrawDibOpen : THANDLE;
+function DrawDibClose(hdd : THANDLE) : BOOL;
+function DrawDibBegin(hdd : THANDLE; dc : HDC; dxDest, dyDest : integer;
+											lpbi : PBITMAPINFOHEADER; dxSrc, dySrc : integer; wFlags : WORD) : BOOL;
+function DrawDibEnd(hdd : THANDLE) : BOOL;
+function DrawDibDraw(hdd : THANDLE; dc : HDC; xDst, yDst, dxDst, dyDst : integer;
+										 lpbi : PBITMAPINFOHEADER; lpBits : POINTER;
+										 xSrc, ySrc, dxSrc, dySrc : integer; wFlags : WORD) : BOOL;
+function DrawDibRealize(hdd : THANDLE;  dc : HDC; fBackground : BOOL) : WORD;
+function DrawDibGetPalette(hdd : THANDLE) : WORD;
+ }
+implementation
+{
+function DrawDibOpen : THANDLE;	external 'MSVIDEO32';
+function DrawDibClose(hdd : THANDLE) : BOOL;	external 'MSVIDEO32';
+function DrawDibBegin(hdd : THANDLE; dc : HDC; dxDest, dyDest : integer;
+											lpbi : PBITMAPINFOHEADER; dxSrc, dySrc : integer; wFlags : WORD) : BOOL; external 'MSVIDEO32';
+function DrawDibEnd(hdd : THANDLE) : BOOL;	external 'MSVIDEO32';
+function DrawDibDraw(hdd : THANDLE; dc : HDC; xDst, yDst, dxDst, dyDst : integer;
+										 lpbi : PBITMAPINFOHEADER; lpBits : POINTER;
+										 xSrc, ySrc, dxSrc, dySrc : integer; wFlags : WORD) : BOOL;	external 'MSVIDEO32';
+function DrawDibRealize(hdd : THANDLE;  dc : HDC; fBackground : BOOL) : WORD;	external 'MSVIDEO32';
+function DrawDibGetPalette(hdd : THANDLE) : WORD;	external 'MSVIDEO32';
+}
+function BOUND(x,min,max : longint) : longint;
+begin
+ if x < min then
+	 BOUND := min
+ else
+ if x > max then
+	 BOUND := max
+ else
+	 BOUND := x;
+end;
+
+function ALIGNB(x : longint) : longint;
+begin
+	 ALIGNB := ((x + 7) AND NOT $07);
+end;
+
+function MKFOURCC( ch0, ch1, ch2, ch3 : char) : DWORD;
+begin
+		MKFOURCC := DWORD(BYTE(ch0))          OR (DWORD(BYTE(ch1)) SHL 8) OR
+								(DWORD(BYTE(ch2)) SHL 16) OR (DWORD(BYTE(ch3)) SHL 24) ;
+end;
+
+procedure GetRealClientRect(hwin : HWND; var rc : TRECT);
+var		dwStyle : DWORD;
+begin
+		dwStyle := GetWindowLong(hwin,GWL_STYLE);
+		GetClientRect(hwin,rc);
+
+		if (dwStyle AND WS_HSCROLL) = WS_HSCROLL then begin
+				inc(rc.bottom, GetSystemMetrics(SM_CYHSCROLL));
+		end;
+
+		if (dwStyle AND WS_VSCROLL) = WS_VSCROLL then begin
+				inc(rc.right, GetSystemMetrics(SM_CXVSCROLL));
+		end;
+end;
+
+procedure InitSize(var di : TDIBINFO);
+
+var	rc 							 : TRECT;
+		i,
+		iRangeV,
+		iRangeH 				 : integer;
+		dwStyle : DWORD;
+
+const iSem : integer = 0;
+
+begin
+		if (di.hdib = 0) OR (iSem <> 0) then
+				exit;
+
+		inc(iSem);
+
+		{}
+		{ stretch to window? }
+		{}
+		if (di.iZoom <> 0) then begin
+				SetScrollRange(di.hwin,SB_VERT,0,0,TRUE);
+				SetScrollRange(di.hwin,SB_HORZ,0,0,TRUE);
+				GetClientRect(di.hwin, di.rcDraw);
+				SetWindowPos(di.havi, 0, 0, 0, di.rcDraw.right, di.rcDraw.bottom, SWP_NOZORDER OR SWP_NOACTIVATE);
+		end	else begin
+				SetRect(di.rcDraw,0, 0,
+						longint(di.bi.biWidth) * di.iZoom DIV ZOOM,
+						longint(di.bi.biHeight) * di.iZoom DIV ZOOM);
+
+				GetRealClientRect(di.hwin, rc);
+
+				for i := 0 to 1 do	begin
+						iRangeV := di.rcDraw.bottom - rc.bottom;
+						iRangeH := di.rcDraw.right - rc.right;
+
+						if (iRangeH < 0) then iRangeH := 0;
+						if (iRangeV < 0) then iRangeV := 0;
+
+						if (GetScrollPos(di.hwin,SB_VERT) > iRangeV) OR
+								(GetScrollPos(di.hwin,SB_HORZ) > iRangeH) then
+								InvalidateRect(di.hwin,nil,TRUE);
+
+						SetScrollPos(di.hwin,SB_VERT,0, FALSE);
+						SetScrollPos(di.hwin,SB_HORZ,0, FALSE);
+						SetScrollRange(di.hwin,SB_VERT,0,iRangeV,TRUE);
+						SetScrollRange(di.hwin,SB_HORZ,0,iRangeH,TRUE);
+
+						GetClientRect(di.hwin, rc);
+				end;
+
+				dwStyle := GetWindowLong(di.hwin,GWL_STYLE);
+				if ((dwStyle AND WS_HSCROLL) <> WS_HSCROLL) AND
+					 ((dwStyle AND WS_VSCROLL) <> WS_VSCROLL) then begin
+					SetWindowPos(di.havi, 0, 0, 0, 0, 0, SWP_NOSIZE OR SWP_NOZORDER OR SWP_NOACTIVATE);
+				end else begin
+				end;
+				SetWindowPos(di.havi, 0, 0, 0, di.rcDraw.right, di.rcDraw.bottom, SWP_NOZORDER OR SWP_NOACTIVATE);
+
+		end;
+
+		dec(iSem);
+end;
+
+{----------------------------------------------------------------------------*\
+\*----------------------------------------------------------------------------}
+
+function InitDib(var di : TDIBINFO; hdib : HANDLE; bResize : BOOLEAN) : BOOL;
+var		ach	: array[0..79] of char;
+			dw	: DWORD;
+			f		: BOOL;
+begin
+
+		{if (hdib = nil) then
+				hdib := OpenDIB(di.achFileName);}
+
+		if (hdib = 0) then begin
+				{di.hdd := 0;}
+				InitDib := FALSE;
+				exit;
+		end;
+
+		di.hdib  := hdib;
+		if di.hdib = HANDLE(-1) then begin
+			{ avi file }
+			{di.hdd	 := 0;}
+			di.lpbi  := nil;
+			if bResize then SizeWindowToImage(di);
+			InitDib := TRUE;
+			exit;
+		end else begin
+			if di.hdd = 0 then di.hdd := DrawDibOpen;
+			di.lpbi  := GlobalLock(hdib);
+			di.fCanCompress   := di.lpbi^.biCompression = 0;
+			di.fCanDecompress := di.lpbi^.biCompression <> 0;
+		end;
+
+		{}
+		{  fix up the default DIB fields }
+		{}
+		if (di.lpbi^.biClrUsed = 0) AND (di.lpbi^.biBitCount <= 8) then
+				di.lpbi^.biClrUsed := 1 SHL integer(di.lpbi^.biBitCount);
+
+		{si pas avi}
+		if di.hdib <> HANDLE(-1) then begin
+			f := DrawDibBegin(di.hdd, 0, -1, -1, di.lpbi, -1, -1, 0);
+			if NOT f then MessageBox(GetActiveWindow, 'Unable to draw this type of DIB', 'DrawDib', MB_OK);
+		end;
+
+		di.bi := di.lpbi^;
+		SetRect(di.rcSource,  0, 0, integer(di.bi.biWidth), integer(di.bi.biHeight));
+
+		dw := di.bi.biCompression;
+		case dw of
+				 BI_RGB :   dw := MKFOURCC('N', 'o', 'n', 'e');
+				 BI_RLE4:   dw := MKFOURCC('R', 'l', 'e', '4');
+				 BI_RLE8:   dw := MKFOURCC('R', 'l', 'e', '8');
+		end;
+
+		{wsprintf(ach, "%ls (%dx%dx%d '%4.4ls' %dk)",
+						FileName(di.achFileName),
+						(int)di.bi.biWidth,
+						(int)di.bi.biHeight,
+						(int)di.bi.biBitCount,
+						(LPSTR)&dw,
+						(int)(di.bi.biSizeImage/1024));
+
+		SetWindowText(di.hwin, ach);}
+		if bResize then SizeWindowToImage(di);
+		InitDib := TRUE;
+end;
+
+procedure SizeWindowToImage(var di : TDIBINFO);
+var	rc,
+		rcParent,
+		rcChild : TRECT;
+		nW			: integer;
+		p				: pointer;
+begin
+
+		if di.hpar = di.hwin then begin
+			InitSize(di);
+			Exit;
+		end;
+
+		if (bWin95 OR bWinNT) then begin
+			nW := GetSystemMetrics(SM_CXFRAME);
+		end else begin
+			nW := GetSystemMetrics(SM_CXDLGFRAME);
+		end;
+
+		{ don't size window if it's streched }
+		if (di.iZoom > 0) then begin
+				SetRect(rc, 0, 0,
+						longint(di.bi.biWidth)  * di.iZoom DIV ZOOM,
+						longint(di.bi.biHeight) * di.iZoom DIV ZOOM);
+
+				AdjustWindowRect(rc, GetWindowLong(di.hwin, GWL_STYLE), FALSE);
+				dec(rc.right  , rc.left);
+				dec(rc.bottom , rc.top);
+
+				{ Determine size of Parent Client area and image window }
+				GetClientRect(di.hpar, rcParent);
+				InflateRect(rcParent, -nW,  -nW);
+
+				{ Make sure window is positioned so that entire window is seen }
+				GetWindowRect(di.hwin, rcChild);
+				p := @rcChild;
+				ScreenToClient(di.hpar, TPOINT(p^));
+
+				if ((rc.right - rc.left) > (rcParent.right - rcParent.left)) then begin
+						rc.left := rcParent.left;
+						rc.right := rcParent.right; { + 2}
+						rcChild.left := rcParent.left;{ - 1}
+				end else begin
+						rcChild.left := rcParent.left + ((rcParent.right -rcParent.left) - (rc.right - rc.left)) DIV 2{ + nW};
+				end;
+				if ((rc.bottom - rc.top) > (rcParent.bottom - rcParent.top)) then begin
+						rc.top := rcParent.top;{ + 2}
+						rc.bottom := rcParent.bottom;{ + 2}
+						rcChild.top := rcParent.top;{ - 1}
+				end else begin
+						rcChild.top := rcParent.top + ((rcParent.bottom - rcParent.top) - (rc.bottom - rc.left)) DIV 2{ + nW};
+				end;
+				SetWindowPos(di.hwin, 0,
+						rcChild.left,
+						rcChild.top,
+						(rc.right - rc.left) - 1,
+						(rc.bottom - rc.top) - 1,
+						SWP_NOACTIVATE OR SWP_NOZORDER);
+		end else begin
+				GetClientRect(di.hpar, rcParent);
+				InflateRect(rcParent, -nW,  -nW);
+				SetWindowPos(di.hwin, 0,
+						rcParent.left,
+						rcParent.top,
+						(rcParent.right - rcParent.left) - 1,
+						(rcParent.bottom - rcParent.top) - 1,
+						SWP_NOACTIVATE OR SWP_NOZORDER);
+		end;
+		InitSize(di);
+end;
+
+begin
+end.

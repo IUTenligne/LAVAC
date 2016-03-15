@@ -1,0 +1,89 @@
+object ExternalToolDialog: TExternalToolDialog
+  Left = 334
+  Height = 347
+  Top = 226
+  Width = 410
+  ActiveControl = ListBox
+  BorderStyle = bsSizeToolWin
+  Caption = 'ExternalToolDialog'
+  ClientHeight = 347
+  ClientWidth = 410
+  Position = poScreenCenter
+  LCLVersion = '0.9.29'
+  object ToolBar: TToolBar
+    Left = 0
+    Height = 48
+    Top = 0
+    Width = 410
+    AutoSize = True
+    ButtonHeight = 46
+    ButtonWidth = 47
+    Caption = 'ToolBar'
+    ParentShowHint = False
+    ShowCaptions = True
+    ShowHint = True
+    TabOrder = 0
+    object MoveDownButton: TToolButton
+      Left = 283
+      Top = 2
+      Caption = 'MoveDownButton'
+      ImageIndex = 4
+      OnClick = MoveDownButtonClick
+    end
+    object MoveUpButton: TToolButton
+      Left = 204
+      Top = 2
+      Caption = 'MoveUpButton'
+      ImageIndex = 3
+      OnClick = MoveUpButtonClick
+    end
+    object EditButton: TToolButton
+      Left = 139
+      Top = 2
+      Caption = 'EditButton'
+      ImageIndex = 2
+      OnClick = EditButtonClick
+    end
+    object RemoveButton: TToolButton
+      Left = 60
+      Top = 2
+      Caption = 'RemoveButton'
+      ImageIndex = 1
+      OnClick = RemoveButtonClick
+    end
+    object AddButton: TToolButton
+      Left = 1
+      Top = 2
+      Caption = 'AddButton'
+      ImageIndex = 0
+      OnClick = AddButtonClick
+    end
+    object tbSeparator: TToolButton
+      Left = 197
+      Top = 2
+      Width = 7
+      Caption = 'tbSeparator'
+      Style = tbsDivider
+    end
+  end
+  object ListBox: TListBox
+    Left = 0
+    Height = 261
+    Top = 48
+    Width = 410
+    Align = alClient
+    BorderSpacing.Bottom = 6
+    ItemHeight = 0
+    OnClick = ListboxClick
+    TabOrder = 1
+  end
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 26
+    Top = 315
+    Width = 398
+    TabOrder = 2
+    ShowButtons = [pbOK, pbCancel, pbHelp]
+    ShowBevel = False
+  end
+end

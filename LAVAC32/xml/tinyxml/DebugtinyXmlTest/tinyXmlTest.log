@@ -1,0 +1,3 @@
+﻿  xmltest.cpp
+xmltest.obj : warning LNK4075: ' /EDITANDCONTINUE' ignoré à cause de la spécification '/SAFESEH'
+  tinyXmlTest.vcxproj -> C:\LAVAC32\xml\tinyxml\DebugtinyXmlTest\tinyXmlTest.exe

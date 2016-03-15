@@ -1,0 +1,163 @@
+object EdtTbConfigForm: TEdtTbConfigForm
+  Left = 375
+  Height = 330
+  Top = 200
+  Width = 651
+  ActiveControl = btnOK
+  Caption = 'EdtTbConfigForm'
+  ClientHeight = 330
+  ClientWidth = 651
+  OnCreate = FormCreate
+  LCLVersion = '0.9.27'
+  object lblMenuTree: TLabel
+    Left = 16
+    Height = 18
+    Top = 10
+    Width = 76
+    Caption = 'lblMenuTree'
+    ParentColor = False
+  end
+  object lblToolbar: TLabel
+    Left = 456
+    Height = 18
+    Top = 10
+    Width = 60
+    Caption = 'lblToolbar'
+    ParentColor = False
+  end
+  object btnRemove: TSpeedButton
+    Left = 432
+    Height = 26
+    Top = 74
+    Width = 22
+    Color = clBtnFace
+    NumGlyphs = 0
+    OnClick = btnRemoveClick
+  end
+  object btnAdd: TSpeedButton
+    Left = 432
+    Height = 26
+    Top = 99
+    Width = 22
+    Color = clBtnFace
+    NumGlyphs = 0
+    OnClick = btnAddClick
+  end
+  object btnMoveUp: TSpeedButton
+    Left = 432
+    Height = 26
+    Top = 157
+    Width = 22
+    Color = clBtnFace
+    NumGlyphs = 0
+    OnClick = btnMoveUpClick
+  end
+  object btnMoveDown: TSpeedButton
+    Left = 432
+    Height = 26
+    Top = 182
+    Width = 22
+    Color = clBtnFace
+    NumGlyphs = 0
+    OnClick = btnMoveDownClick
+  end
+  object pnlButtons: TPanel
+    Left = 0
+    Height = 42
+    Top = 288
+    Width = 651
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 42
+    ClientWidth = 651
+    Color = clGreen
+    ParentColor = False
+    TabOrder = 0
+    object Bevel1: TBevel
+      Left = 0
+      Height = 2
+      Top = 0
+      Width = 651
+      Align = alTop
+    end
+    object btnOK: TButton
+      AnchorSideRight.Control = btnCancel
+      AnchorSideBottom.Control = pnlButtons
+      AnchorSideBottom.Side = asrBottom
+      Left = 480
+      Height = 25
+      Top = 11
+      Width = 75
+      Anchors = [akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Right = 6
+      BorderSpacing.Bottom = 6
+      BorderSpacing.InnerBorder = 4
+      Caption = 'btnOK'
+      Constraints.MaxHeight = 25
+      Constraints.MinHeight = 25
+      Constraints.MinWidth = 75
+      ModalResult = 1
+      OnClick = btnOKClick
+      TabOrder = 0
+    end
+    object btnCancel: TButton
+      AnchorSideRight.Control = pnlButtons
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = pnlButtons
+      AnchorSideBottom.Side = asrBottom
+      Left = 561
+      Height = 25
+      Top = 11
+      Width = 84
+      Anchors = [akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Right = 6
+      BorderSpacing.Bottom = 6
+      BorderSpacing.InnerBorder = 4
+      Cancel = True
+      Caption = 'btnCancel'
+      Constraints.MaxHeight = 25
+      Constraints.MinHeight = 25
+      Constraints.MinWidth = 75
+      ModalResult = 2
+      TabOrder = 1
+    end
+  end
+  object btnAddDivider: TButton
+    Left = 497
+    Height = 25
+    Top = 256
+    Width = 110
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    BorderSpacing.InnerBorder = 4
+    Caption = 'btnAddDivider'
+    Constraints.MaxHeight = 25
+    Constraints.MinHeight = 25
+    Constraints.MinWidth = 75
+    OnClick = btnAddDividerClick
+    TabOrder = 1
+  end
+  object lbToolbar: TListBox
+    Left = 456
+    Height = 225
+    Top = 28
+    Width = 183
+    ItemHeight = 0
+    TabOrder = 2
+    TopIndex = -1
+  end
+  object TV: TTreeView
+    Left = 16
+    Height = 253
+    Top = 28
+    Width = 392
+    DefaultItemHeight = 19
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 3
+    OnChange = TVChange
+    Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips]
+  end
+end

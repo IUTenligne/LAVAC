@@ -1,0 +1,1776 @@
+MakeNSIS v2.46 - Copyright 1995-2009 Contributors
+See the file COPYING for license details.
+Credits can be found in the Users Manual.
+
+Processing config: 
+Processing plugin dlls: "C:\Program Files (x86)\NSIS\Plugins\*.dll"
+ - AdvSplash::show
+ - Banner::destroy
+ - Banner::getWindow
+ - Banner::show
+ - BgImage::AddImage
+ - BgImage::AddText
+ - BgImage::Clear
+ - BgImage::Destroy
+ - BgImage::Redraw
+ - BgImage::SetBg
+ - BgImage::SetReturn
+ - BgImage::Sound
+ - Dialer::AttemptConnect
+ - Dialer::AutodialHangup
+ - Dialer::AutodialOnline
+ - Dialer::AutodialUnattended
+ - Dialer::GetConnectedState
+ - InstallOptions::dialog
+ - InstallOptions::initDialog
+ - InstallOptions::show
+ - LangDLL::LangDialog
+ - Math::Script
+ - NSISdl::download
+ - NSISdl::download_quiet
+ - Splash::show
+ - StartMenu::Init
+ - StartMenu::Select
+ - StartMenu::Show
+ - System::Alloc
+ - System::Call
+ - System::Copy
+ - System::Free
+ - System::Get
+ - System::Int64Op
+ - System::Store
+ - TypeLib::GetLibVersion
+ - TypeLib::Register
+ - TypeLib::UnRegister
+ - UserInfo::GetAccountType
+ - UserInfo::GetName
+ - UserInfo::GetOriginalAccountType
+ - VPatch::GetFileCRC32
+ - VPatch::GetFileMD5
+ - VPatch::vpatchfile
+ - nsDialogs::Create
+ - nsDialogs::CreateControl
+ - nsDialogs::CreateItem
+ - nsDialogs::CreateTimer
+ - nsDialogs::GetUserData
+ - nsDialogs::KillTimer
+ - nsDialogs::OnBack
+ - nsDialogs::OnChange
+ - nsDialogs::OnClick
+ - nsDialogs::OnNotify
+ - nsDialogs::SelectFileDialog
+ - nsDialogs::SelectFolderDialog
+ - nsDialogs::SetRTL
+ - nsDialogs::SetUserData
+ - nsDialogs::Show
+ - nsExec::Exec
+ - nsExec::ExecToLog
+ - nsExec::ExecToStack
+
+!define: "MUI_INSERT_NSISCONF"=""
+
+Changing directory to: "C:\Users\GUILLA~1\AppData\Local\Temp"
+
+Processing script file: "C:\Users\GUILLA~1\AppData\Local\Temp\nsaE7D5.tmp"
+!define: "APP_NAME"="LAVAC64"
+!define: "COMP_NAME"="Morgan Multimedia"
+!define: "WEB_SITE"="http://www.morgan-multimedia.com"
+!define: "VERSION"="4.0.3.9"
+!define: "COPYRIGHT"="IUTenLigne © 2015"
+!define: "DESCRIPTION"="Application"
+!define: "INSTALLER_NAME"="C:\LAVAC32\Install\Output\LAVAC64\setup.exe"
+!define: "MAIN_APP_EXE"="LAVAC_ET.EXE"
+!define: "INSTALL_TYPE"="SetShellVarContext current"
+!define: "REG_ROOT"="HKCU"
+!define: "REG_APP_PATH"="Software\Microsoft\Windows\CurrentVersion\App Paths\LAVAC_ET.EXE"
+!define: "UNINSTALL_PATH"="Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64"
+VIAddVersionKey: "ProductName" "LAVAC64"
+VIAddVersionKey: "CompanyName" "Morgan Multimedia"
+VIAddVersionKey: "LegalCopyright" "IUTenLigne © 2015"
+VIAddVersionKey: "FileDescription" "Application"
+VIAddVersionKey: "FileVersion" "4.0.3.9"
+SetCompressor: ZLIB
+Name: "LAVAC64"
+Caption: "LAVAC64"
+OutFile: "C:\LAVAC32\Install\Output\LAVAC64\setup.exe"
+BrandingText: "LAVAC64"
+XPStyle: on
+InstallRegKey: "HKCU\Software\Microsoft\Windows\CurrentVersion\App Paths\LAVAC_ET.EXE\"
+InstallDir: "$PROGRAMFILES\LAVAC"
+!include: "C:\Program Files (x86)\NSIS\Include\MUI.nsh"
+!include: "C:\Program Files (x86)\NSIS\Contrib\Modern UI\System.nsh"
+NSIS Modern User Interface version 1.8 - Copyright 2002-2009 Joost Verburg (C:\Program Files (x86)\NSIS\Contrib\Modern UI\System.nsh:8)
+!define: "MUI_INCLUDED"=""
+!define: "MUI_SYSVERSION"="1.8"
+!define: "MUI_VERBOSE"="3"
+!include: closed: "C:\Program Files (x86)\NSIS\Contrib\Modern UI\System.nsh"
+!include: closed: "C:\Program Files (x86)\NSIS\Include\MUI.nsh"
+!define: "MUI_ABORTWARNING"=""
+!define: "MUI_UNABORTWARNING"=""
+!define: "MUI_LANGDLL_REGISTRY_ROOT"="HKCU"
+!define: "MUI_LANGDLL_REGISTRY_KEY"="Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64"
+!define: "MUI_LANGDLL_REGISTRY_VALUENAME"="Installer Language"
+!insertmacro: MUI_PAGE_WELCOME
+!insertmacro: end of MUI_PAGE_WELCOME
+!insertmacro: MUI_PAGE_DIRECTORY
+!insertmacro: end of MUI_PAGE_DIRECTORY
+!insertmacro: MUI_PAGE_INSTFILES
+!insertmacro: end of MUI_PAGE_INSTFILES
+!insertmacro: MUI_PAGE_FINISH
+!insertmacro: end of MUI_PAGE_FINISH
+!insertmacro: MUI_UNPAGE_CONFIRM
+!insertmacro: end of MUI_UNPAGE_CONFIRM
+!insertmacro: MUI_UNPAGE_INSTFILES
+!insertmacro: end of MUI_UNPAGE_INSTFILES
+!insertmacro: MUI_UNPAGE_FINISH
+!insertmacro: end of MUI_UNPAGE_FINISH
+!insertmacro: MUI_LANGUAGE
+!insertmacro: end of MUI_LANGUAGE
+!insertmacro: MUI_LANGUAGE
+!insertmacro: end of MUI_LANGUAGE
+!insertmacro: MUI_RESERVEFILE_LANGDLL
+!insertmacro: end of MUI_RESERVEFILE_LANGDLL
+Function: ".onInit"
+!insertmacro: MUI_LANGDLL_DISPLAY
+!insertmacro: end of MUI_LANGDLL_DISPLAY
+FunctionEnd
+Section: "-MainProgram"
+SetShellVarContext: current
+SetOverwrite: ifnewer
+SetOutPath: "$INSTDIR"
+File: "LAVAC_ET.EXE" [compress] 412347/1277709 bytes
+File: "About box Lavac.txt" [compress] 207/271 bytes
+File: "Anglais Méthodologie pour l'étudiant 2012-2013.doc" [compress] 9117/40960 bytes
+File: "LAVAC.INI" [compress] 623/1064 bytes
+File: "Lavac.LIC" [compress] 165/14852 bytes
+SetOutPath: "$INSTDIR\xml"
+File: "lessons.xml" [compress] 12621/506092 bytes
+SetOutPath: "$INSTDIR\Téléchargement des cours"
+File: "Téléchargement et installation.rtf" [compress] 2616/53448 bytes
+SetOutPath: "$INSTDIR\Textes"
+File: "Info.rtf" [compress] 184/223 bytes
+File: "notes.rtf" [compress] 712/2327 bytes
+File: "RTF.NEW" [compress] 212/297 bytes
+SetOutPath: "$INSTDIR\Sons"
+File: "11025_16.NEW" [compress] 42/44 bytes
+File: "11025_8.NEW" [compress] 38/44 bytes
+File: "22050_16.NEW" [compress] 42/44 bytes
+File: "22050_8.NEW" [compress] 38/44 bytes
+File: "44100_16.NEW" [compress] 42/44 bytes
+File: "44100_8.NEW" [compress] 38/44 bytes
+File: "Info.rtf" [compress] 181/219 bytes
+SetOutPath: "$INSTDIR\SAUVELEV"
+File: "Info.rtf" [compress] 350/548 bytes
+File: "Sauvegarde de votre travail.doc" [compress] 50094/70144 bytes
+SetOutPath: "$INSTDIR\Ressources\VIDEO"
+File: "Obama_Putin_G20_WV-standardQT-fixed-x264-Platform_YTHQFull__017181.mp4" [compress] 37856340/37949817 bytes
+SetOutPath: "$INSTDIR\Prof"
+File: "DILATATO.VAL" [compress] 2 bytes
+File: "ETUDIANT.LST" [compress] 200/7008 bytes
+File: "Info.rtf" [compress] 0/219 bytes
+SetOutPath: "$INSTDIR\LECONS"
+File: "Info.rtf" [compress] 1416/3030 bytes
+File: "LECONS.LST" [compress] 402/3178 bytes
+SetOutPath: "$INSTDIR\LECONS\L0000012"
+File: "lecons.rec" [compress] 128/454 bytes
+File: "M0000001.CMD" [compress] 16 bytes
+File: "M0000002.CMD" [compress] 19 bytes
+File: "M0000003.CMD" [compress] 25/29 bytes
+File: "M0000005.CMD" [compress] 15 bytes
+File: "M0000006.CMD" [compress] 12 bytes
+File: "M0000007.CMD" [compress] 134/145 bytes
+File: "M0000008.CMD" [compress] 20 bytes
+File: "M0000009.CMD" [compress] 0/145 bytes
+File: "M0000013.CMD" [compress] 15 bytes
+File: "M0000014.CMD" [compress] 17 bytes
+File: "M0000038.CMD" [compress] 118/121 bytes
+File: "M0000069.CMD" [compress] 23 bytes
+File: "Q0000002.WAV" [compress] 12343/12862 bytes
+File: "Q0000012.WAV" [compress] 14848/15462 bytes
+File: "Q0000013.WAV" [compress] 9645/10054 bytes
+File: "Q0000014.WAV" [compress] 9364/9742 bytes
+File: "Q0000015.WAV" [compress] 5407/5686 bytes
+File: "Q0000016.WAV" [compress] 10066/10470 bytes
+File: "Q0000017.WAV" [compress] 7729/8078 bytes
+File: "Q0000018.WAV" [compress] 8873/9222 bytes
+File: "Q0000019.WAV" [compress] 12514/12966 bytes
+File: "Q0000020.WAV" [compress] 13763/14214 bytes
+File: "Q0000021.WAV" [compress] 5425/5686 bytes
+File: "Q0000022.WAV" [compress] 8555/8910 bytes
+File: "Q0000023.WAV" [compress] 7736/8078 bytes
+File: "Q0000024.WAV" [compress] 12089/12550 bytes
+File: "Q0000025.WAV" [compress] 7742/8078 bytes
+File: "Q0000026.WAV" [compress] 12620/13070 bytes
+File: "Q0000027.WAV" [compress] 12325/12758 bytes
+File: "Q0000028.WAV" [compress] 6588/6830 bytes
+File: "Q0000029.WAV" [compress] 8360/8702 bytes
+File: "Q0000030.WAV" [compress] 14380/14838 bytes
+File: "Q0000031.WAV" [compress] 9279/9638 bytes
+File: "Q0000032.WAV" [compress] 11493/11926 bytes
+File: "Q0000033.WAV" [compress] 9858/10262 bytes
+File: "Q0000034.WAV" [compress] 8344/8702 bytes
+File: "Q0000035.WAV" [compress] 10785/11198 bytes
+File: "Q0000036.WAV" [compress] 15792/16398 bytes
+File: "Q0000037.WAV" [compress] 14298/14838 bytes
+File: "Q0000038.WAV" [compress] 8525/8910 bytes
+File: "Q0000039.WAV" [compress] 4278/4542 bytes
+File: "Q0000040.WAV" [compress] 15348/15878 bytes
+File: "Q0000041.WAV" [compress] 8646/9014 bytes
+File: "Q0000042.WAV" [compress] 8561/8910 bytes
+File: "Q0000043.WAV" [compress] 7446/7766 bytes
+File: "Q0000044.WAV" [compress] 8163/8494 bytes
+File: "Q0000045.WAV" [compress] 10463/10886 bytes
+File: "Q0000046.WAV" [compress] 12396/12862 bytes
+File: "Q0000047.WAV" [compress] 8180/8494 bytes
+File: "Q0000048.WAV" [compress] 9362/9742 bytes
+File: "Q0000049.WAV" [compress] 11908/12342 bytes
+File: "Q0000050.WAV" [compress] 10475/10886 bytes
+File: "Q0000051.WAV" [compress] 5962/6206 bytes
+File: "Q0000052.WAV" [compress] 17598/18166 bytes
+File: "Q0000053.WAV" [compress] 4639/4854 bytes
+File: "Q0000054.WAV" [compress] 12026/12446 bytes
+File: "Q0000055.WAV" [compress] 3683/3918 bytes
+File: "Q0000056.WAV" [compress] 12127/12550 bytes
+File: "Q0000057.WAV" [compress] 15571/16086 bytes
+File: "Q0000058.WAV" [compress] 6114/6414 bytes
+File: "Q0000059.WAV" [compress] 13909/14422 bytes
+File: "Q0000060.WAV" [compress] 4414/4646 bytes
+File: "Q0000061.WAV" [compress] 14104/14630 bytes
+File: "Q0000062.WAV" [compress] 10570/10990 bytes
+File: "Q0000063.WAV" [compress] 9330/9742 bytes
+File: "Q0000064.WAV" [compress] 7547/7870 bytes
+File: "Q0000065.WAV" [compress] 16178/16710 bytes
+File: "Q0000066.WAV" [compress] 10314/10678 bytes
+File: "Q0000067.WAV" [compress] 8581/8910 bytes
+File: "QCM00000.BMP" [compress] 4861/103520 bytes
+File: "QCM00001.QCM" [compress] 2156/12879 bytes
+File: "QCM00005.QCM" [compress] 854/2510 bytes
+File: "QCM00008.QCM" [compress] 1993/3567 bytes
+File: "Question.lst" [compress] 2084/38480 bytes
+File: "T0000002.RTF" [compress] 720/1831 bytes
+File: "T0000003.RTF" [compress] 346/611 bytes
+File: "T0000004.RTF" [compress] 667/1343 bytes
+File: "T0000006.RTF" [compress] 1156/2998 bytes
+File: "T0000008.RTF" [compress] 948/2019 bytes
+File: "T0000009.RTF" [compress] 348/539 bytes
+File: "T0000013.RTF" [compress] 750/1699 bytes
+File: "T0000018.RTF" [compress] 181/240 bytes
+File: "T0000019.RTF" [compress] 1669/3295 bytes
+File: "T0000069.RTF" [compress] 450/809 bytes
+File: "T0000071.RTF" [compress] 351/637 bytes
+File: "T0000072.RTF" [compress] 561/1069 bytes
+File: "V0000003.BMP" [compress] 18326/23836 bytes
+File: "V0000004.BMP" [compress] 7313/168534 bytes
+File: "V0000038.BMP" [compress] 6790/240982 bytes
+SetOutPath: "$INSTDIR\LECONS\L0000011"
+File: "lecons.rec" [compress] 123/454 bytes
+File: "M0000000.CMD" [compress] 142/158 bytes
+File: "M0000004.CMD" [compress] 45 bytes
+File: "M0000005.CMD" [compress] 0/15 bytes
+File: "M0000006.CMD" [compress] 12 bytes
+File: "M0000007.CMD" [compress] 17 bytes
+File: "M0000008.CMD" [compress] 0/121 bytes
+File: "M0000009.CMD" [compress] 0/29 bytes
+File: "M0000012.CMD" [compress] 21 bytes
+File: "M0000013.CMD" [compress] 16 bytes
+File: "M0000014.CMD" [compress] 17 bytes
+File: "M0000016.CMD" [compress] 19 bytes
+File: "M0000017.CMD" [compress] 20 bytes
+File: "M0000018.CMD" [compress] 21 bytes
+File: "M0000019.CMD" [compress] 19 bytes
+File: "M0000020.CMD" [compress] 21 bytes
+File: "M0000021.CMD" [compress] 0/19 bytes
+File: "M0000022.CMD" [compress] 0/158 bytes
+File: "M0000024.CMD" [compress] 0 bytes
+File: "M0000025.CMD" [compress] 0 bytes
+File: "M0000028.CMD" [compress] 17 bytes
+File: "Q0000007.WAV" [compress] 0/12862 bytes
+File: "Q0000014.WAV" [compress] 9657/10054 bytes
+File: "Q0000015.WAV" [compress] 26046/26902 bytes
+File: "Q0000016.WAV" [compress] 4005/4230 bytes
+File: "Q0000017.WAV" [compress] 4906/5166 bytes
+File: "Q0000018.WAV" [compress] 3983/4230 bytes
+File: "Q0000019.WAV" [compress] 6506/6830 bytes
+File: "Q0000020.WAV" [compress] 4490/4750 bytes
+File: "Q0000021.WAV" [compress] 7755/8078 bytes
+File: "Q0000022.WAV" [compress] 6440/6726 bytes
+File: "Q0000023.WAV" [compress] 9053/9430 bytes
+File: "Q0000024.WAV" [compress] 14930/15462 bytes
+File: "Q0000026.WAV" [compress] 12718/13174 bytes
+File: "Q0000033.WAV" [compress] 6936/7246 bytes
+File: "Q0000034.WAV" [compress] 17783/18374 bytes
+File: "Q0000035.WAV" [compress] 10819/11198 bytes
+File: "Q0000036.WAV" [compress] 9748/10054 bytes
+File: "Q0000037.WAV" [compress] 18225/18790 bytes
+File: "Q0000038.WAV" [compress] 10381/10782 bytes
+File: "Q0000040.WAV" [compress] 10578/10990 bytes
+File: "Q0000041.WAV" [compress] 9272/9638 bytes
+File: "Q0000042.WAV" [compress] 12450/12862 bytes
+File: "Q0000043.WAV" [compress] 7525/7870 bytes
+File: "Q0000044.WAV" [compress] 11765/12238 bytes
+File: "Q0000045.WAV" [compress] 11766/12238 bytes
+File: "Q0000046.WAV" [compress] 6835/7142 bytes
+File: "Q0000049.WAV" [compress] 18385/18998 bytes
+File: "Q0000050.WAV" [compress] 6340/6622 bytes
+File: "Q0000051.WAV" [compress] 11520/11926 bytes
+File: "Q0000052.WAV" [compress] 11495/11926 bytes
+File: "Q0000053.WAV" [compress] 3674/3918 bytes
+File: "Q0000054.WAV" [compress] 11112/11510 bytes
+File: "Q0000055.WAV" [compress] 14134/14630 bytes
+File: "Q0000056.WAV" [compress] 5637/5894 bytes
+File: "Q0000057.WAV" [compress] 7592/7870 bytes
+File: "Q0000058.WAV" [compress] 9578/9950 bytes
+File: "Q0000061.WAV" [compress] 9573/9950 bytes
+File: "Q0000062.WAV" [compress] 11450/11822 bytes
+File: "Q0000065.WAV" [compress] 16667/17230 bytes
+File: "Q0000068.WAV" [compress] 6032/6310 bytes
+File: "Q0000069.WAV" [compress] 10070/10470 bytes
+File: "Q0000070.WAV" [compress] 9687/10054 bytes
+File: "Q0000072.WAV" [compress] 5343/5582 bytes
+File: "Q0000073.WAV" [compress] 9870/10262 bytes
+File: "Q0000074.WAV" [compress] 15033/15566 bytes
+File: "Q0000075.WAV" [compress] 12421/12862 bytes
+File: "Q0000076.WAV" [compress] 8563/8910 bytes
+File: "Q0000077.WAV" [compress] 6666/6934 bytes
+File: "Q0000078.WAV" [compress] 13611/14110 bytes
+File: "Q0000080.WAV" [compress] 8975/9326 bytes
+File: "Q0000081.WAV" [compress] 18494/19102 bytes
+File: "Q0000082.WAV" [compress] 10495/10886 bytes
+File: "Q0000083.WAV" [compress] 12417/12862 bytes
+File: "Q0000084.WAV" [compress] 16140/16710 bytes
+File: "Q0000085.WAV" [compress] 15447/15982 bytes
+File: "Q0000086.WAV" [compress] 10798/11198 bytes
+File: "Q0000087.WAV" [compress] 12504/12966 bytes
+File: "Q0000088.WAV" [compress] 7120/7454 bytes
+File: "Q0000089.WAV" [compress] 9783/10158 bytes
+File: "Q0000090.WAV" [compress] 6553/6830 bytes
+File: "Q0000091.WAV" [compress] 5662/5894 bytes
+File: "Q0000092.WAV" [compress] 5510/5790 bytes
+File: "Q0000093.WAV" [compress] 3891/4126 bytes
+File: "Q0000094.WAV" [compress] 5117/5374 bytes
+File: "Q0000095.WAV" [compress] 10591/10990 bytes
+File: "Q0000096.WAV" [compress] 8661/9014 bytes
+File: "Q0000097.WAV" [compress] 11490/11926 bytes
+File: "Q0000099.WAV" [compress] 14432/14942 bytes
+File: "Q0000101.WAV" [compress] 10431/10782 bytes
+File: "Q0000102.WAV" [compress] 6614/6934 bytes
+File: "Q0000103.WAV" [compress] 12387/12862 bytes
+File: "Q0000104.WAV" [compress] 17343/17854 bytes
+File: "Q0000105.WAV" [compress] 14337/14838 bytes
+File: "Q0000106.WAV" [compress] 5851/6102 bytes
+File: "Q0000107.WAV" [compress] 10453/10782 bytes
+File: "Q0000108.WAV" [compress] 7980/8286 bytes
+File: "Q0000109.WAV" [compress] 15345/15878 bytes
+File: "Q0000110.WAV" [compress] 13757/14214 bytes
+File: "Q0000111.WAV" [compress] 4883/5166 bytes
+File: "Q0000112.WAV" [compress] 18872/19414 bytes
+File: "Q0000113.WAV" [compress] 8558/8910 bytes
+File: "Q0000114.WAV" [compress] 8677/9014 bytes
+File: "QCM00000.BMP" [compress] 0/103520 bytes
+File: "QCM00003.QCM" [compress] 0/12879 bytes
+File: "QCM00007.QCM" [compress] 1078/4892 bytes
+File: "QCM00009.QCM" [compress] 1662/3042 bytes
+File: "Question.lst" [compress] 2630/53560 bytes
+File: "T0000002.RTF" [compress] 754/1987 bytes
+File: "T0000003.RTF" [compress] 353/617 bytes
+File: "T0000007.RTF" [compress] 789/1618 bytes
+File: "T0000008.RTF" [compress] 953/2024 bytes
+File: "T0000009.RTF" [compress] 206/289 bytes
+File: "T0000010.RTF" [compress] 2047/4238 bytes
+File: "T0000011.RTF" [compress] 1141/2969 bytes
+File: "T0000013.RTF" [compress] 769/1724 bytes
+File: "T0000020.RTF" [compress] 391/649 bytes
+File: "T0000023.RTF" [compress] 555/1041 bytes
+File: "T0000060.RTF" [compress] 387/673 bytes
+File: "T0000061.RTF" [compress] 217/310 bytes
+File: "T0000064.RTF" [compress] 222/314 bytes
+File: "V0000007.BMP" [compress] 0/23836 bytes
+File: "V0000010.BMP" [compress] 0/168534 bytes
+File: "V0000013.BMP" [compress] 9451/270358 bytes
+SetOutPath: "$INSTDIR\LECONS\L0000010"
+File: "B0000000.BMP" [compress] 1435/2240 bytes
+File: "lecons.rec" [compress] 113/454 bytes
+File: "M0000006.CMD" [compress] 0 bytes
+File: "M0000060.CMD" [compress] 18 bytes
+File: "M0000067.CMD" [compress] 17 bytes
+File: "M0000068.CMD" [compress] 17 bytes
+File: "M0000069.CMD" [compress] 17 bytes
+File: "M0000070.CMD" [compress] 17 bytes
+File: "M0000071.CMD" [compress] 17 bytes
+File: "M0000072.CMD" [compress] 17 bytes
+File: "M0000073.CMD" [compress] 17 bytes
+File: "M0000074.CMD" [compress] 17 bytes
+File: "M0000075.CMD" [compress] 17 bytes
+File: "M0000076.CMD" [compress] 17 bytes
+File: "M0000078.CMD" [compress] 21 bytes
+File: "Q0000003.WAV" [compress] 62531/77642 bytes
+File: "Q0000009.WAV" [compress] 17964/22406 bytes
+File: "Q0000020.WAV" [compress] 17798/22658 bytes
+File: "Q0000033.WAV" [compress] 24951/30946 bytes
+File: "Q0000040.WAV" [compress] 33716/42548 bytes
+File: "Q0001002.WAV" [compress] 54626/66912 bytes
+File: "Q0001003.WAV" [compress] 15405/19012 bytes
+File: "Q0001004.WAV" [compress] 48332/59410 bytes
+File: "Q0001006.WAV" [compress] 16602/21162 bytes
+File: "Q0001007.WAV" [compress] 73381/91304 bytes
+File: "Q0001010.WAV" [compress] 50081/62378 bytes
+File: "Q0001012.WAV" [compress] 35382/44184 bytes
+File: "Q0001013.WAV" [compress] 58108/72700 bytes
+File: "Q0001014.WAV" [compress] 46442/57462 bytes
+File: "Q0001015.WAV" [compress] 50365/63048 bytes
+File: "Q0001016.WAV" [compress] 30935/37914 bytes
+File: "Q0001017.WAV" [compress] 33043/40710 bytes
+File: "Q0001018.WAV" [compress] 63682/80008 bytes
+File: "Q0001019.WAV" [compress] 38328/47696 bytes
+File: "Q0001020.WAV" [compress] 53289/66638 bytes
+File: "Q0001022.WAV" [compress] 37510/46296 bytes
+File: "Q0001023.WAV" [compress] 34781/44060 bytes
+File: "Q0001024.WAV" [compress] 35448/44324 bytes
+File: "Q0001025.WAV" [compress] 38065/46296 bytes
+File: "Q0001026.WAV" [compress] 51236/64324 bytes
+File: "Q0001027.WAV" [compress] 16403/21162 bytes
+File: "Q0001028.WAV" [compress] 51765/65964 bytes
+File: "Q0001029.WAV" [compress] 37762/46802 bytes
+File: "Q0001032.WAV" [compress] 30644/37914 bytes
+File: "Q0001033.WAV" [compress] 19437/25250 bytes
+File: "Q0001035.WAV" [compress] 67490/84688 bytes
+File: "Q0001036.WAV" [compress] 19239/24036 bytes
+File: "Q0001037.WAV" [compress] 43606/54162 bytes
+File: "Q0001038.WAV" [compress] 23639/29538 bytes
+File: "Q0001039.WAV" [compress] 45766/57622 bytes
+File: "Q0001040.WAV" [compress] 28763/34302 bytes
+File: "Q0001041.WAV" [compress] 47346/57944 bytes
+File: "Q0001042.WAV" [compress] 14678/18268 bytes
+File: "Q0001043.WAV" [compress] 25883/32328 bytes
+File: "Q0001044.WAV" [compress] 53802/67854 bytes
+File: "Q0001045.WAV" [compress] 48789/59352 bytes
+File: "Q0001046.WAV" [compress] 19327/23952 bytes
+File: "Q0001047.WAV" [compress] 49284/60258 bytes
+File: "Q0001048.WAV" [compress] 24265/30146 bytes
+File: "Q0001050.WAV" [compress] 61660/76110 bytes
+File: "Q0001051.WAV" [compress] 18031/23952 bytes
+File: "Q0001052.WAV" [compress] 37377/46696 bytes
+File: "Q0001053.WAV" [compress] 77390/98298 bytes
+File: "QCM00005.QCM" [compress] 1363/6272 bytes
+File: "Question.lst" [compress] 2392/42120 bytes
+File: "T0000006.RTF" [compress] 903/2006 bytes
+File: "T0000008.RTF" [compress] 586/1075 bytes
+File: "T0000009.RTF" [compress] 273/436 bytes
+File: "T0000055.RTF" [compress] 457/969 bytes
+File: "T0000059.RTF" [compress] 1340/2763 bytes
+File: "T0000060.RTF" [compress] 1408/2913 bytes
+File: "T0000061.RTF" [compress] 307/606 bytes
+File: "T0000062.RTF" [compress] 346/671 bytes
+File: "T0000063.RTF" [compress] 356/712 bytes
+File: "T0000064.RTF" [compress] 305/558 bytes
+File: "T0000065.RTF" [compress] 361/733 bytes
+File: "T0000066.RTF" [compress] 463/969 bytes
+File: "T0000067.RTF" [compress] 287/504 bytes
+File: "T0000068.RTF" [compress] 337/593 bytes
+File: "T0000069.RTF" [compress] 377/710 bytes
+File: "T0000070.RTF" [compress] 323/589 bytes
+File: "T0000071.RTF" [compress] 375/705 bytes
+File: "T0000077.RTF" [compress] 463/988 bytes
+File: "T0000078.RTF" [compress] 527/971 bytes
+File: "T0000081.RTF" [compress] 1327/2730 bytes
+File: "V0000007.BMP" [compress] 7241/16234 bytes
+File: "V0000009.BMP" [compress] 1435/2240 bytes
+File: "V0000067.BMP" [compress] 3466/8206 bytes
+File: "V0000068.BMP" [compress] 5000/10526 bytes
+File: "V0000069.BMP" [compress] 5694/12080 bytes
+File: "V0000070.BMP" [compress] 4680/9906 bytes
+File: "V0000071.BMP" [compress] 5667/11618 bytes
+File: "V0000072.BMP" [compress] 2962/5906 bytes
+File: "V0000073.BMP" [compress] 5236/11052 bytes
+File: "V0000074.BMP" [compress] 5630/10912 bytes
+File: "V0000075.BMP" [compress] 4705/9938 bytes
+File: "V0000076.BMP" [compress] 6604/14654 bytes
+File: "V0000077.BMP" [compress] 4412/10222 bytes
+SetOutPath: "$INSTDIR\LECONS\L0000009"
+File: "B0000051.BMP" [compress] 0/2240 bytes
+File: "B0000106.BMP" [compress] 1436/2240 bytes
+File: "lecons.rec" [compress] 110/454 bytes
+File: "M0000007.CMD" [compress] 0 bytes
+File: "M0000030.CMD" [compress] 0/17 bytes
+File: "M0000031.CMD" [compress] 0/17 bytes
+File: "M0000032.CMD" [compress] 0/17 bytes
+File: "M0000033.CMD" [compress] 0/17 bytes
+File: "M0000034.CMD" [compress] 0/17 bytes
+File: "M0000035.CMD" [compress] 0/17 bytes
+File: "M0000036.CMD" [compress] 0/17 bytes
+File: "M0000037.CMD" [compress] 0/17 bytes
+File: "M0000038.CMD" [compress] 0/17 bytes
+File: "M0000039.CMD" [compress] 0/17 bytes
+File: "M0000040.CMD" [compress] 23 bytes
+File: "M0000107.CMD" [compress] 18 bytes
+File: "Q0000115.WAV" [compress] 0/22406 bytes
+File: "Q0000116.WAV" [compress] 41454/51882 bytes
+File: "Q0000117.WAV" [compress] 28471/35126 bytes
+File: "Q0000118.WAV" [compress] 27709/33606 bytes
+File: "Q0000119.WAV" [compress] 16879/21162 bytes
+File: "Q0000120.WAV" [compress] 34171/42682 bytes
+File: "Q0000121.WAV" [compress] 16877/20712 bytes
+File: "Q0000122.WAV" [compress] 25749/32442 bytes
+File: "Q0000123.WAV" [compress] 24799/29908 bytes
+File: "Q0000124.WAV" [compress] 18258/23236 bytes
+File: "Q0000125.WAV" [compress] 20918/26324 bytes
+File: "Q0000126.WAV" [compress] 41107/51882 bytes
+File: "Q0000127.WAV" [compress] 38797/48904 bytes
+File: "Q0000128.WAV" [compress] 23178/30148 bytes
+File: "Q0000129.WAV" [compress] 37618/46296 bytes
+File: "Q0000130.WAV" [compress] 9719/12050 bytes
+File: "Q0000131.WAV" [compress] 17195/21616 bytes
+File: "Q0000132.WAV" [compress] 16118/19646 bytes
+File: "Q0000133.WAV" [compress] 43305/53912 bytes
+File: "Q0000134.WAV" [compress] 39783/49086 bytes
+File: "Q0000135.WAV" [compress] 36374/44424 bytes
+File: "Q0000136.WAV" [compress] 23169/29928 bytes
+File: "Q0000137.WAV" [compress] 13587/16732 bytes
+File: "Q0000138.WAV" [compress] 37305/45768 bytes
+File: "Q0000139.WAV" [compress] 22914/29538 bytes
+File: "Q0000140.WAV" [compress] 24760/30076 bytes
+File: "Q0000141.WAV" [compress] 15259/19106 bytes
+File: "Q0000142.WAV" [compress] 26310/33628 bytes
+File: "Q0000143.WAV" [compress] 14389/18562 bytes
+File: "Q0000144.WAV" [compress] 37533/49064 bytes
+File: "Q0000145.WAV" [compress] 23798/29972 bytes
+File: "Q0000146.WAV" [compress] 18724/23434 bytes
+File: "Q0000147.WAV" [compress] 15298/18804 bytes
+File: "Q0000148.WAV" [compress] 17040/21382 bytes
+File: "Q0000149.WAV" [compress] 16233/20326 bytes
+File: "Q0000150.WAV" [compress] 27570/33490 bytes
+File: "Q0000151.WAV" [compress] 27883/34718 bytes
+File: "Q0000152.WAV" [compress] 19491/25772 bytes
+File: "Q0000153.WAV" [compress] 16430/20794 bytes
+File: "Q0000154.WAV" [compress] 8828/12296 bytes
+File: "Q0000155.WAV" [compress] 33616/41316 bytes
+File: "Q0000156.WAV" [compress] 14154/17382 bytes
+File: "Q0000157.WAV" [compress] 31490/39674 bytes
+File: "Q0000158.WAV" [compress] 41923/52384 bytes
+File: "Q0000159.WAV" [compress] 22735/28054 bytes
+File: "Q0000160.WAV" [compress] 19192/24136 bytes
+File: "Q0000161.WAV" [compress] 21916/27248 bytes
+File: "Q0000162.WAV" [compress] 18716/23660 bytes
+File: "Q0000163.WAV" [compress] 23068/28302 bytes
+File: "Q0000164.WAV" [compress] 14054/17420 bytes
+File: "Q0000165.WAV" [compress] 21202/27414 bytes
+File: "Q0000166.WAV" [compress] 18168/23486 bytes
+File: "Q0000167.WAV" [compress] 38727/47662 bytes
+File: "Q0000168.WAV" [compress] 29250/37568 bytes
+File: "Q0000169.WAV" [compress] 17300/20916 bytes
+File: "Q0000170.WAV" [compress] 31653/39498 bytes
+File: "Q0000171.WAV" [compress] 28944/37826 bytes
+File: "Q0000172.WAV" [compress] 20090/26340 bytes
+File: "Q0000173.WAV" [compress] 36045/45582 bytes
+File: "Q0000174.WAV" [compress] 37023/46296 bytes
+File: "Q0000175.WAV" [compress] 17349/20936 bytes
+File: "Q0000176.WAV" [compress] 20484/25084 bytes
+File: "Q0000177.WAV" [compress] 7927/10356 bytes
+File: "Q0000178.WAV" [compress] 23104/29802 bytes
+File: "Q0000179.WAV" [compress] 27920/34598 bytes
+File: "Q0000180.WAV" [compress] 20702/25896 bytes
+File: "Q0000181.WAV" [compress] 13261/16632 bytes
+File: "Q0000182.WAV" [compress] 32315/42474 bytes
+File: "Q0000183.WAV" [compress] 30914/37774 bytes
+File: "Q0000184.WAV" [compress] 16759/20826 bytes
+File: "Q0000185.WAV" [compress] 22749/29364 bytes
+File: "Q0000186.WAV" [compress] 11909/15576 bytes
+File: "Q0000187.WAV" [compress] 26020/33846 bytes
+File: "Q0000188.WAV" [compress] 34791/43500 bytes
+File: "Q0000189.WAV" [compress] 30405/38672 bytes
+File: "QCM00006.QCM" [compress] 1367/6272 bytes
+File: "Question.lst" [compress] 2731/56160 bytes
+File: "T0000007.RTF" [compress] 0/2006 bytes
+File: "T0000020.RTF" [compress] 0/1075 bytes
+File: "T0000021.RTF" [compress] 279/453 bytes
+File: "T0000022.RTF" [compress] 0/969 bytes
+File: "T0000023.RTF" [compress] 0/606 bytes
+File: "T0000024.RTF" [compress] 0/671 bytes
+File: "T0000025.RTF" [compress] 0/712 bytes
+File: "T0000026.RTF" [compress] 0/558 bytes
+File: "T0000027.RTF" [compress] 0/733 bytes
+File: "T0000028.RTF" [compress] 0/969 bytes
+File: "T0000029.RTF" [compress] 0/504 bytes
+File: "T0000032.RTF" [compress] 0/593 bytes
+File: "T0000033.RTF" [compress] 0/710 bytes
+File: "T0000034.RTF" [compress] 0/589 bytes
+File: "T0000035.RTF" [compress] 0/705 bytes
+File: "T0000036.RTF" [compress] 505/1126 bytes
+File: "T0000037.RTF" [compress] 0/971 bytes
+File: "T0000060.RTF" [compress] 1368/2772 bytes
+File: "T0000106.RTF" [compress] 1271/2536 bytes
+File: "T0000107.RTF" [compress] 1382/2766 bytes
+File: "V0000008.BMP" [compress] 7240/16234 bytes
+File: "V0000010.BMP" [compress] 1436/2240 bytes
+File: "V0000030.BMP" [compress] 0/8206 bytes
+File: "V0000031.BMP" [compress] 0/10526 bytes
+File: "V0000032.BMP" [compress] 5695/12080 bytes
+File: "V0000033.BMP" [compress] 0/9906 bytes
+File: "V0000034.BMP" [compress] 0/11618 bytes
+File: "V0000035.BMP" [compress] 0/5906 bytes
+File: "V0000036.BMP" [compress] 0/11052 bytes
+File: "V0000037.BMP" [compress] 0/10912 bytes
+File: "V0000038.BMP" [compress] 0/9938 bytes
+File: "V0000039.BMP" [compress] 0/14654 bytes
+File: "V0000080.BMP" [compress] 3266/6514 bytes
+SetOutPath: "$INSTDIR\LECONS\L0000008"
+File: "B0000000.BMP" [compress] 0/2240 bytes
+File: "B0000049.BMP" [compress] 0/2240 bytes
+File: "B0000051.BMP" [compress] 2749/5510 bytes
+File: "lecons.rec" [compress] 106/454 bytes
+File: "M0000000.CMD" [compress] 17 bytes
+File: "M0000001.CMD" [compress] 17 bytes
+File: "M0000003.CMD" [compress] 17 bytes
+File: "M0000004.CMD" [compress] 17 bytes
+File: "M0000007.CMD" [compress] 0 bytes
+File: "M0000030.CMD" [compress] 17 bytes
+File: "M0000032.CMD" [compress] 17 bytes
+File: "M0000033.CMD" [compress] 0/17 bytes
+File: "M0000034.CMD" [compress] 0/17 bytes
+File: "M0000035.CMD" [compress] 0/17 bytes
+File: "M0000036.CMD" [compress] 0/17 bytes
+File: "M0000090.CMD" [compress] 21 bytes
+File: "M0000091.CMD" [compress] 18 bytes
+File: "Q0000143.WAV" [compress] 0/22406 bytes
+File: "Q0000144.WAV" [compress] 36234/44670 bytes
+File: "Q0000145.WAV" [compress] 16081/19908 bytes
+File: "Q0000146.WAV" [compress] 15302/19268 bytes
+File: "Q0000147.WAV" [compress] 40686/49470 bytes
+File: "Q0000148.WAV" [compress] 22007/28714 bytes
+File: "Q0000149.WAV" [compress] 42818/52708 bytes
+File: "Q0000150.WAV" [compress] 20734/26302 bytes
+File: "Q0000151.WAV" [compress] 22184/28440 bytes
+File: "Q0000152.WAV" [compress] 25016/30642 bytes
+File: "Q0000153.WAV" [compress] 27219/34316 bytes
+File: "Q0000154.WAV" [compress] 17297/22382 bytes
+File: "Q0000155.WAV" [compress] 19760/24324 bytes
+File: "Q0000156.WAV" [compress] 27701/36030 bytes
+File: "Q0000157.WAV" [compress] 25243/30752 bytes
+File: "Q0000158.WAV" [compress] 27201/34662 bytes
+File: "Q0000159.WAV" [compress] 44275/55332 bytes
+File: "Q0000160.WAV" [compress] 22913/29902 bytes
+File: "Q0000161.WAV" [compress] 31858/42236 bytes
+File: "Q0000162.WAV" [compress] 25235/32274 bytes
+File: "Q0000163.WAV" [compress] 43527/55682 bytes
+File: "Q0000164.WAV" [compress] 37468/49974 bytes
+File: "Q0000165.WAV" [compress] 48337/63048 bytes
+File: "Q0000166.WAV" [compress] 31173/41348 bytes
+File: "Q0000167.WAV" [compress] 37831/47234 bytes
+File: "Q0000168.WAV" [compress] 21022/27366 bytes
+File: "Q0000169.WAV" [compress] 28007/35664 bytes
+File: "Q0000170.WAV" [compress] 25617/32620 bytes
+File: "Q0000171.WAV" [compress] 18593/25512 bytes
+File: "Q0000172.WAV" [compress] 24364/31176 bytes
+File: "Q0000173.WAV" [compress] 49050/63048 bytes
+File: "Q0000174.WAV" [compress] 19852/26694 bytes
+File: "Q0000175.WAV" [compress] 44413/57714 bytes
+File: "Q0000176.WAV" [compress] 26289/32260 bytes
+File: "Q0000177.WAV" [compress] 21783/29806 bytes
+File: "Q0000178.WAV" [compress] 15653/19612 bytes
+File: "Q0000179.WAV" [compress] 31221/40710 bytes
+File: "Q0000180.WAV" [compress] 41964/56334 bytes
+File: "Q0000181.WAV" [compress] 38220/47806 bytes
+File: "Q0000182.WAV" [compress] 36123/46120 bytes
+File: "Q0000183.WAV" [compress] 37342/47082 bytes
+File: "Q0000184.WAV" [compress] 28250/35610 bytes
+File: "Q0000185.WAV" [compress] 32217/40990 bytes
+File: "Q0000186.WAV" [compress] 38850/50008 bytes
+File: "Q0000187.WAV" [compress] 33734/42336 bytes
+File: "Q0000188.WAV" [compress] 33721/43500 bytes
+File: "Q0000189.WAV" [compress] 10547/13080 bytes
+File: "Q0000190.WAV" [compress] 39984/52126 bytes
+File: "Q0000191.WAV" [compress] 37373/46130 bytes
+File: "Q0000192.WAV" [compress] 24326/31096 bytes
+File: "Q0000193.WAV" [compress] 9881/13398 bytes
+File: "Q0000194.WAV" [compress] 51310/65634 bytes
+File: "Q0000195.WAV" [compress] 49355/61846 bytes
+File: "Q0000196.WAV" [compress] 42567/56560 bytes
+File: "Q0000197.WAV" [compress] 31313/38526 bytes
+File: "Q0000198.WAV" [compress] 49637/63048 bytes
+File: "Q0000199.WAV" [compress] 46911/59270 bytes
+File: "Q0000200.WAV" [compress] 22887/30542 bytes
+File: "Q0000201.WAV" [compress] 43056/54632 bytes
+File: "QCM00006.QCM" [compress] 1369/6272 bytes
+File: "Question.lst" [compress] 2527/47840 bytes
+File: "T0000022.RTF" [compress] 0/969 bytes
+File: "T0000023.RTF" [compress] 0/606 bytes
+File: "T0000024.RTF" [compress] 0/671 bytes
+File: "T0000025.RTF" [compress] 0/712 bytes
+File: "T0000026.RTF" [compress] 0/558 bytes
+File: "T0000027.RTF" [compress] 0/733 bytes
+File: "T0000028.RTF" [compress] 0/969 bytes
+File: "T0000029.RTF" [compress] 0/504 bytes
+File: "T0000030.RTF" [compress] 494/1076 bytes
+File: "T0000032.RTF" [compress] 0/593 bytes
+File: "T0000033.RTF" [compress] 0/710 bytes
+File: "T0000034.RTF" [compress] 0/589 bytes
+File: "T0000035.RTF" [compress] 0/705 bytes
+File: "T0000039.RTF" [compress] 0/2006 bytes
+File: "T0000040.RTF" [compress] 0/1075 bytes
+File: "T0000056.RTF" [compress] 273/442 bytes
+File: "T0000060.RTF" [compress] 1343/2854 bytes
+File: "T0000090.RTF" [compress] 218/312 bytes
+File: "T0000091.RTF" [compress] 1214/2542 bytes
+File: "T0000092.RTF" [compress] 1359/2870 bytes
+File: "T0000093.RTF" [compress] 526/965 bytes
+File: "V0000010.BMP" [compress] 0/16234 bytes
+File: "V0000013.BMP" [compress] 1435/2240 bytes
+File: "V0000030.BMP" [compress] 0/8206 bytes
+File: "V0000031.BMP" [compress] 0/10526 bytes
+File: "V0000032.BMP" [compress] 0/12080 bytes
+File: "V0000033.BMP" [compress] 0/9906 bytes
+File: "V0000034.BMP" [compress] 0/11618 bytes
+File: "V0000035.BMP" [compress] 0/5906 bytes
+File: "V0000036.BMP" [compress] 0/11052 bytes
+File: "V0000037.BMP" [compress] 0/10912 bytes
+File: "V0000038.BMP" [compress] 0/9938 bytes
+File: "V0000039.BMP" [compress] 0/14654 bytes
+SetOutPath: "$INSTDIR\LECONS\L0000007"
+File: "B0000000.BMP" [compress] 1476/2228 bytes
+File: "B0000009.BMP" [compress] 741/2386 bytes
+File: "B0000055.BMP" [compress] 1760/3546 bytes
+File: "lecons.rec" [compress] 110/454 bytes
+File: "M0000002.CMD" [compress] 0 bytes
+File: "M0000054.CMD" [compress] 21 bytes
+File: "M0000057.CMD" [compress] 18 bytes
+File: "Q0000034.WAV" [compress] 29566/34944 bytes
+File: "Q0000038.WAV" [compress] 28349/36098 bytes
+File: "Q0001001.WAV" [compress] 51768/63048 bytes
+File: "Q0001002.WAV" [compress] 54466/69072 bytes
+File: "Q0001004.WAV" [compress] 52789/65844 bytes
+File: "Q0001005.WAV" [compress] 30468/38006 bytes
+File: "Q0001006.WAV" [compress] 58029/72546 bytes
+File: "Q0001007.WAV" [compress] 35784/44058 bytes
+File: "Q0001008.WAV" [compress] 11747/15576 bytes
+File: "Q0001009.WAV" [compress] 38749/49086 bytes
+File: "Q0001010.WAV" [compress] 36574/45750 bytes
+File: "Q0001012.WAV" [compress] 39160/47930 bytes
+File: "Q0001013.WAV" [compress] 23760/29590 bytes
+File: "Q0001014.WAV" [compress] 28056/34802 bytes
+File: "Q0001015.WAV" [compress] 66942/84628 bytes
+File: "Q0001016.WAV" [compress] 47168/59984 bytes
+File: "Q0001017.WAV" [compress] 35991/43862 bytes
+File: "Q0001018.WAV" [compress] 29032/37512 bytes
+File: "Q0001019.WAV" [compress] 36605/44738 bytes
+File: "Q0001020.WAV" [compress] 56645/69632 bytes
+File: "Q0001021.WAV" [compress] 14131/18366 bytes
+File: "Q0001022.WAV" [compress] 22866/28266 bytes
+File: "Q0001024.WAV" [compress] 48909/60258 bytes
+File: "Q0001025.WAV" [compress] 49697/60258 bytes
+File: "Q0001026.WAV" [compress] 21970/27046 bytes
+File: "Q0001027.WAV" [compress] 67552/84818 bytes
+File: "Q0001028.WAV" [compress] 39153/49086 bytes
+File: "Q0001029.WAV" [compress] 30712/37914 bytes
+File: "Q0001030.WAV" [compress] 46577/58346 bytes
+File: "Q0001032.WAV" [compress] 30197/37622 bytes
+File: "Q0001033.WAV" [compress] 50038/60258 bytes
+File: "Q0001036.WAV" [compress] 52228/63726 bytes
+File: "Q0001038.WAV" [compress] 34147/41924 bytes
+File: "Q0001040.WAV" [compress] 50035/62368 bytes
+File: "Q0001041.WAV" [compress] 39758/49176 bytes
+File: "Q0001042.WAV" [compress] 31029/38358 bytes
+File: "Q0001043.WAV" [compress] 43309/54672 bytes
+File: "Q0001044.WAV" [compress] 66395/83152 bytes
+File: "Q0001046.WAV" [compress] 47399/57468 bytes
+File: "Q0001047.WAV" [compress] 44705/55758 bytes
+File: "Q0001048.WAV" [compress] 26385/32328 bytes
+File: "Q0001049.WAV" [compress] 35315/43544 bytes
+File: "Q0001050.WAV" [compress] 75595/93024 bytes
+File: "Q0001051.WAV" [compress] 53478/65844 bytes
+File: "Q0001052.WAV" [compress] 29422/36362 bytes
+File: "Q0001053.WAV" [compress] 56688/68634 bytes
+File: "QCM00001.QCM" [compress] 1364/6272 bytes
+File: "Question.lst" [compress] 1360/29120 bytes
+File: "T0000000.RTF" [compress] 331/535 bytes
+File: "T0000002.RTF" [compress] 895/1996 bytes
+File: "T0000005.RTF" [compress] 524/991 bytes
+File: "T0000054.RTF" [compress] 480/1033 bytes
+File: "T0000055.RTF" [compress] 563/1104 bytes
+File: "T0000056.RTF" [compress] 0/312 bytes
+File: "T0000057.RTF" [compress] 1208/2545 bytes
+File: "T0000058.RTF" [compress] 1315/2764 bytes
+File: "V0000003.BMP" [compress] 6904/15754 bytes
+SetOutPath: "$INSTDIR\LECONS\L0000006"
+File: "B0000014.BMP" [compress] 7314/236446 bytes
+File: "lecons.rec" [compress] 125/454 bytes
+File: "M0000000.CMD" [compress] 305/469 bytes
+File: "M0000001.CMD" [compress] 124/130 bytes
+File: "M0000003.CMD" [compress] 0/19 bytes
+File: "M0000004.CMD" [compress] 45 bytes
+File: "M0000005.CMD" [compress] 0/15 bytes
+File: "M0000007.CMD" [compress] 16 bytes
+File: "M0000009.CMD" [compress] 0/29 bytes
+File: "M0000010.CMD" [compress] 14 bytes
+File: "M0000012.CMD" [compress] 0/21 bytes
+File: "M0000013.CMD" [compress] 0/16 bytes
+File: "M0000014.CMD" [compress] 0/17 bytes
+File: "M0000016.CMD" [compress] 19 bytes
+File: "M0000017.CMD" [compress] 20 bytes
+File: "M0000018.CMD" [compress] 21 bytes
+File: "M0000019.CMD" [compress] 18 bytes
+File: "M0000022.CMD" [compress] 495/902 bytes
+File: "M0000023.CMD" [compress] 21 bytes
+File: "M0000024.CMD" [compress] 0 bytes
+File: "M0000025.CMD" [compress] 0 bytes
+File: "M0000027.CMD" [compress] 45 bytes
+File: "M0000028.CMD" [compress] 0/17 bytes
+File: "M0000029.CMD" [compress] 0/121 bytes
+File: "M0000030.CMD" [compress] 119/125 bytes
+File: "M0000031.CMD" [compress] 117/119 bytes
+File: "M0000032.CMD" [compress] 0/14 bytes
+File: "Q0000003.WAV" [compress] 0/12862 bytes
+File: "Q0000014.WAV" [compress] 10099/10574 bytes
+File: "Q0000015.WAV" [compress] 11623/12238 bytes
+File: "Q0000016.WAV" [compress] 12333/12966 bytes
+File: "Q0000017.WAV" [compress] 11748/12238 bytes
+File: "Q0000018.WAV" [compress] 6566/7038 bytes
+File: "Q0000019.WAV" [compress] 16297/16918 bytes
+File: "Q0000020.WAV" [compress] 13355/13902 bytes
+File: "Q0000021.WAV" [compress] 16101/16710 bytes
+File: "Q0000022.WAV" [compress] 14971/15566 bytes
+File: "Q0000023.WAV" [compress] 6003/6414 bytes
+File: "Q0000024.WAV" [compress] 13377/14006 bytes
+File: "Q0000025.WAV" [compress] 5162/5478 bytes
+File: "Q0000026.WAV" [compress] 7776/8182 bytes
+File: "Q0000027.WAV" [compress] 15165/15774 bytes
+File: "Q0000028.WAV" [compress] 19033/19726 bytes
+File: "Q0000029.WAV" [compress] 10429/10990 bytes
+File: "Q0000030.WAV" [compress] 7643/8078 bytes
+File: "Q0000031.WAV" [compress] 10289/10782 bytes
+File: "Q0000032.WAV" [compress] 12356/12966 bytes
+File: "Q0000033.WAV" [compress] 8497/8910 bytes
+File: "Q0000034.WAV" [compress] 5940/6310 bytes
+File: "Q0000035.WAV" [compress] 6763/7246 bytes
+File: "Q0000036.WAV" [compress] 9484/10054 bytes
+File: "Q0000037.WAV" [compress] 6240/6726 bytes
+File: "Q0000038.WAV" [compress] 13089/13798 bytes
+File: "Q0000039.WAV" [compress] 13797/14422 bytes
+File: "Q0000040.WAV" [compress] 13546/14214 bytes
+File: "Q0000041.WAV" [compress] 16178/16814 bytes
+File: "Q0000042.WAV" [compress] 12349/12966 bytes
+File: "Q0000043.WAV" [compress] 6881/7246 bytes
+File: "Q0000044.WAV" [compress] 8296/8806 bytes
+File: "Q0000045.WAV" [compress] 6596/6934 bytes
+File: "Q0000046.WAV" [compress] 12168/12654 bytes
+File: "Q0000047.WAV" [compress] 12795/13382 bytes
+File: "Q0000048.WAV" [compress] 6469/6830 bytes
+File: "Q0000049.WAV" [compress] 8295/8702 bytes
+File: "Q0000050.WAV" [compress] 9990/10470 bytes
+File: "Q0000053.WAV" [compress] 15265/15878 bytes
+File: "Q0000054.WAV" [compress] 10490/10990 bytes
+File: "Q0000055.WAV" [compress] 6359/6726 bytes
+File: "Q0000056.WAV" [compress] 11642/12238 bytes
+File: "Q0000057.WAV" [compress] 6397/6726 bytes
+File: "Q0000058.WAV" [compress] 6656/7038 bytes
+File: "Q0000059.WAV" [compress] 15305/15982 bytes
+File: "Q0000060.WAV" [compress] 18843/19518 bytes
+File: "Q0000061.WAV" [compress] 10648/11198 bytes
+File: "Q0000062.WAV" [compress] 3748/4126 bytes
+File: "Q0000063.WAV" [compress] 12594/13174 bytes
+File: "Q0000064.WAV" [compress] 3854/4126 bytes
+File: "Q0000065.WAV" [compress] 6592/7038 bytes
+File: "Q0000066.WAV" [compress] 7889/8286 bytes
+File: "Q0000067.WAV" [compress] 8703/9222 bytes
+File: "Q0000068.WAV" [compress] 8785/9222 bytes
+File: "Q0000069.WAV" [compress] 7536/7974 bytes
+File: "Q0000070.WAV" [compress] 8778/9222 bytes
+File: "QCM00000.BMP" [compress] 0/103520 bytes
+File: "QCM00003.QCM" [compress] 0/12879 bytes
+File: "QCM00007.QCM" [compress] 1083/4892 bytes
+File: "QCM00009.QCM" [compress] 1876/3362 bytes
+File: "Question.lst" [compress] 2585/42640 bytes
+File: "T0000003.RTF" [compress] 342/603 bytes
+File: "T0000004.RTF" [compress] 1299/2799 bytes
+File: "T0000008.RTF" [compress] 966/2051 bytes
+File: "T0000009.RTF" [compress] 0/289 bytes
+File: "T0000010.RTF" [compress] 1853/3785 bytes
+File: "T0000012.RTF" [compress] 819/2177 bytes
+File: "T0000017.RTF" [compress] 769/1739 bytes
+File: "T0000018.RTF" [compress] 997/2218 bytes
+File: "T0000020.RTF" [compress] 0/649 bytes
+File: "T0000023.RTF" [compress] 510/961 bytes
+File: "T0000060.RTF" [compress] 337/568 bytes
+File: "T0000061.RTF" [compress] 0/310 bytes
+File: "T0000064.RTF" [compress] 0/314 bytes
+File: "V0000003.BMP" [compress] 0/23836 bytes
+File: "V0000010.BMP" [compress] 21286/1271654 bytes
+File: "V0000015.BMP" [compress] 8747/249522 bytes
+SetOutPath: "$INSTDIR\Images"
+File: "BITMAP.NEW" [compress] 238/192054 bytes
+File: "Info.rtf" [compress] 0/219 bytes
+File: "VIDEO.NEW" [compress] 3622/8868 bytes
+SetOutPath: "$INSTDIR\ico"
+File: "Custom-Icon-Design-Pretty-Office-6-Logout.ico" [compress] 33223/113956 bytes
+File: "GREEN.ico" [compress] 72473/72720 bytes
+File: "GREY.ico" [compress] 61508/62822 bytes
+File: "Hopstarter-Soft-Scraps-Document.ico" [compress] 57589/225670 bytes
+File: "Hopstarter-Soft-Scraps-Edit-Document.ico" [compress] 101449/245792 bytes
+File: "Icons8-Ios7-Media-Controls-High-Volume - Green.ico" [compress] 11777/165911 bytes
+File: "Icons8-Ios7-Media-Controls-High-Volume - Red.ico" [compress] 11786/165906 bytes
+File: "Icons8-Ios7-Very-Basic-Settings-Filled.ico" [compress] 10776/165436 bytes
+File: "LAVAC64.ico" [compress] 38839/40704 bytes
+File: "LISTEN.ico" [compress] 108130/258023 bytes
+File: "LISTEN_GREEN.ico" [compress] 0/258023 bytes
+File: "LISTEN_GREEN_RED.ico" [compress] 109813/258023 bytes
+File: "LISTEN_RED.ico" [compress] 107996/258627 bytes
+File: "MugenB16-Microphones-Mic-2.ico" [compress] 22969/82726 bytes
+File: "Oxygen-Icons.org-Oxygen-Actions-media-playback-pause.ico" [compress] 58590/184196 bytes
+File: "Oxygen-Icons.org-Oxygen-Actions-media-playback-start.ico" [compress] 60178/185864 bytes
+File: "RED.ico" [compress] 70673/71053 bytes
+File: "YELLOW.ico" [compress] 76938/77389 bytes
+SetOutPath: "$INSTDIR\Exe"
+File: "LAVAC_ET.EXE" [compress] 0/1277709 bytes
+File: "LICENCE.DLL" [compress] 191909/486481 bytes
+File: "WINCONST.DLL" [compress] 154399/399372 bytes
+File: "xmlparser.dll" [compress] 15853/35328 bytes
+SetOutPath: "$INSTDIR\AIDE"
+File: "Aide.rtf" [compress] 918/1762 bytes
+SectionEnd
+Section: "-Icons_Reg"
+SetOutPath: "$INSTDIR"
+WriteUninstaller: "$INSTDIR\uninstall.exe"
+CreateDirectory: "$SMPROGRAMS\LAVAC64"
+CreateShortCut: "$SMPROGRAMS\LAVAC64\LAVAC64.lnk"->"$INSTDIR\LAVAC_ET.EXE"  icon:,0, showmode=0x0, hotkey=0x0, comment=
+CreateShortCut: "$DESKTOP\LAVAC64.lnk"->"$INSTDIR\LAVAC_ET.EXE"  icon:,0, showmode=0x0, hotkey=0x0, comment=
+WriteINIStr: [InternetShortcut] URL=http://www.morgan-multimedia.com in $INSTDIR\LAVAC64 website.url
+CreateShortCut: "$SMPROGRAMS\LAVAC64\LAVAC64 Website.lnk"->"$INSTDIR\LAVAC64 website.url"  icon:,0, showmode=0x0, hotkey=0x0, comment=
+WriteRegStr: HKCU\Software\Microsoft\Windows\CurrentVersion\App Paths\LAVAC_ET.EXE\=$INSTDIR\LAVAC_ET.EXE
+WriteRegStr: HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64\DisplayName=LAVAC64
+WriteRegStr: HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64\UninstallString=$INSTDIR\uninstall.exe
+WriteRegStr: HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64\DisplayIcon=$INSTDIR\LAVAC_ET.EXE
+WriteRegStr: HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64\DisplayVersion=4.0.3.9
+WriteRegStr: HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64\Publisher=Morgan Multimedia
+WriteRegStr: HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64\URLInfoAbout=http://www.morgan-multimedia.com
+SectionEnd
+Section: "Uninstall"
+SetShellVarContext: current
+Delete: "$INSTDIR\LAVAC_ET.EXE"
+Delete: "$INSTDIR\About box Lavac.txt"
+Delete: "$INSTDIR\Anglais Méthodologie pour l'étudiant 2012-2013.doc"
+Delete: "$INSTDIR\LAVAC.INI"
+Delete: "$INSTDIR\Lavac.LIC"
+Delete: "$INSTDIR\xml\lessons.xml"
+Delete: "$INSTDIR\Téléchargement des cours\Téléchargement et installation.rtf"
+Delete: "$INSTDIR\Textes\Info.rtf"
+Delete: "$INSTDIR\Textes\notes.rtf"
+Delete: "$INSTDIR\Textes\RTF.NEW"
+Delete: "$INSTDIR\Sons\11025_16.NEW"
+Delete: "$INSTDIR\Sons\11025_8.NEW"
+Delete: "$INSTDIR\Sons\22050_16.NEW"
+Delete: "$INSTDIR\Sons\22050_8.NEW"
+Delete: "$INSTDIR\Sons\44100_16.NEW"
+Delete: "$INSTDIR\Sons\44100_8.NEW"
+Delete: "$INSTDIR\Sons\Info.rtf"
+Delete: "$INSTDIR\SAUVELEV\Info.rtf"
+Delete: "$INSTDIR\SAUVELEV\Sauvegarde de votre travail.doc"
+Delete: "$INSTDIR\Ressources\VIDEO\Obama_Putin_G20_WV-standardQT-fixed-x264-Platform_YTHQFull__017181.mp4"
+Delete: "$INSTDIR\Prof\DILATATO.VAL"
+Delete: "$INSTDIR\Prof\ETUDIANT.LST"
+Delete: "$INSTDIR\Prof\Info.rtf"
+Delete: "$INSTDIR\LECONS\Info.rtf"
+Delete: "$INSTDIR\LECONS\LECONS.LST"
+Delete: "$INSTDIR\LECONS\L0000012\lecons.rec"
+Delete: "$INSTDIR\LECONS\L0000012\M0000001.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000002.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000003.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000005.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000006.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000007.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000008.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000009.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000013.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000014.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000038.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\M0000069.CMD"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000002.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000012.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000013.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000014.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000015.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000016.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000017.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000018.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000019.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000020.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000021.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000022.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000023.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000024.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000025.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000026.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000027.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000028.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000029.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000030.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000031.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000032.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000033.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000034.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000035.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000036.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000037.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000038.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000039.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000040.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000041.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000042.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000043.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000044.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000045.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000046.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000047.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000048.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000049.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000050.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000051.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000052.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000053.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000054.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000055.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000056.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000057.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000058.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000059.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000060.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000061.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000062.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000063.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000064.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000065.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000066.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\Q0000067.WAV"
+Delete: "$INSTDIR\LECONS\L0000012\QCM00000.BMP"
+Delete: "$INSTDIR\LECONS\L0000012\QCM00001.QCM"
+Delete: "$INSTDIR\LECONS\L0000012\QCM00005.QCM"
+Delete: "$INSTDIR\LECONS\L0000012\QCM00008.QCM"
+Delete: "$INSTDIR\LECONS\L0000012\Question.lst"
+Delete: "$INSTDIR\LECONS\L0000012\T0000002.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000003.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000004.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000006.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000008.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000009.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000013.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000018.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000019.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000069.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000071.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\T0000072.RTF"
+Delete: "$INSTDIR\LECONS\L0000012\V0000003.BMP"
+Delete: "$INSTDIR\LECONS\L0000012\V0000004.BMP"
+Delete: "$INSTDIR\LECONS\L0000012\V0000038.BMP"
+Delete: "$INSTDIR\LECONS\L0000011\lecons.rec"
+Delete: "$INSTDIR\LECONS\L0000011\M0000000.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000004.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000005.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000006.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000007.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000008.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000009.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000012.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000013.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000014.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000016.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000017.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000018.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000019.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000020.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000021.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000022.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000024.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000025.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\M0000028.CMD"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000007.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000014.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000015.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000016.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000017.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000018.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000019.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000020.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000021.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000022.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000023.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000024.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000026.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000033.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000034.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000035.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000036.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000037.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000038.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000040.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000041.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000042.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000043.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000044.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000045.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000046.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000049.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000050.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000051.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000052.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000053.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000054.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000055.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000056.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000057.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000058.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000061.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000062.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000065.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000068.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000069.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000070.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000072.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000073.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000074.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000075.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000076.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000077.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000078.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000080.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000081.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000082.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000083.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000084.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000085.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000086.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000087.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000088.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000089.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000090.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000091.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000092.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000093.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000094.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000095.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000096.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000097.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000099.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000101.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000102.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000103.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000104.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000105.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000106.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000107.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000108.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000109.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000110.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000111.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000112.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000113.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\Q0000114.WAV"
+Delete: "$INSTDIR\LECONS\L0000011\QCM00000.BMP"
+Delete: "$INSTDIR\LECONS\L0000011\QCM00003.QCM"
+Delete: "$INSTDIR\LECONS\L0000011\QCM00007.QCM"
+Delete: "$INSTDIR\LECONS\L0000011\QCM00009.QCM"
+Delete: "$INSTDIR\LECONS\L0000011\Question.lst"
+Delete: "$INSTDIR\LECONS\L0000011\T0000002.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000003.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000007.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000008.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000009.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000010.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000011.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000013.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000020.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000023.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000060.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000061.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\T0000064.RTF"
+Delete: "$INSTDIR\LECONS\L0000011\V0000007.BMP"
+Delete: "$INSTDIR\LECONS\L0000011\V0000010.BMP"
+Delete: "$INSTDIR\LECONS\L0000011\V0000013.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\B0000000.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\lecons.rec"
+Delete: "$INSTDIR\LECONS\L0000010\M0000006.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000060.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000067.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000068.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000069.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000070.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000071.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000072.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000073.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000074.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000075.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000076.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\M0000078.CMD"
+Delete: "$INSTDIR\LECONS\L0000010\Q0000003.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0000009.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0000020.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0000033.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0000040.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001002.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001003.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001004.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001006.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001007.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001010.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001012.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001013.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001014.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001015.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001016.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001017.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001018.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001019.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001020.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001022.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001023.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001024.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001025.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001026.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001027.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001028.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001029.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001032.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001033.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001035.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001036.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001037.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001038.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001039.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001040.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001041.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001042.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001043.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001044.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001045.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001046.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001047.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001048.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001050.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001051.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001052.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\Q0001053.WAV"
+Delete: "$INSTDIR\LECONS\L0000010\QCM00005.QCM"
+Delete: "$INSTDIR\LECONS\L0000010\Question.lst"
+Delete: "$INSTDIR\LECONS\L0000010\T0000006.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000008.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000009.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000055.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000059.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000060.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000061.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000062.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000063.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000064.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000065.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000066.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000067.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000068.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000069.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000070.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000071.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000077.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000078.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\T0000081.RTF"
+Delete: "$INSTDIR\LECONS\L0000010\V0000007.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000009.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000067.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000068.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000069.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000070.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000071.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000072.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000073.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000074.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000075.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000076.BMP"
+Delete: "$INSTDIR\LECONS\L0000010\V0000077.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\B0000051.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\B0000106.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\lecons.rec"
+Delete: "$INSTDIR\LECONS\L0000009\M0000007.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000030.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000031.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000032.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000033.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000034.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000035.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000036.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000037.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000038.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000039.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000040.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\M0000107.CMD"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000115.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000116.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000117.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000118.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000119.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000120.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000121.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000122.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000123.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000124.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000125.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000126.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000127.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000128.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000129.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000130.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000131.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000132.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000133.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000134.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000135.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000136.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000137.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000138.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000139.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000140.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000141.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000142.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000143.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000144.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000145.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000146.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000147.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000148.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000149.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000150.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000151.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000152.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000153.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000154.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000155.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000156.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000157.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000158.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000159.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000160.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000161.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000162.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000163.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000164.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000165.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000166.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000167.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000168.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000169.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000170.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000171.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000172.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000173.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000174.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000175.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000176.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000177.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000178.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000179.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000180.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000181.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000182.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000183.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000184.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000185.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000186.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000187.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000188.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\Q0000189.WAV"
+Delete: "$INSTDIR\LECONS\L0000009\QCM00006.QCM"
+Delete: "$INSTDIR\LECONS\L0000009\Question.lst"
+Delete: "$INSTDIR\LECONS\L0000009\T0000007.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000020.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000021.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000022.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000023.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000024.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000025.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000026.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000027.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000028.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000029.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000032.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000033.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000034.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000035.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000036.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000037.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000060.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000106.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\T0000107.RTF"
+Delete: "$INSTDIR\LECONS\L0000009\V0000008.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000010.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000030.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000031.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000032.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000033.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000034.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000035.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000036.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000037.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000038.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000039.BMP"
+Delete: "$INSTDIR\LECONS\L0000009\V0000080.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\B0000000.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\B0000049.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\B0000051.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\lecons.rec"
+Delete: "$INSTDIR\LECONS\L0000008\M0000000.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000001.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000003.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000004.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000007.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000030.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000032.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000033.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000034.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000035.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000036.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000090.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\M0000091.CMD"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000143.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000144.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000145.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000146.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000147.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000148.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000149.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000150.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000151.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000152.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000153.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000154.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000155.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000156.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000157.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000158.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000159.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000160.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000161.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000162.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000163.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000164.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000165.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000166.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000167.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000168.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000169.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000170.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000171.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000172.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000173.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000174.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000175.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000176.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000177.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000178.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000179.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000180.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000181.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000182.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000183.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000184.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000185.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000186.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000187.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000188.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000189.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000190.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000191.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000192.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000193.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000194.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000195.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000196.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000197.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000198.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000199.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000200.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\Q0000201.WAV"
+Delete: "$INSTDIR\LECONS\L0000008\QCM00006.QCM"
+Delete: "$INSTDIR\LECONS\L0000008\Question.lst"
+Delete: "$INSTDIR\LECONS\L0000008\T0000022.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000023.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000024.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000025.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000026.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000027.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000028.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000029.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000030.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000032.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000033.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000034.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000035.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000039.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000040.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000056.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000060.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000090.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000091.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000092.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\T0000093.RTF"
+Delete: "$INSTDIR\LECONS\L0000008\V0000010.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000013.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000030.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000031.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000032.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000033.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000034.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000035.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000036.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000037.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000038.BMP"
+Delete: "$INSTDIR\LECONS\L0000008\V0000039.BMP"
+Delete: "$INSTDIR\LECONS\L0000007\B0000000.BMP"
+Delete: "$INSTDIR\LECONS\L0000007\B0000009.BMP"
+Delete: "$INSTDIR\LECONS\L0000007\B0000055.BMP"
+Delete: "$INSTDIR\LECONS\L0000007\lecons.rec"
+Delete: "$INSTDIR\LECONS\L0000007\M0000002.CMD"
+Delete: "$INSTDIR\LECONS\L0000007\M0000054.CMD"
+Delete: "$INSTDIR\LECONS\L0000007\M0000057.CMD"
+Delete: "$INSTDIR\LECONS\L0000007\Q0000034.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0000038.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001001.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001002.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001004.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001005.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001006.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001007.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001008.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001009.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001010.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001012.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001013.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001014.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001015.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001016.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001017.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001018.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001019.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001020.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001021.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001022.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001024.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001025.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001026.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001027.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001028.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001029.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001030.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001032.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001033.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001036.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001038.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001040.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001041.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001042.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001043.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001044.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001046.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001047.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001048.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001049.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001050.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001051.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001052.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\Q0001053.WAV"
+Delete: "$INSTDIR\LECONS\L0000007\QCM00001.QCM"
+Delete: "$INSTDIR\LECONS\L0000007\Question.lst"
+Delete: "$INSTDIR\LECONS\L0000007\T0000000.RTF"
+Delete: "$INSTDIR\LECONS\L0000007\T0000002.RTF"
+Delete: "$INSTDIR\LECONS\L0000007\T0000005.RTF"
+Delete: "$INSTDIR\LECONS\L0000007\T0000054.RTF"
+Delete: "$INSTDIR\LECONS\L0000007\T0000055.RTF"
+Delete: "$INSTDIR\LECONS\L0000007\T0000056.RTF"
+Delete: "$INSTDIR\LECONS\L0000007\T0000057.RTF"
+Delete: "$INSTDIR\LECONS\L0000007\T0000058.RTF"
+Delete: "$INSTDIR\LECONS\L0000007\V0000003.BMP"
+Delete: "$INSTDIR\LECONS\L0000006\B0000014.BMP"
+Delete: "$INSTDIR\LECONS\L0000006\lecons.rec"
+Delete: "$INSTDIR\LECONS\L0000006\M0000000.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000001.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000003.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000004.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000005.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000007.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000009.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000010.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000012.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000013.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000014.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000016.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000017.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000018.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000019.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000022.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000023.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000024.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000025.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000027.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000028.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000029.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000030.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000031.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\M0000032.CMD"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000003.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000014.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000015.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000016.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000017.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000018.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000019.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000020.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000021.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000022.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000023.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000024.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000025.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000026.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000027.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000028.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000029.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000030.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000031.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000032.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000033.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000034.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000035.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000036.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000037.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000038.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000039.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000040.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000041.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000042.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000043.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000044.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000045.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000046.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000047.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000048.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000049.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000050.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000053.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000054.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000055.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000056.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000057.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000058.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000059.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000060.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000061.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000062.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000063.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000064.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000065.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000066.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000067.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000068.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000069.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\Q0000070.WAV"
+Delete: "$INSTDIR\LECONS\L0000006\QCM00000.BMP"
+Delete: "$INSTDIR\LECONS\L0000006\QCM00003.QCM"
+Delete: "$INSTDIR\LECONS\L0000006\QCM00007.QCM"
+Delete: "$INSTDIR\LECONS\L0000006\QCM00009.QCM"
+Delete: "$INSTDIR\LECONS\L0000006\Question.lst"
+Delete: "$INSTDIR\LECONS\L0000006\T0000003.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000004.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000008.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000009.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000010.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000012.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000017.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000018.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000020.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000023.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000060.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000061.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\T0000064.RTF"
+Delete: "$INSTDIR\LECONS\L0000006\V0000003.BMP"
+Delete: "$INSTDIR\LECONS\L0000006\V0000010.BMP"
+Delete: "$INSTDIR\LECONS\L0000006\V0000015.BMP"
+Delete: "$INSTDIR\Images\BITMAP.NEW"
+Delete: "$INSTDIR\Images\Info.rtf"
+Delete: "$INSTDIR\Images\VIDEO.NEW"
+Delete: "$INSTDIR\ico\Custom-Icon-Design-Pretty-Office-6-Logout.ico"
+Delete: "$INSTDIR\ico\GREEN.ico"
+Delete: "$INSTDIR\ico\GREY.ico"
+Delete: "$INSTDIR\ico\Hopstarter-Soft-Scraps-Document.ico"
+Delete: "$INSTDIR\ico\Hopstarter-Soft-Scraps-Edit-Document.ico"
+Delete: "$INSTDIR\ico\Icons8-Ios7-Media-Controls-High-Volume - Green.ico"
+Delete: "$INSTDIR\ico\Icons8-Ios7-Media-Controls-High-Volume - Red.ico"
+Delete: "$INSTDIR\ico\Icons8-Ios7-Very-Basic-Settings-Filled.ico"
+Delete: "$INSTDIR\ico\LAVAC64.ico"
+Delete: "$INSTDIR\ico\LISTEN.ico"
+Delete: "$INSTDIR\ico\LISTEN_GREEN.ico"
+Delete: "$INSTDIR\ico\LISTEN_GREEN_RED.ico"
+Delete: "$INSTDIR\ico\LISTEN_RED.ico"
+Delete: "$INSTDIR\ico\MugenB16-Microphones-Mic-2.ico"
+Delete: "$INSTDIR\ico\Oxygen-Icons.org-Oxygen-Actions-media-playback-pause.ico"
+Delete: "$INSTDIR\ico\Oxygen-Icons.org-Oxygen-Actions-media-playback-start.ico"
+Delete: "$INSTDIR\ico\RED.ico"
+Delete: "$INSTDIR\ico\YELLOW.ico"
+Delete: "$INSTDIR\Exe\LAVAC_ET.EXE"
+Delete: "$INSTDIR\Exe\LICENCE.DLL"
+Delete: "$INSTDIR\Exe\WINCONST.DLL"
+Delete: "$INSTDIR\Exe\xmlparser.dll"
+Delete: "$INSTDIR\AIDE\Aide.rtf"
+RMDir: "$INSTDIR\AIDE"
+RMDir: "$INSTDIR\Exe"
+RMDir: "$INSTDIR\ico"
+RMDir: "$INSTDIR\Images"
+RMDir: "$INSTDIR\LECONS\L0000006"
+RMDir: "$INSTDIR\LECONS\L0000007"
+RMDir: "$INSTDIR\LECONS\L0000008"
+RMDir: "$INSTDIR\LECONS\L0000009"
+RMDir: "$INSTDIR\LECONS\L0000010"
+RMDir: "$INSTDIR\LECONS\L0000011"
+RMDir: "$INSTDIR\LECONS\L0000012"
+RMDir: "$INSTDIR\LECONS"
+RMDir: "$INSTDIR\Prof"
+RMDir: "$INSTDIR\Ressources\VIDEO"
+RMDir: "$INSTDIR\SAUVELEV"
+RMDir: "$INSTDIR\Sons"
+RMDir: "$INSTDIR\Textes"
+RMDir: "$INSTDIR\Téléchargement des cours"
+RMDir: "$INSTDIR\xml"
+Delete: "$INSTDIR\uninstall.exe"
+Delete: "$INSTDIR\LAVAC64 website.url"
+RMDir: "$INSTDIR"
+Delete: "$SMPROGRAMS\LAVAC64\LAVAC64.lnk"
+Delete: "$SMPROGRAMS\LAVAC64\LAVAC64 Website.lnk"
+Delete: "$DESKTOP\LAVAC64.lnk"
+RMDir: "$SMPROGRAMS\LAVAC64"
+DeleteRegKey: HKCU\Software\Microsoft\Windows\CurrentVersion\App Paths\LAVAC_ET.EXE
+DeleteRegKey: HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64
+SectionEnd
+Function: "un.onInit"
+!insertmacro: MUI_UNGETLANGUAGE
+ReadRegStr $MUI_TEMP1 HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\LAVAC64\Installer Language
+StrCmp "$MUI_TEMP1" "" equal=0, nonequal=mui.ungetlanguage_setlang
+!insertmacro: MUI_LANGDLL_DISPLAY
+!insertmacro: end of MUI_LANGDLL_DISPLAY
+Goto: mui.ungetlanguage_done
+StrCpy $LANGUAGE "$MUI_TEMP1" () ()
+!insertmacro: end of MUI_UNGETLANGUAGE
+FunctionEnd
+
+Processed 1 file, writing output:
+Adding plug-ins initializing function... Done!
+Processing pages... Done!
+Removing unused resources... Done!
+Generating language tables... Done!
+Generating uninstaller... Done!
+
+Output: "C:\LAVAC32\Install\Output\LAVAC64\setup.exe"
+Install: 5 pages (320 bytes), 2 sections (1 required) (2096 bytes), 1109 instructions (31052 bytes), 691 strings (11577 bytes), 2 language tables (604 bytes).
+Uninstall: 4 pages (256 bytes), 
+1 section (1048 bytes), 1037 instructions (29036 bytes), 990 strings (29546 bytes), 2 language tables (572 bytes).
+Datablock optimizer saved 769541 bytes (~1.5%).
+
+Using zlib compression.
+
+EXE header size:               48640 / 35840 bytes
+Install code:                  11494 / 46025 bytes
+Install data:               49415450 / 60690716 bytes
+Uninstall code+data:           29900 / 34923 bytes
+CRC (0x60CF3EE3):                  4 / 4 bytes
+
+Total size:                 49505488 / 60807508 bytes (81.4%)

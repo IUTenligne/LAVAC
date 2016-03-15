@@ -1,0 +1,4967 @@
+{************************************************}
+{                                                }
+{   Unité MMMCI                                  }
+{                                                }
+{   Projet LAVAC                                 }
+{                                                }
+{  (c) 1992-94 C Puissance 3 Informatique        }
+{              MORGAN MULTIMEDIA                 }
+{                                                }
+{  par Guillaume de Bailliencourt                }
+{                                                }
+{  18/11/1994                                    }
+{                                                }
+{************************************************}
+
+UNIT MMMCI;
+
+{$ASMMODE intel}
+
+interface
+
+{************************************************}
+uses Windows, Dos, SysUtils,
+		 CommDlg,
+		 Dlgs,
+		 mmsystem, VFW, Strings, {toolhelp,} ShellApi,
+		 LZExpand,
+		 MCIWnd,
+		 {BWCC,} MMDIB, MMDRWDIB, MMSTRING, MMLAVAC, WinCrt, Ctl3d, RichEdit
+		 {$IFDEF _DEBUG}
+		 ,MMDEBUG
+		 {$ENDIF};
+
+{************************************************}
+
+const
+	{MciQueue}
+	idmq_ListeMci		= 101;
+	idmq_ListeMciClose  	= 102;
+	idmq_ListeMciCmd	= 103;
+	idmq_ListeMciCmdClose	= 104;
+
+var
+       	hMciQueue : HWnd;
+       	hMciCmdQueue : HWnd;
+	hMciCmdCloseQueue : HWnd;
+	hMciCloseQueue : HWnd;
+	hMciQueueProc : HWnd;
+	lpMciQueueProc : TFarProc;
+	mciMessage : TMCISTR;
+	dwMciReturn : DWORD;
+	bUser0  : Array[0..3] of BYTE;
+	bUser1  : Array[0..3] of BYTE;
+	bUser2  : Array[0..3] of BYTE;
+	bUser3  : Array[0..3] of BYTE;
+	bUser4  : Array[0..3] of BYTE;
+	bUser5  : Array[0..3] of BYTE;
+	bUser6  : Array[0..3] of BYTE;
+	bUser7  : Array[0..3] of BYTE;
+	bUser8  : Array[0..3] of BYTE;
+	bUser9  : Array[0..3] of BYTE;
+	bUser10 : Array[0..3] of BYTE;
+	bUser11 : Array[0..3] of BYTE;
+	bUser12 : Array[0..3] of BYTE;
+	bUser13 : Array[0..3] of BYTE;
+	bUser14 : Array[0..3] of BYTE;
+	bUser15 : Array[0..3] of BYTE;
+	hUser   : Array[0..15] of HWND;
+	rUser   : TRECT;
+	ptUser  : TPOINT;
+
+const dwNullNil : DWORD = 0;
+{
+function EnumFontFamiliesEx(
+		dc : HDC;
+		pLogfnt : PLOGFONT;
+		lpEnumFontFamExProc : TFARPROC;
+		lParam : LONGINT;
+		dwFlags : DWORD) : integer; stdcall;
+
+function RegQueryValueEx(
+		Key : HKEY;
+		pszValueName : PCHAR;
+		pdwReserved : PLONGINT;
+		pdwType : PLONGINT;
+		pbData : PBYTE;
+		pcbData : PLONGINT) : DWORD; stdcall;
+}
+
+{
+function mcFillDevList(hDlg : HWND; nItem : integer) : BOOL;
+function mcFillCmdList(pszDev : PChar; hDlg : HWND; nItem : integer) : BOOL;
+function mcFillParList(pszDev, pszCmd : PChar; hDlg : HWND; nItem : integer) : BOOL;
+}
+function wcGetCst(pszWord : PChar; var bSize : BYTE; fErrMsg : BOOL) : DWORD;
+procedure FindCst(pszWord : PChar; dwVal : DWORD; pszRet : PCHAR; nSize : integer; var bSize : BYTE; fErrMsg : BOOL);
+function SendMci(pMciStr : PStr; pMciReturnStr : PMCISTR; MciWindow : HWnd) : DWORD;
+function InitMciQueue : Bool;
+function ResetMciQueue : Bool;
+function ResetMciCloseQueue : Bool;
+function ResetMciCmdQueue : Bool;
+function ResetMciCmdCloseQueue : Bool;
+function StartMciQueue : Bool;
+function StopMciQueue : Bool;
+function PauseMciQueue : Bool;
+function ResumeMciQueue : Bool;
+function InsMciQueueString(MciCommandPStr : PChar; nIndex : integer) : Bool;
+function AddMciQueueString(MciCommandPStr : PChar) : Bool;
+function GetMciQueueString(MciCommandPStr : PChar) : Bool;
+function AddMciCloseQueueString(MciCommandPStr : PChar) : Bool;
+function GetMciCloseQueueString(MciCommandPStr : PChar) : Bool;
+function AddMciCmdQueueString(MciCommandPStr : PChar) : Bool;
+function GetMciCmdQueueString(MciCommandPStr : PChar; nPos : integer) : Bool;
+function AddMciCmdCloseQueueString(MciCommandPStr : PChar) : Bool;
+function GetMciCmdCloseQueueString(MciCommandPStr : PChar) : Bool;
+function FindMciCmdQueueString(MciCommandPStr : PChar) : Longint;
+function StrTok(lpszStr : PChar; Separator : PChar) : PChar;
+function mciOn(MciCommandPStr : PChar) : Bool;
+function mciMciWnd(MciCommandPStr : PChar) : Bool;
+function mciSetFocus(MciCommandPStr : PChar) : Bool;
+function mciSelect(MciCommandPStr : PChar) : Bool;
+function mciUnSelect(MciCommandPStr : PChar) : Bool;
+function mciPlayQ(MciCommandPStr : PChar) : Bool;
+function mciPlayA(MciCommandPStr : PChar) : Bool;
+function mciPlayQA(MciCommandPStr : PChar) : Bool;
+function mciRecordA(MciCommandPStr : PChar) : Bool;
+function mciTestCall(MciCommandPStr : PChar) : Bool;
+function mciSetVolume(MciCommandPStr : PChar) : Bool;
+function mciWinExec(MciCommandPStr : PChar) : Bool;
+function mciPlayQuestion(MciCommandPStr : PChar) : Bool;
+function mciRecordAnswer(MciCommandPStr : PChar) : Bool;
+function mciPlayAnswer(MciCommandPStr : PChar) : Bool;
+function mciPlayQcm(MciCommandPStr : PChar) : Bool;
+function mciDisplay(MciCommandPStr : PChar) : Bool;
+function mciDisplayLed(MciCommandPStr : PChar) : Bool;
+function RepTexteProc(Dialog: HWnd; Message, WParam: DWord;
+	LParam: Longint): Bool; StdCall;
+function ShowWaveProc(hWin : HWnd; Message, wParam: DWord;
+	lParam: Longint): Longint; StdCall;
+function mciRequestText(MciCommandPStr : PChar) : Bool;
+function mciShare(MciCommandPStr : PChar) : Bool;
+function mciSetPosition(MciCommandPStr : PChar) : Bool;
+function EndMciQueue(MciCommandPStr : PChar) : Bool;
+function mciSetCaption(MciCommandPStr : PChar) : Bool;
+function mciRemark(MciCommandPStr : PChar) : Bool;
+function mciSetLesson(MciCommandPStr : PChar) : Bool;
+function mciLoadLesson(MciCommandPStr : PChar) : Bool;
+function mciSetQuestion(MciCommandPStr : PChar) : Bool;
+function MciQueueProc(Dialog: HWnd; Message, WParam: DWord;
+	LParam: Longint): Bool; StdCall;
+function mciSetStyle(MciCommandPStr : PChar) : Bool;
+function mciSetPos(MciCommandPStr : PChar) : Bool;
+function mciHide(MciCommandPStr : PChar) : Bool;
+function mciShow(MciCommandPStr : PChar) : Bool;
+function mciCall(MciCommandPStr : PChar) : Bool;
+function mciMsgBox(MciCommandPStr : PChar) : Bool;
+function mciLet(MciCommandPStr : PChar) : Bool;
+function mciStop(MciCommandPStr : PChar) : Bool;
+function mciPause(MciCommandPStr : PChar) : Bool;
+function mciShowWave(MciCommandPStr : PChar) : Bool;
+function mciSendString(lpstrCommand: PChar; lpstrReturnString: PChar; uReturnLength: Word;
+hWndCallback: HWnd): Longint;
+
+// OptionsProc & LibelProc (was in UTUTDLG.PAS ???)
+function OptionsProc(Dialog: HWnd; Message, WParam: DWord; LParam: Longint): Bool; stdcall;
+function LibelProc(Dialog: HWnd; Message, WParam: DWord; LParam: Longint): Bool; stdcall;
+
+
+type
+	TCmd = (CMD_REM, { mciRemark }
+					CMD_REM_C, { mciRemark }
+					CMD_REM_ASM, { mciRemark }
+					CMD_SETFOCUS, { mciSetFocus }
+					CMD_SELECT, { mciSelect }
+					CMD_UNSELECT, { mciUnSelect }
+					CMD_PLAYQA, {  }
+					CMD_PLAYA, {  }
+					CMD_PLAYQ, {  }
+					CMD_RECORDA, {  }
+					CMD_TESTCALL, {  }
+					CMD_DISPLAYLED, { mciDisplayLed }
+					CMD_REQUESTTEXT, { mciRequestText }
+					CMD_SHARE, { mciShare }
+					CMD_SETPOSITION, { mciSetPosition }
+					CMD_SETLESSON, { mciSetLesson }
+					CMD_SETQUESTION, { mciSetQuestion }
+					CMD_SETCAPTION, { mciSetCaption }
+					CMD_DISPLAY, { mciDisplay }
+					CMD_SETVOLUME, { mciSetVolume }
+					CMD_WINEXEC, { mciWinExec }
+					CMD_PLAYQCM, { mciPlayQCM }
+					CMD_SETSTYLE, { mciSetStyle }
+					CMD_SETPOS, { mciSetPos }
+					CMD_HIDE, { mciHide }
+					CMD_SHOW, { mciShow }
+					CMD_CALL, { mciCall }
+					CMD_MSGBOX,{ mciMsgBox }
+					CMD_LET,	{ mciLet }
+					CMD_STOP,	{ mciStop }
+					CMD_PAUSE,	{ mciPause }
+					CMD_SHOWVAWE,	{ mciPause }
+					CMD_ON,	{ mciOn }
+					CMD_MCIWND,	{ mciOn }
+					CMD_LoadLesson, { mciSetLesson }
+					CMD_END); { EndMciQueue) }
+        Type
+        TCmdFunc = function(MciCommandPStr : PChar) : Bool;
+
+	TCmdRec = record
+							cmd  : PChar;
+							func : TCmdFunc;
+							{inf  : PChar;}
+						end;
+
+	TCmdMap = array[TCmd] of TCmdRec;
+
+	TVar = (VAR_BMPWIN,
+					VAR_WAVWIN,
+					VAR_TXTWIN,
+					VAR_BUTWIN,
+					VAR_LSTWIN,
+					VAR_LAVWIN,
+					VAR_HINST,
+					VAR_TUTWIN,
+					VAR_NULL,
+					VAR_NIL,
+					VAR_USER0,
+					VAR_USER0_LO,
+					VAR_USER0_LO_LO,
+					VAR_USER0_LO_HI,
+					VAR_USER0_HI,
+					VAR_USER0_HI_LO,
+					VAR_USER0_HI_HI,
+					VAR_USER1,
+					VAR_USER1_LO,
+					VAR_USER1_LO_LO,
+					VAR_USER1_LO_HI,
+					VAR_USER1_HI,
+					VAR_USER1_HI_LO,
+					VAR_USER1_HI_HI,
+					VAR_USER2,
+					VAR_USER2_LO,
+					VAR_USER2_LO_LO,
+					VAR_USER2_LO_HI,
+					VAR_USER2_HI,
+					VAR_USER2_HI_LO,
+					VAR_USER2_HI_HI,
+					VAR_USER3,
+					VAR_USER3_LO,
+					VAR_USER3_LO_LO,
+					VAR_USER3_LO_HI,
+					VAR_USER3_HI,
+					VAR_USER3_HI_LO,
+					VAR_USER3_HI_HI,
+					VAR_USER4,
+					VAR_USER4_LO,
+					VAR_USER4_LO_LO,
+					VAR_USER4_LO_HI,
+					VAR_USER4_HI,
+					VAR_USER4_HI_LO,
+					VAR_USER4_HI_HI,
+					VAR_USER5,
+					VAR_USER5_LO,
+					VAR_USER5_LO_LO,
+					VAR_USER5_LO_HI,
+					VAR_USER5_HI,
+					VAR_USER5_HI_LO,
+					VAR_USER5_HI_HI,
+					VAR_USER6,
+					VAR_USER6_LO,
+					VAR_USER6_LO_LO,
+					VAR_USER6_LO_HI,
+					VAR_USER6_HI,
+					VAR_USER6_HI_LO,
+					VAR_USER6_HI_HI,
+					VAR_USER7,
+					VAR_USER7_LO,
+					VAR_USER7_LO_LO,
+					VAR_USER7_LO_HI,
+					VAR_USER7_HI,
+					VAR_USER7_HI_LO,
+					VAR_USER7_HI_HI,
+					VAR_USER8,
+					VAR_USER8_LO,
+					VAR_USER8_LO_LO,
+					VAR_USER8_LO_HI,
+					VAR_USER8_HI,
+					VAR_USER8_HI_LO,
+					VAR_USER8_HI_HI,
+					VAR_USER9,
+					VAR_USER9_LO,
+					VAR_USER9_LO_LO,
+					VAR_USER9_LO_HI,
+					VAR_USER9_HI,
+					VAR_USER9_HI_LO,
+					VAR_USER9_HI_HI,
+					VAR_USER10,
+					VAR_USER10_LO,
+					VAR_USER10_LO_LO,
+					VAR_USER10_LO_HI,
+					VAR_USER10_HI,
+					VAR_USER10_HI_LO,
+					VAR_USER10_HI_HI,
+					VAR_USER11,
+					VAR_USER11_LO,
+					VAR_USER11_LO_LO,
+					VAR_USER11_LO_HI,
+					VAR_USER11_HI,
+					VAR_USER11_HI_LO,
+					VAR_USER11_HI_HI,
+					VAR_USER12,
+					VAR_USER12_LO,
+					VAR_USER12_LO_LO,
+					VAR_USER12_LO_HI,
+					VAR_USER12_HI,
+					VAR_USER12_HI_LO,
+					VAR_USER12_HI_HI,
+					VAR_USER13,
+					VAR_USER13_LO,
+					VAR_USER13_LO_LO,
+					VAR_USER13_LO_HI,
+					VAR_USER13_HI,
+					VAR_USER13_HI_LO,
+					VAR_USER13_HI_HI,
+					VAR_USER14,
+					VAR_USER14_LO,
+					VAR_USER14_LO_LO,
+					VAR_USER14_LO_HI,
+					VAR_USER14_HI,
+					VAR_USER14_HI_LO,
+					VAR_USER14_HI_HI,
+					VAR_USER15,
+					VAR_USER15_LO,
+					VAR_USER15_LO_LO,
+					VAR_USER15_LO_HI,
+					VAR_USER15_HI,
+					VAR_USER15_HI_LO,
+					VAR_USER15_HI_HI,
+					VAR_RUSER,
+					VAR_RUSER_LEFT,
+					VAR_RUSER_TOP,
+					VAR_RUSER_RIGHT,
+					VAR_RUSER_BOTTOM,
+					VAR_PTUSER,
+					VAR_PTUSER_X,
+					VAR_PTUSER_Y,
+					VAR_HUSER0,
+					VAR_HUSER1,
+					VAR_HUSER2,
+					VAR_HUSER3,
+					VAR_HUSER4,
+					VAR_HUSER5,
+					VAR_HUSER6,
+					VAR_HUSER7,
+					VAR_HUSER8,
+					VAR_HUSER9,
+					VAR_HUSER10,
+					VAR_HUSER11,
+					VAR_HUSER12,
+					VAR_HUSER13,
+					VAR_HUSER14,
+					VAR_HUSER15,
+					VAR_RETURN);
+
+	TVarRec = record
+							tok	: PChar;
+							pVar : pointer;
+							wSize : WORD;
+						end;
+
+	TVarMap = array[TVar] of TVarRec;
+
+	TCst = (CST_TRUE,
+					CST_FALSE,
+					CST_WS_OVERLAPPED,
+					CST_WS_CAPTION,
+					CST_WS_THICKFRAME,
+					CST_WS_BORDER,
+					CST_HWND_TOP,
+					CST_HWND_BOTTOM,
+					CST_HWND_TOPMOST,
+					CST_HWND_NOTOPMOST);
+
+	TwCstRec = record
+							tok	: PChar;
+							wCst : WORD;
+						end;
+
+	TdwCstRec = record
+							tok	: PChar;
+							dwCst : DWORD;
+						end;
+
+	TCstMap = array[TCst] of TdwCstRec;
+
+	TTyp = (TYP_BYTE,
+					TYP_WORD,
+					TYP_STRING,
+					TYP_POINTER,
+					TYP_DWORD);
+
+	TTypRec = record
+							tok	: PChar;
+							dwTyp : DWORD;
+						end;
+
+	TTypMap = array[TTyp] of TTypRec;
+
+const
+
+	CMD_FIRST = CMD_REM;
+	CMD_LAST  = CMD_END;
+	CmdMap : TCmdMap = (
+        (cmd : 'REM'; 			func : TCmdFunc(mciRemark)			{; inf : ' [commentaires] : Remarque'}),
+	(cmd : '//'; 			func : TCmdFunc(mciRemark)			{; inf : ' [commentaires] : Remarque'}),
+	(cmd : ';'; 			func : TCmdFunc(mciRemark)			{; inf : ' [commentaires] : Remarque'}),
+	(cmd : 'SETFOCUS'; 		func : TCmdFunc(mciSetFocus)		{; inf : ' n : Encadre la séquence n'}),
+	(cmd : 'SELECT'; 		func : TCmdFunc(mciSelect)			{; inf : ' n1 [n2] : Sélectionne les séquences de n1 à n2'}),
+	(cmd : 'UNSELECT'; 		func : TCmdFunc(mciUnSelect)		{; inf : ' n1 [n2] : Désélectionne les séquences de n1 à n2'}),
+	(cmd : 'PLAYQA';		func : TCmdFunc(mciPlayQA)			{; inf : ' [n] : Ajoute la séquence n à la sélection en cours et lance'+
+																											' Ecoute Prof/Elève'}),
+	(cmd : 'PLAYA';			func : TCmdFunc(mciPlayA)				{; inf : ' [n] : Ajoute la séquence n à la sélection en cours et lance'+
+																											' Ecoute Elève'}),
+	(cmd : 'PLAYQ';  		func : TCmdFunc(mciPlayQ)				{; inf : ' [n] : Ajoute la séquence n à la sélection en cours et lance'+
+																											' Ecoute Prof'}),
+	(cmd : 'RECORDA'; 		func : TCmdFunc(mciRecordA)			{; inf : ' [n] : Ajoute la séquence n à la sélection en cours et lance'+
+																											' Enregistre Elève'}),
+	(cmd : 'TESTCALL'; 		func : TCmdFunc(mciTestCall)		{; inf : ' : Test les appels'}),
+	(cmd : 'DISPLAYLED'; 	        func : TCmdFunc(mciDisplayLed)	{; inf : ' hled [n]: Affiche la LED hled pendant n ms'}),
+	(cmd : 'REQUESTTEXT';           func : TCmdFunc(mciRequestText)	{; inf : ' [APPEND] [AT x1 y1 x2 y2 ] : Reprend le texte de la questio'+
+																											'n, Ouvre la fenêtre à la position spécifiée'}),
+	(cmd : 'SHARE'; 		func : TCmdFunc(mciShare)				{; inf : ' filename : Rend le fichier filename partageable'}),
+	(cmd : 'SETPOSITION';           func : TCmdFunc(mciSetPosition)	{; inf : ' nstudent npos : Met à jour des informations de suivi'}),
+	(cmd : 'SETLESSON'; 	        func : TCmdFunc(mciSetLesson)		{; inf : ' nlesson : Met à jour des informations de suivi'}),
+	(cmd : 'SETQUESTION';           func : TCmdFunc(mciSetQuestion)	{; inf : ' nfrom nto : Met à jour des informations de suivi'}),
+	(cmd : 'SETCAPTION'; 	        func : TCmdFunc(mciSetCaption)	{; inf : ' hwin "text" : Change le titre de la fenêtre hwin'}),
+	(cmd : 'DISPLAY'; 		func : TCmdFunc(mciDisplay)			{; inf : ' filename STRECHED|UNSTRECHED BITMAP|VIDEO|TEXT HIDEN|'+
+																											'ZOOMED|DEFAULT|NORMAL|AT x1 y1 x2 y2 TOP|BOTTOM : Affiche '+
+																											'le fichier filename selon les options spécifiées'}),
+	(cmd : 'SETVOLUME'; 	        func : TCmdFunc(mciSetVolume)		{; inf : ' hbar : Règle le volume par rapport à la position de hbar'}),
+	(cmd : 'WINEXEC'; 		func : TCmdFunc(mciWinExec)			{; inf : ' exename | filename | exename filename [/P:path] [/C:command'+
+																											'] : exécute la commande command de l''application exename '+
+																											'pour le fichier filename avec path comme répertoire courant'}),
+	(cmd : 'PLAYQCM'; 		func : TCmdFunc(mciPlayQCM)			{; inf : ' filename ID n NELEV nstud AT x1 y1 x2 y2 [NOTIFY] : Joue le'+
+																											' tuteur filename à la séquence n pour l''élève nstud à la po'+
+																											'sition spécifiée'}),
+	(cmd : 'SETSTYLE'; 		func : TCmdFunc(mciSetStyle)		{; inf : ' hwin OVERLAPPED|CAPTION|THICKFRAME|BORDER : Change le style'+
+																											' de la fenêtre hwin'}),
+	(cmd : 'SETPOS';	 	func : TCmdFunc(mciSetPos)			{; inf : ' hwin1 TOP|BOTTOM|hwin2 : Change la position de la fenêtre h'+
+																											'win1'}),
+	(cmd : 'HIDE';		 	func : TCmdFunc(mciHide)				{; inf : ' hwin : Cache la fenêtre hwin'}),
+	(cmd : 'SHOW';		 	func : TCmdFunc(mciShow)				{; inf : ' hwin : Montre la fenêtre hwin'}),
+	(cmd : 'CALL';		 	func : TCmdFunc(mciCall)				{; inf : ' dllname funcname (type1) param1 (type2) param2 ... : Appel '+
+																											'de la fonction funcname de la DLL dllname'}),
+	(cmd : 'MSGBOX';		func : TCmdFunc(mciMsgBox)			{; inf : ' title format arg1 arg2 ... : Ouvre une boite de message de '+
+																											'titre title et ayant pour message la chaine de caractère for'+
+																											'matée à la syntaxe sprintf'}),
+	(cmd : 'LET';			func : TCmdFunc(mciLet)					{; inf : ' var = arg1 [op arg2] [op arg3] [...] : Stocke le résultat da'+
+																											'ns la variable var'}),
+	(cmd : 'STOP';		 	func : TCmdFunc(mciStop)				{; inf : ' : Stoppe le déroulement des séquences'}),
+	(cmd : 'PAUSE';		 	func : TCmdFunc(mciPause)				{; inf : ' [n] : Suspend le déroulement des séquences pendant n millise'+
+																											'condes en activant le bouton Pause/Suite'}),
+	(cmd : 'SHOWWAVE'; 		func : TCmdFunc(mciShowWave)		{; inf : ' filename|QUESTION n|ANSWER n [x1 y1 x2 y2 [r g b]] : Affic'+
+																											'he le diagramme du fichier son filename ou de la question ou r'+
+																											'éponse n à la position spécifiée avec la couleur spécifiée'}),
+	(cmd : 'ON'; 			func : TCmdFunc(mciOn)					{; inf : ' START|END|STOP : Décrit un bloc de commandes terminé par END éxécuté'+
+																											' au début, à la fin ou si l''utilisateur stoppe la séquence.'}),
+	(cmd : 'MCIWND';		func : TCmdFunc(mciMciWnd)			{; inf : ' filename|QUESTION n|ANSWER n : Jouer un fichier supporté par MCI '+
+																											' dans une fenêtre.'}),
+	(cmd : 'LOADLESSON'; 	        func : TCmdFunc(mciLoadLesson)		{; inf : ' nlesson : Met à jour des informations de suivi'}),
+	(cmd : 'END'; 			func : TCmdFunc(EndMciQueue)		{; inf : ' : Fin de script'}));
+
+	VAR_FIRST = VAR_BMPWIN;
+	VAR_LAST  = VAR_RETURN;
+	VarMap : TVarMap = ((tok : '$BMPWIN'; pVar : @hGraphiqueProc; wSize : 2),
+											(tok : '$WAVWIN'; pVar : @hSonProc; 			wSize : 2),
+											(tok : '$TXTWIN'; pVar : @hTexteProc; 		wSize : 2),
+											(tok : '$BUTWIN'; pVar : @hBoutonsProc; 	wSize : 2),
+											(tok : '$LSTWIN'; pVar : @hLeconProc; 		wSize : 2),
+											(tok : '$LAVWIN'; pVar : @Window; 				wSize : 2),
+											(tok : '$HINST';	pVar : @hInstance; 			wSize : 2),
+											(tok : '$TUTWIN'; pVar : @hQcmProc; 			wSize : 2),
+											(tok : 'NULL'; 		pVar : @dwNullNil; 			wSize : 4),
+											(tok : 'NIL'; 		pVar : @dwNullNil; 			wSize : 4),
+											(tok : '$USER0';				pVar : @bUser0[0]; wSize : 4),
+											(tok : '$USER0.LO';			pVar : @bUser0[0]; wSize : 2),
+											(tok : '$USER0.LO.LO';	pVar : @bUser0[0]; wSize : 1),
+											(tok : '$USER0.LO.HI';	pVar : @bUser0[1]; wSize : 1),
+											(tok : '$USER0.HI';			pVar : @bUser0[2]; wSize : 2),
+											(tok : '$USER0.HI.LO';	pVar : @bUser0[2]; wSize : 1),
+											(tok : '$USER0.HI.HI';	pVar : @bUser0[3]; wSize : 1),
+											(tok : '$USER1';				pVar : @bUser1[0]; wSize : 4),
+											(tok : '$USER1.LO';			pVar : @bUser1[0]; wSize : 2),
+											(tok : '$USER1.LO.LO';	pVar : @bUser1[0]; wSize : 1),
+											(tok : '$USER1.LO.HI';	pVar : @bUser1[1]; wSize : 1),
+											(tok : '$USER1.HI';			pVar : @bUser1[2]; wSize : 2),
+											(tok : '$USER1.HI.LO';	pVar : @bUser1[2]; wSize : 1),
+											(tok : '$USER1.HI.HI';	pVar : @bUser1[3]; wSize : 1),
+											(tok : '$USER2';				pVar : @bUser2[0]; wSize : 4),
+											(tok : '$USER2.LO';			pVar : @bUser2[0]; wSize : 2),
+											(tok : '$USER2.LO.LO';	pVar : @bUser2[0]; wSize : 1),
+											(tok : '$USER2.LO.HI';	pVar : @bUser2[1]; wSize : 1),
+											(tok : '$USER2.HI';			pVar : @bUser2[2]; wSize : 2),
+											(tok : '$USER2.HI.LO';	pVar : @bUser2[2]; wSize : 1),
+											(tok : '$USER2.HI.HI';	pVar : @bUser2[3]; wSize : 1),
+											(tok : '$USER3';				pVar : @bUser3[0]; wSize : 4),
+											(tok : '$USER3.LO';			pVar : @bUser3[0]; wSize : 2),
+											(tok : '$USER3.LO.LO';	pVar : @bUser3[0]; wSize : 1),
+											(tok : '$USER3.LO.HI';	pVar : @bUser3[1]; wSize : 1),
+											(tok : '$USER3.HI';			pVar : @bUser3[2]; wSize : 2),
+											(tok : '$USER3.HI.LO';	pVar : @bUser3[2]; wSize : 1),
+											(tok : '$USER3.HI.HI';	pVar : @bUser3[3]; wSize : 1),
+											(tok : '$USER4';				pVar : @bUser4[0]; wSize : 4),
+											(tok : '$USER4.LO';			pVar : @bUser4[0]; wSize : 2),
+											(tok : '$USER4.LO.LO';	pVar : @bUser4[0]; wSize : 1),
+											(tok : '$USER4.LO.HI';	pVar : @bUser4[1]; wSize : 1),
+											(tok : '$USER4.HI';			pVar : @bUser4[2]; wSize : 2),
+											(tok : '$USER4.HI.LO';	pVar : @bUser4[2]; wSize : 1),
+											(tok : '$USER4.HI.HI';	pVar : @bUser4[3]; wSize : 1),
+											(tok : '$USER5';				pVar : @bUser5[0]; wSize : 4),
+											(tok : '$USER5.LO';			pVar : @bUser5[0]; wSize : 2),
+											(tok : '$USER5.LO.LO';	pVar : @bUser5[0]; wSize : 1),
+											(tok : '$USER5.LO.HI';	pVar : @bUser5[1]; wSize : 1),
+											(tok : '$USER5.HI';			pVar : @bUser5[2]; wSize : 2),
+											(tok : '$USER5.HI.LO';	pVar : @bUser5[2]; wSize : 1),
+											(tok : '$USER5.HI.HI';	pVar : @bUser5[3]; wSize : 1),
+											(tok : '$USER6';				pVar : @bUser6[0]; wSize : 4),
+											(tok : '$USER6.LO';			pVar : @bUser6[0]; wSize : 2),
+											(tok : '$USER6.LO.LO';	pVar : @bUser6[0]; wSize : 1),
+											(tok : '$USER6.LO.HI';	pVar : @bUser6[1]; wSize : 1),
+											(tok : '$USER6.HI';			pVar : @bUser6[2]; wSize : 2),
+											(tok : '$USER6.HI.LO';	pVar : @bUser6[2]; wSize : 1),
+											(tok : '$USER6.HI.HI';	pVar : @bUser6[3]; wSize : 1),
+											(tok : '$USER7';				pVar : @bUser7[0]; wSize : 4),
+											(tok : '$USER7.LO';			pVar : @bUser7[0]; wSize : 2),
+											(tok : '$USER7.LO.LO';	pVar : @bUser7[0]; wSize : 1),
+											(tok : '$USER7.LO.HI';	pVar : @bUser7[1]; wSize : 1),
+											(tok : '$USER7.HI';			pVar : @bUser7[2]; wSize : 2),
+											(tok : '$USER7.HI.LO';	pVar : @bUser7[2]; wSize : 1),
+											(tok : '$USER7.HI.HI';	pVar : @bUser7[3]; wSize : 1),
+											(tok : '$USER8';				pVar : @bUser8[0]; wSize : 4),
+											(tok : '$USER8.LO';			pVar : @bUser8[0]; wSize : 2),
+											(tok : '$USER8.LO.LO';	pVar : @bUser8[0]; wSize : 1),
+											(tok : '$USER8.LO.HI';	pVar : @bUser8[1]; wSize : 1),
+											(tok : '$USER8.HI';			pVar : @bUser8[2]; wSize : 2),
+											(tok : '$USER8.HI.LO';	pVar : @bUser8[2]; wSize : 1),
+											(tok : '$USER8.HI.HI';	pVar : @bUser8[3]; wSize : 1),
+											(tok : '$USER9';				pVar : @bUser9[0]; wSize : 4),
+											(tok : '$USER9.LO';			pVar : @bUser9[0]; wSize : 2),
+											(tok : '$USER9.LO.LO';	pVar : @bUser9[0]; wSize : 1),
+											(tok : '$USER9.LO.HI';	pVar : @bUser9[1]; wSize : 1),
+											(tok : '$USER9.HI';			pVar : @bUser9[2]; wSize : 2),
+											(tok : '$USER9.HI.LO';	pVar : @bUser9[2]; wSize : 1),
+											(tok : '$USER9.HI.HI';	pVar : @bUser9[3]; wSize : 1),
+											(tok : '$USER10';				pVar : @bUser10[0]; wSize : 4),
+											(tok : '$USER10.LO';			pVar : @bUser10[0]; wSize : 2),
+											(tok : '$USER10.LO.LO';		pVar : @bUser10[0]; wSize : 1),
+											(tok : '$USER10.LO.HI';		pVar : @bUser10[1]; wSize : 1),
+											(tok : '$USER10.HI';			pVar : @bUser10[2]; wSize : 2),
+											(tok : '$USER10.HI.LO';		pVar : @bUser10[2]; wSize : 1),
+											(tok : '$USER10.HI.HI';		pVar : @bUser10[3]; wSize : 1),
+											(tok : '$USER11';					pVar : @bUser11[0]; wSize : 4),
+											(tok : '$USER11.LO';			pVar : @bUser11[0]; wSize : 2),
+											(tok : '$USER11.LO.LO';		pVar : @bUser11[0]; wSize : 1),
+											(tok : '$USER11.LO.HI';		pVar : @bUser11[1]; wSize : 1),
+											(tok : '$USER11.HI';			pVar : @bUser11[2]; wSize : 2),
+											(tok : '$USER11.HI.LO';		pVar : @bUser11[2]; wSize : 1),
+											(tok : '$USER11.HI.HI';		pVar : @bUser11[3]; wSize : 1),
+											(tok : '$USER12';					pVar : @bUser12[0]; wSize : 4),
+											(tok : '$USER12.LO';			pVar : @bUser12[0]; wSize : 2),
+											(tok : '$USER12.LO.LO';		pVar : @bUser12[0]; wSize : 1),
+											(tok : '$USER12.LO.HI';		pVar : @bUser12[1]; wSize : 1),
+											(tok : '$USER12.HI';			pVar : @bUser12[2]; wSize : 2),
+											(tok : '$USER12.HI.LO';		pVar : @bUser12[2]; wSize : 1),
+											(tok : '$USER12.HI.HI';		pVar : @bUser12[3]; wSize : 1),
+											(tok : '$USER13';					pVar : @bUser13[0]; wSize : 4),
+											(tok : '$USER13.LO';			pVar : @bUser13[0]; wSize : 2),
+											(tok : '$USER13.LO.LO';		pVar : @bUser13[0]; wSize : 1),
+											(tok : '$USER13.LO.HI';		pVar : @bUser13[1]; wSize : 1),
+											(tok : '$USER13.HI';			pVar : @bUser13[2]; wSize : 2),
+											(tok : '$USER13.HI.LO';		pVar : @bUser13[2]; wSize : 1),
+											(tok : '$USER13.HI.HI';		pVar : @bUser13[3]; wSize : 1),
+											(tok : '$USER14';					pVar : @bUser14[0]; wSize : 4),
+											(tok : '$USER14.LO';			pVar : @bUser14[0]; wSize : 2),
+											(tok : '$USER14.LO.LO';		pVar : @bUser14[0]; wSize : 1),
+											(tok : '$USER14.LO.HI';		pVar : @bUser14[1]; wSize : 1),
+											(tok : '$USER14.HI';			pVar : @bUser14[2]; wSize : 2),
+											(tok : '$USER14.HI.LO';		pVar : @bUser14[2]; wSize : 1),
+											(tok : '$USER14.HI.HI';		pVar : @bUser14[3]; wSize : 1),
+											(tok : '$USER15';					pVar : @bUser15[0]; wSize : 4),
+											(tok : '$USER15.LO';			pVar : @bUser15[0]; wSize : 2),
+											(tok : '$USER15.LO.LO';		pVar : @bUser15[0]; wSize : 1),
+											(tok : '$USER15.LO.HI';		pVar : @bUser15[1]; wSize : 1),
+											(tok : '$USER15.HI';			pVar : @bUser15[2]; wSize : 2),
+											(tok : '$USER15.HI.LO';		pVar : @bUser15[2]; wSize : 1),
+											(tok : '$USER15.HI.HI';		pVar : @bUser15[3]; wSize : 1),
+											(tok : '$RECT';					pVar : @rUser; 		 	 wSize : 8),
+											(tok : '$RECT.LEFT';		pVar : @rUser.left;  wSize : 2),
+											(tok : '$RECT.TOP';			pVar : @rUser.top; 	 wSize : 2),
+											(tok : '$RECT.RIGHT';		pVar : @rUser.right; wSize : 2),
+											(tok : '$RECT.BOTTOM';	pVar : @rUser.bottom;wSize : 2),
+											(tok : '$POINT';				pVar : @ptUser; 		 wSize : 4),
+											(tok : '$POINT.X';			pVar : @ptUser.x; 	 wSize : 2),
+											(tok : '$POINT.Y';			pVar : @ptUser.y; 	 wSize : 2),
+											(tok : '$HANDLE0';				pVar : @hUser[0]; 	 wSize : 2),
+											(tok : '$HANDLE1';				pVar : @hUser[1]; 	 wSize : 2),
+											(tok : '$HANDLE2';				pVar : @hUser[2]; 	 wSize : 2),
+											(tok : '$HANDLE3';				pVar : @hUser[3]; 	 wSize : 2),
+											(tok : '$HANDLE4';				pVar : @hUser[4]; 	 wSize : 2),
+											(tok : '$HANDLE5';				pVar : @hUser[5]; 	 wSize : 2),
+											(tok : '$HANDLE6';				pVar : @hUser[6]; 	 wSize : 2),
+											(tok : '$HANDLE7';				pVar : @hUser[7]; 	 wSize : 2),
+											(tok : '$HANDLE8';				pVar : @hUser[8]; 	 wSize : 2),
+											(tok : '$HANDLE9';				pVar : @hUser[9]; 	 wSize : 2),
+											(tok : '$HANDLE10';				pVar : @hUser[10]; 	 wSize : 2),
+											(tok : '$HANDLE11';				pVar : @hUser[11]; 	 wSize : 2),
+											(tok : '$HANDLE12';				pVar : @hUser[12]; 	 wSize : 2),
+											(tok : '$HANDLE13';				pVar : @hUser[13]; 	 wSize : 2),
+											(tok : '$HANDLE14';				pVar : @hUser[14]; 	 wSize : 2),
+											(tok : '$HANDLE15';				pVar : @hUser[15]; 	 wSize : 2),
+											(tok : '$RETURN'; pVar : @dwMciReturn; 		wSize : 4));
+
+
+	CST_FIRST = CST_TRUE;
+	CST_LAST  = CST_HWND_NOTOPMOST;
+	CstMap : TCstMap = ((tok : 'TRUE'; 				dwCst : DWORD(TRUE)),
+											(tok : 'FALSE';				dwCst : DWORD(FALSE)),
+											(tok : 'OVERLAPPED'; 	dwCst : DWORD(WS_OVERLAPPED)),
+											(tok : 'CAPTION'; 		dwCst : DWORD(WS_CAPTION)),
+											(tok : 'THICKFRAME'; 	dwCst : DWORD(WS_THICKFRAME)),
+											(tok : 'BORDER'; 			dwCst : DWORD(WS_BORDER)),
+											(tok : 'TOP'; 				dwCst : DWORD(HWND_TOP)),
+											(tok : 'BOTTOM'; 			dwCst : DWORD(HWND_BOTTOM)),
+											(tok : 'TOPMOST'; 		dwCst : DWORD(HWND_TOPMOST)),
+											(tok : 'NOTOPMOST'; 	dwCst : DWORD(HWND_NOTOPMOST)));
+
+	TYP_FIRST = TYP_BYTE;
+	TYP_LAST  = TYP_DWORD;
+	TypMap : TTypMap = ((tok : '(BYTE)';	 	dwTyp : DWORD(TYP_BYTE)),
+											(tok : '(WORD)'; 		dwTyp : DWORD(TYP_WORD)),
+											(tok : '(STRING)';	dwTyp : DWORD(TYP_STRING)),
+											(tok : '(POINTER)';	dwTyp : DWORD(TYP_POINTER)),
+											(tok : '(DWORD)'; 	dwTyp : DWORD(TYP_DWORD)));
+
+IMPLEMENTATION
+
+{
+function RegQueryValueEx(
+		Key : HKEY;
+		pszValueName : PCHAR;
+		pdwReserved : PLONGINT;
+		pdwType : PLONGINT;
+		pbData : PBYTE;
+		pcbData : PLONGINT) : DWORD; stdcall; external 'KERNEL32' name 'RegQueryValueExA';
+}
+function EnumFontFamiliesEx(
+		dc : HDC;
+		pLogfnt : PLOGFONT;
+		lpEnumFontFamExProc : TFARPROC;
+		lParam : LONGINT;
+		dwFlags : DWORD) : integer; stdcall; external 'gdi32.dll' name 'EnumFontFamiliesExA';
+
+{
+function mcFillDevList; external 'MCICMD' index 1;
+function mcFillCmdList; external 'MCICMD' index 2;
+function mcFillParList; external 'MCICMD' index 3;
+function wcGetCst; external 'WINCONST' index 1;
+procedure FindCst; external 'WINCONST' index 2;
+}
+function wcGetCst(pszWord : PChar; var bSize : BYTE; fErrMsg : BOOL) : DWORD; external 'WINCONST.DLL' name 'wcGetCst';
+procedure FindCst(pszWord : PChar; dwVal : DWORD; pszRet : PCHAR; nSize : integer; var bSize : BYTE; fErrMsg : BOOL); external 'WINCONST.DLL' name 'FindCst';
+
+function LibelProc(Dialog: HWnd; Message, WParam: DWord; LParam: Longint): Bool; stdcall;
+
+const lpszLibel : PChar  = nil;
+
+var pt :TPOINT;
+
+begin
+	LibelProc := TRUE;
+	case Message of
+		wm_InitDialog:
+			begin
+
+				if GetDlgItem(GetParent(Dialog), 115) <> 0 then begin
+					SendMessage(GetDlgItem(Dialog, 101), WM_SETFONT,
+						SendMessage(GetDlgItem(GetParent(Dialog), 115), WM_GETFONT, 0, 0), MAKELONG(WORD(TRUE), 0));
+				end;
+
+				lpszLibel := PChar(lParam);
+				SetDlgItemText(Dialog, 101, lpszLibel);
+				GetCursorPos(pt);
+				SetWindowPos(Dialog, 0, pt.x, pt.y, 0, 0,
+					SWP_NOSIZE OR SWP_NOZORDER OR SWP_NOACTIVATE OR SWP_NOREDRAW);
+				SendDlgItemMessage(Dialog, 101, EM_SETSEL, WORD(FALSE), MAKELONG(0, WORD(-1)));
+				SendDlgItemMessage(Dialog, 101, EM_SETSEL, WORD(FALSE), MAKELONG(WORD(-1), 0));
+				SetFocus(GetDlgItem(Dialog, 101));
+				PostMessage(Dialog, WM_MMPAINT, 0, 0);
+			end;
+
+		wm_mmpaint:
+			begin
+				ShowWindow(Dialog,SW_SHOW);
+			end;
+
+		wm_Command: begin
+			case LoWord(wParam) of
+				idok:
+					begin
+						GetDlgItemText(Dialog, 101, lpszLibel, SizeOf(szLongName));
+						EndDialog(Dialog,1);
+					end;
+			end;
+		end;
+	end;
+	LibelProc := FALSE;
+end;
+{*************************************************************}
+
+function OptionsProc(Dialog: HWnd; Message, WParam: DWord; LParam: Longint): Bool; stdcall;
+
+const	szMCIPath: szLongName = #0;
+
+var rWin,
+		Rect : TRECT;
+		gOptions,
+		tOptions : byte;
+		hWin : HWND;
+		szFichExe : szLongName;
+		Dir: array[0..fsDirectory] of Char;
+		Ext: array[0..fsExtension] of Char;
+		szDev,
+		szCmd : array[0..255] of Char;
+		p			: PChar;
+		szMciParam : szLongname;
+		lpMciParamProc: TFarProc;
+		CurCmd : TCmd;
+		CurVar : TVar;
+		CurCst : TCst;
+		dwRet	 : DWORD;
+		pszFile: PCHAR;
+
+const
+		nItem : integer = 0;
+		bTutorScript : BOOL = FALSE;
+		lpszScript : PCHAR = nil;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_LAVACCR, nFUNC_LAVACCR+25, Message, wParam, lParam, 'WM_', TRUE);
+	{$ENDIF}
+
+	OptionsProc := TRUE;
+
+	case Message of
+
+		wm_InitDialog:
+			begin
+				CenterDialog(Dialog);
+
+				{ Start SubClassing de Ctl 119 pour recevoir les WM_CTLCOLOR = IDLE CB }
+				//lpCBProc := MakeProcInstance(@IdleCBProc, hInstance);
+				lpCBProc := WNDPROC(@IdleCBProc);
+				lpOldCBProc := WNDPROC(SetWindowLong(GetDlgItem(Dialog, 119), GWL_WNDPROC, LongInt(lpCBProc)));
+
+				{-- remplir les CB MCI --}
+				{mciLoadTableResource(Dialog, 116);}
+				// ??? mcFillDevList(Dialog, 116);
+
+				CurCmd := CMD_FIRST;
+				while (CurCmd <= CMD_LAST) do begin
+					dwRet := SendDlgItemMessage(Dialog, 119, CB_ADDSTRING, 0,  LongInt(CmdMap[CurCmd].cmd));
+					if dwRet >= 0 then SendDlgItemMessage(Dialog, 119, CB_SETITEMDATA, WORD(dwRet),  DWORD(CurCmd));
+					inc(CurCmd);
+				end;
+				CurVar := VAR_FIRST;
+				while (CurVar <= VAR_LAST) do begin
+					SendDlgItemMessage(Dialog, 120, CB_ADDSTRING, 0,  LongInt(VarMap[CurVar].tok));
+					inc(CurVar);
+				end;
+				CurCst := Cst_FIRST;
+				while (CurCst <= Cst_LAST) do begin
+					SendDlgItemMessage(Dialog, 121, CB_ADDSTRING, 0,  LongInt(CstMap[CurCst].tok));
+					inc(CurCst);
+				end;
+
+				{--lire record tQuestion--}
+				FillChar(tQuestion, SizeOf(tQuestion), 0);
+				nItem := LOWORD(lParam);
+				bTutorScript := (integer(HIWORD(lParam)) <> 0) AND (integer(HIWORD(lParam)) <> -1);
+				if bTutorScript then begin
+					lpszScript := PCHAR(lParam);
+					SetDlgItemText(Dialog, 115, lpszScript);
+					ShowWindow(GetDlgItem(Dialog, 107), SW_HIDE);
+					ShowWindow(GetDlgItem(Dialog, 108), SW_HIDE);
+					ShowWindow(GetDlgItem(Dialog, 110), SW_HIDE);
+				end else begin
+					GetQuestionRec(nItem, tQuestion);
+					GetWindowText(Dialog, szCmd, SizeOf(szCmd));
+					StrCat(szCmd, ' : ');
+					StrCat(szCmd, tQuestion.Nom);
+					SetWindowText(Dialog, szCmd);
+
+					{--Charge fichier commandes MCI--}
+					if (tQuestion.FichierMCI[0] <> #0) then begin
+							StrCopy(szMCIPath, tLecon.PathLecon);
+							StrCat(szMCIPath, '\');
+							StrCat(szMCIPath, tQuestion.FichierMCI);
+							StrCat(szMCIPath, '.CMD');
+							if FileExist(szMCIPath) then begin
+								SetWindowTextFromFile(GetDlgItem(Dialog, id_em_CommandeMCI), szMCIPath);
+							end else begin
+								tQuestion.FichierMCI[0] := #0;
+							end;
+					end;
+
+					{--Affiche fichier éxécutable--}
+					SetDlgItemText(Dialog, id_tf_FichierExe, tQuestion.FichierExecutable);
+				end;
+
+				{SendDlgItemMessage(Dialog, id_em_CommandeMCI, WM_SETFONT,
+													 SendDlgItemMessage(hStatusBar, 101, WM_GETFONT, 0, 0), 0);}
+
+				SendDlgItemMessage(Dialog, 109, WM_SETFONT,
+													 SendDlgItemMessage(hStatusBar, 101, WM_GETFONT, 0, 0), 0);
+
+				PostMessage(Dialog, WM_MMPAINT, 0, 0);
+			end;
+
+			WM_DESTROY :
+				begin
+					{ Stop SubClassing de Ctl 119 pour recevoir les WM_CTLCOLOR = IDLE CB }
+					SetWindowLong(GetDlgItem(Dialog, 119), GWL_WNDPROC, LongInt(lpOldCBProc));
+					//FreeProcInstance(lpCBProc);
+				end;
+
+			WM_MMPAINT :
+				begin
+					SetFocus(GetDlgItem(Dialog, id_em_CommandeMCI));
+					SendDlgItemMessage(Dialog, id_em_CommandeMCI, EM_SETSEL, 0, MAKELONG(0, WORD(-1)));
+					ShowWindow(Dialog, SW_SHOW);
+					SendDlgItemMessage(Dialog, id_em_CommandeMCI, EM_SETSEL, 0, MAKELONG(WORD(-1), WORD(-1)));
+				end;
+
+			WM_USER + 100 :
+				begin
+					if (TCMD(wParam) >= CMD_FIRST) AND
+						 (TCMD(wParam) <= CMD_LAST) then begin
+						StrCopy(szCmd, CmdMap[TCMD(wParam)].cmd);
+						StrCat(szCmd, MMLoadString(hInstRes, wParam + 1000){CmdMap[TCMD(wParam)].inf});
+						SetDlgItemText(Dialog, 109, szCmd);
+					end;
+				end;
+
+		wm_Command:
+			begin
+			case LoWord(wParam) of
+				id_bn_Parcourir :
+					begin
+						pszFile := GetFileName(mmLoadString(hInstRes, STR_EXE), 'EXE');
+						if pszFile <> nil then begin
+							StrCopy(szFichExe, pszFile);
+							StrDispose(pszFile);
+						end else begin
+							StrCopy(szFichExe, '');
+						end;
+						if szFichExe[0] <> #0 then
+							 SetDlgItemText(Dialog,id_tf_FichierExe,szFichExe);
+					end;
+
+				IDOK:
+					begin
+
+						if bTutorScript then begin
+							GetDlgItemText(Dialog, 115, lpszScript, 32767);
+						end else begin
+							{--Sauve fichier MCI --}
+							if BOOL(SendMessage(GetDlgItem(Dialog, id_em_CommandeMCI), EM_GETMODIFY, 0, 0)) then begin
+								if (tQuestion.FichierMCI[0] = #0) then begin
+									NewMCIFile(szMCIPath, 0);
+									FileSplit(szMCIPath, Dir, tQuestion.FichierMCI, Ext);
+								end;
+								GetWindowTextToFile(GetDlgItem(Dialog, id_em_CommandeMCI), szMCIPath);
+								SendMessage(GetDlgItem(Dialog, id_em_CommandeMCI), EM_SETMODIFY, WORD(FALSE), 0);
+							end;
+
+							{--Fichier executable--}
+							GetDlgItemText(Dialog,id_tf_FichierExe,tQuestion.FichierExecutable,SizeOf(tQuestion.FichierExecutable));
+
+							{ sauve tQuestion à jours }
+							SetQuestionRec(nItem, tQuestion);
+						end;
+
+						OptionsProc := TRUE;
+						EndDialog(Dialog, -1);
+					end;
+
+				IDCANCEL:
+					begin
+						OptionsProc := TRUE;
+						EndDialog(Dialog, 0);
+					end;
+				end;
+
+				//case HIWORD(lParam) of
+        			case HiWord(wParam) of
+					CBN_SELCHANGE :
+					begin
+						case wParam of
+							116 :
+								begin
+									GetDlgItemText(Dialog, 116, szDev, SizeOf(szDev));
+									// ??? mcFillCmdList(szDev, Dialog, 117);
+									// ??? mcFillParList(szDev, '', Dialog, 118);
+								end;
+							117 :
+								begin
+									GetDlgItemText(Dialog, 116, szDev, SizeOf(szDev));
+									GetDlgItemText(Dialog, 117, szCmd, SizeOf(szCmd));
+									// ??? mcFillParList(szDev, szCmd, Dialog, 118);
+								end;
+						end;
+						if (wParam > 116) AND
+							 (wParam <= 121) then begin
+							 GetDlgItemText(Dialog, wParam, szDev, SizeOf(szDev));
+							 p := StrPos(szDev, '#');
+							 if p <> nil then begin
+								 StrCopy(szMciParam, p);
+								 p[0] := #0;
+								 SendDlgItemMessage(Dialog, 115, EM_REPLACESEL, 0, Longint(@szDev));
+								 //lpMciParamProc := MakeProcInstance(@MciParamProc, HInstance);
+								 lpMciParamProc := @MciParamProc;
+								 DialogBoxParam(hInstRes, 'MCIPARAM', Dialog, DLGPROC(lpMciParamProc), LongInt(@szMciParam));
+								 //FreeProcInstance(lpMciParamProc);
+								 StrCopy(szDev, szMciParam);
+							 end;
+							 if (szDev[0] <> #0) then begin
+									p := StrPos(szDev, '‹-''');
+									if p = nil then begin
+										StrCat(szDev, ' ');
+									end else begin
+										p[0] := #0;
+										StrCat(szDev, #13+#10);
+									end;
+							 end;
+							 SendDlgItemMessage(Dialog, 115, EM_REPLACESEL, 0, Longint(@szDev));
+							 SetFocus(GetDlgItem(Dialog, 115));
+						end;
+					end;
+				end;
+			end;
+	else
+		OptionsProc := FALSE;
+	end;
+
+end;
+{*************************************************************}
+
+function mciSendString(lpstrCommand: PChar; lpstrReturnString: PChar; uReturnLength: Word;
+hWndCallback: HWnd): Longint;
+var p 				: PCHAR;
+		MciCmdStr,
+		MciRetStr : TMCISTR;
+		dwRet     : DWord;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+1, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	mciSendString := mmsystem.mciSendString(lpstrCommand, lpstrReturnString, uReturnLength, hWndCallback);
+	exit;
+
+	p := StrTok(lpstrCommand, ' ');
+	StrCopy(MciCmdStr, 'STATUS ');
+	StrCat(MciCmdStr, p);
+	StrCat(MciCmdStr, ' READY WAIT');
+	dwRet := mmsystem.mciSendString(MciCmdStr, MciRetStr, SizeOf(MciRetStr), 0);
+	{ WriteLn('[', MciCmdStr,' : <',MciRetStr,'>]');
+	WriteLn('[',lpstrCommand,']'); }
+	if MciRetStr[0] <> #0 then begin
+		mciSendString := mmsystem.mciSendString(lpstrCommand, lpstrReturnString, uReturnLength, hWndCallback);
+	end else begin
+		mciSendString := dwRet;
+	end;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'mciSendString : %s', @lpstrCommand, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function SendMci(pMciStr : PStr; pMciReturnStr : PMCISTR; MciWindow : HWnd) : DWORD;
+var MciErrorStr : TMCISTR;
+		MciCommandStr : TMCISTR;
+		dwReturn     : DWord;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+2, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+
+	SendMci := DWORD(-1);
+	if pMciStr = nil then exit;
+
+	StrCopy(MciCommandStr,pMciStr);
+	if pMciReturnStr = nil then
+		dwReturn := mciSendString(@MciCommandStr, nil, 0,MciWindow)
+	else
+		dwReturn := mciSendString(@MciCommandStr, PCHAR(pMciReturnStr), SizeOf(TMCISTR) - 1,MciWindow);
+
+	if dwReturn <> 0 then begin
+		if Bool(mciGetErrorString(dwReturn,@MciErrorStr,SizeOf(MciErrorStr))) then begin
+			MessageBox(Window,MciErrorStr, MciCommandStr,MB_OK + MB_ICONSTOP OR MB_APPLMODAL );
+		end;
+	end;
+	SendMci := dwReturn;
+end;
+
+function InitMciQueue : Bool;
+var r : TRECT;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+3, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	GetClientRect(hMciQueueProc, r);
+
+	//MoveWindow(GetDlgItem(hMciQueueProc, 101), r.left, r.top, (r.left + r.right) DIV 4, r.bottom - r.top, TRUE);
+	hMciCloseQueue :=	CreateWindow(
+
+					'LISTBOX',    {-- Nom de la classe de fenêtre --}
+					'',          {-- Nom de la fenêtre           --}
+					WS_CHILD OR WS_VISIBLE OR WS_BORDER,
+					(r.left + r.right) DIV 4,
+					r.top,
+					(r.left + r.right) DIV 4,
+					r.bottom - r.top,
+					hMciQueueProc,     {-- handle de la fenêtre mère   --}
+					102,                {-- Handle du menu              --}
+					HInstance,        {-- Instance du module          --}
+					nil);             {-- Paramètres de la fenêtre    --}
+
+	hMciCmdQueue :=	CreateWindow(
+
+					'LISTBOX',    {-- Nom de la classe de fenêtre --}
+					'',          {-- Nom de la fenêtre           --}
+					WS_CHILD OR WS_VISIBLE OR WS_BORDER,
+					(r.left + r.right) * 2 DIV 4,
+					r.top,
+					(r.left + r.right) DIV 4,
+					r.bottom - r.top,
+					hMciQueueProc,     {-- handle de la fenêtre mère   --}
+					103,                {-- Handle du menu              --}
+					HInstance,        {-- Instance du module          --}
+					nil);             {-- Paramètres de la fenêtre    --}
+
+	hMciCmdCloseQueue :=	CreateWindow(
+
+					'LISTBOX',    {-- Nom de la classe de fenêtre --}
+					'',          {-- Nom de la fenêtre           --}
+					WS_CHILD OR WS_VISIBLE OR WS_BORDER,
+					(r.left + r.right) * 3 DIV 4,
+					r.top,
+					(r.left + r.right) DIV 4,
+					r.bottom - r.top,
+					hMciQueueProc,     {-- handle de la fenêtre mère   --}
+					104,                {-- Handle du menu              --}
+					HInstance,        {-- Instance du module          --}
+					nil);             {-- Paramètres de la fenêtre    --}
+
+        DestroyWindow(GetDlgItem(hMciQueueProc, 101));
+        hMciQueue  :=	CreateWindow(
+
+					'LISTBOX',    {-- Nom de la classe de fenêtre --}
+					'',          {-- Nom de la fenêtre           --}
+					WS_CHILD OR WS_VISIBLE OR WS_BORDER,
+					0,
+					r.top,
+					(r.left + r.right),
+					r.bottom - r.top,
+					hMciQueueProc,     {-- handle de la fenêtre mère   --}
+					101,                {-- Handle du menu              --}
+					HInstance,        {-- Instance du module          --}
+					nil);
+
+	if hMciCloseQueue = 0 then MessageBox(Window, 'CloseQueue','Erreur', MB_OK OR MB_APPLMODAL );
+	if hMciCmdQueue = 0 then MessageBox(Window, 'CmdQueue','Erreur', MB_OK OR MB_APPLMODAL );
+	if hMciCmdCloseQueue = 0 then MessageBox(Window, 'CmdQueue','Erreur', MB_OK OR MB_APPLMODAL );
+
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'InitMciQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function ResetMciQueue : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+4, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	ResetMciQueue := FALSE;
+	SendDlgItemMessage(hMciQueueProc,idmq_ListeMci,LB_RESETCONTENT,WORD(0),DWORD(0));
+	ResetMciQueue := TRUE;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'ResetMciQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function AddMciQueueString(MciCommandPStr : PChar) : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+5, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	AddMciQueueString := InsMciQueueString(MciCommandPStr, -1);
+end;
+
+function InsMciQueueString(MciCommandPStr : PChar; nIndex : integer) : Bool;
+var dwReturn : DWORD;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+6, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	InsMciQueueString := FALSE;
+	//dwReturn := SendDlgItemMessage(hMciQueueProc,idmq_ListeMci,LB_INSERTSTRING,WORD(nIndex),DWORD(MciCommandPStr));
+	dwReturn := SendDlgItemMessage(hMciQueueProc,idmq_ListeMci,LB_INSERTSTRING,nIndex,DWORD(MciCommandPStr));
+	if (dwReturn <> LB_ERR) AND (dwReturn <> LB_ERRSPACE) then begin
+		InsMciQueueString := TRUE;
+	end;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'InsMciQueue : %s', @MciCommandPStr, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function GetMciQueueString(MciCommandPStr : PChar) : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+7, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	GetMciQueueString := FALSE;
+	if SendDlgItemMessage(hMciQueueProc,idmq_ListeMci,LB_GETTEXT,WORD(0),DWORD(MciCommandPStr))
+		 <> LB_ERR then begin
+		if SendDlgItemMessage(hMciQueueProc,idmq_ListeMci,LB_DELETESTRING,WORD(0),DWORD(0))
+			 <> LB_ERR then begin
+			GetMciQueueString := TRUE;
+		end;
+	end;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'GetMciQueue : %s', @MciCommandPStr, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function ResetMciCloseQueue : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+8, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	ResetMciCloseQueue := FALSE;
+	SendDlgItemMessage(hMciQueueProc,idmq_ListeMciClose,LB_RESETCONTENT,WORD(0),DWORD(0));
+	ResetMciCloseQueue := TRUE;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'ResetMciCloseQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function AddMciCloseQueueString(MciCommandPStr : PChar) : Bool;
+var dwReturn : DWORD;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+9, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	AddMciCloseQueueString := FALSE;
+	dwReturn := SendDlgItemMessage(hMciQueueProc,idmq_ListeMciClose,LB_ADDSTRING,WORD(0),DWORD(MciCommandPStr));
+	if (dwReturn <> LB_ERR) AND (dwReturn <> LB_ERRSPACE) then begin
+		AddMciCloseQueueString := TRUE;
+	end;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'AddMciCloseQueue : %s', @MciCommandPStr, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function GetMciCloseQueueString(MciCommandPStr : PChar) : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+10, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	GetMciCloseQueueString := FALSE;
+	if SendDlgItemMessage(hMciQueueProc,idmq_ListeMciClose,LB_GETTEXT,WORD(0),DWORD(MciCommandPStr))
+		 <> LB_ERR then begin
+		if SendDlgItemMessage(hMciQueueProc,idmq_ListeMciClose,LB_DELETESTRING,WORD(0),DWORD(0))
+			 <> LB_ERR then begin
+			GetMciCloseQueueString := TRUE;
+		end;
+	end;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'GetMciCloseQueue : %s', @MciCommandPStr, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function ResetMciCmdCloseQueue : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+11, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	ResetMciCmdCloseQueue := FALSE;
+	SendDlgItemMessage(hMciQueueProc,idmq_ListeMciCmdClose,LB_RESETCONTENT, 0, 0);
+	ResetMciCmdCloseQueue := TRUE;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'ResetMciCloseQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function AddMciCmdCloseQueueString(MciCommandPStr : PChar) : Bool;
+var dwReturn : DWORD;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+12, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	AddMciCmdCloseQueueString := FALSE;
+	dwReturn := SendDlgItemMessage(hMciQueueProc,idmq_ListeMciCmdClose,LB_ADDSTRING,WORD(0),DWORD(MciCommandPStr));
+	if (dwReturn <> LB_ERR) AND (dwReturn <> LB_ERRSPACE) then begin
+		AddMciCmdCloseQueueString := TRUE;
+	end;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'AddMciCmdCloseQueue : %s', @MciCommandPStr, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function GetMciCmdCloseQueueString(MciCommandPStr : PChar) : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+13, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	GetMciCmdCloseQueueString := FALSE;
+	if SendDlgItemMessage(hMciQueueProc,idmq_ListeMciCmdClose,LB_GETTEXT,WORD(0),DWORD(MciCommandPStr))
+		 <> LB_ERR then begin
+		if SendDlgItemMessage(hMciQueueProc,idmq_ListeMciCmdClose,LB_DELETESTRING,WORD(0),DWORD(0))
+			 <> LB_ERR then begin
+			GetMciCmdCloseQueueString := TRUE;
+		end;
+	end;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'GetMciCmdCloseQueue : %s', @MciCommandPStr, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function ResetMciCmdQueue : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+14, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	ResetMciCmdQueue := FALSE;
+	SendDlgItemMessage(hMciQueueProc,idmq_ListeMciCmd,LB_RESETCONTENT,WORD(0),DWORD(0));
+	ResetMciCmdQueue := TRUE;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'ResMciCmdQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function AddMciCmdQueueString(MciCommandPStr : PChar) : Bool;
+var dwReturn : DWORD;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+15, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	AddMciCmdQueueString := FALSE;
+	dwReturn := SendDlgItemMessage(hMciQueueProc,idmq_ListeMciCmd,LB_ADDSTRING,WORD(0),DWORD(MciCommandPStr));
+	if (dwReturn <> LB_ERR) AND (dwReturn <> LB_ERRSPACE) then begin
+		AddMciCmdQueueString := TRUE;
+	end;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'AddMciCmdQueue : %s', @MciCommandPStr, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function GetMciCmdQueueString(MciCommandPStr : PChar; nPos : integer) : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+16, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	GetMciCmdQueueString := FALSE;
+	if SendDlgItemMessage(hMciQueueProc,idmq_ListeMciCmd,LB_GETTEXT,WORD(nPos),DWORD(MciCommandPStr))
+		 <> LB_ERR then begin
+		if SendDlgItemMessage(hMciQueueProc,idmq_ListeMciCmd,LB_DELETESTRING,WORD(nPos),DWORD(0))
+			 <> LB_ERR then begin
+			GetMciCmdQueueString := TRUE;
+		end;
+	end;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'GetMciCmdQueue : %s', @MciCommandPStr, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function FindMciCmdQueueString(MciCommandPStr : PChar) : Longint;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+17, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	FindMciCmdQueueString := SendDlgItemMessage(hMciQueueProc, idmq_ListeMciCmd, LB_FINDSTRINGEXACT,
+													 WORD(-1), DWORD(MciCommandPStr));
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'FindMciCmdQueue : %s', @MciCommandPStr, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function StartMciQueue : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+18, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	StartMciQueue := TRUE;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'StartMciQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function StopMciQueue : Bool;
+var MciStr				: TMCISTR;
+		MciReturnStr	: TMCISTR;
+		i							: integer;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+19, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+
+	StopMciQueue := FALSE;
+
+	{ Stoppe video en cours avec TrackBar }
+	PostMessage(PDIBINFO(SendMessage(hGraphiqueProc, WM_USER + 1006, 0, 0))^.havi, MCI_STOP, 0, 0);
+
+	{ Sauvegarde réponse en cours si Stop Enreg}
+			{ Display Led }
+			{ Save rec }
+			{ Close rec }
+			{ Share rec }
+			{ Set position }
+	StrCopy(MciStr, 'STATUS REC MODE WAIT');
+	if MciSendString(MciStr, MciReturnStr, SizeOf(MciReturnStr)-1, 0) = 0 then begin
+		if (StrPos(StrUpper(MciReturnStr), 'RE') <> nil)then begin
+			GetMciQueueString(MciStr);
+			MciDisplayLed(MciStr);
+
+			GetMciQueueString(MciStr);
+			mciSendString(@MciStr, nil, 0, 0);
+
+			GetMciQueueString(MciStr);
+			mciSendString(@MciStr, nil, 0, 0);
+
+			GetMciQueueString(MciStr);
+			MciShare(MciStr);
+
+			GetMciQueueString(MciStr);
+			MciSetPosition(MciStr);
+		end;
+	end;
+
+	ResetMciQueue;
+
+	while GetMciCloseQueueString(MciStr) do begin
+		mciSendString(@MciStr, nil, 0, 0);
+	end;
+	ResetMciCloseQueue;
+
+	while GetMciCmdCloseQueueString(MciStr) do begin
+		AddMciQueueString(MciStr);
+	end;
+	AddMciQueueString('END');
+
+	if Pause then begin
+		SetDlgItemText(hBoutonsProc, 605, mmLoadString(hInstRes, STR_PAUSE));
+		ShowWindow(GetDlgItem(hBoutonsProc, idb_Pause), SW_SHOW);
+		ShowWindow(GetDlgItem(hBoutonsProc, idb_Reprendre), SW_HIDE);
+		Pause := FALSE;
+	end;
+
+	StartMciQueue;
+
+	StopMciQueue := TRUE;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'StopMciQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function EndMciQueue(MciCommandPStr : PChar) : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+20, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	PlayingQ := FALSE;
+	PlayingR := FALSE;
+	RecordingR := FALSE;
+	Pause := FALSE;
+	AfficheLed(hLed_N);
+	SetDlgItemText(hBoutonsProc,601, mmLoadString(hInstRes, STR_TEACHER));
+	SetDlgItemText(hBoutonsProc,602, mmLoadString(hInstRes, STR_STUDENT));
+	SetDlgItemText(hBoutonsProc,603, mmLoadString(hInstRes, STR_TEACHSTUD));
+	SetDlgItemText(hBoutonsProc,604, mmLoadString(hInstRes, STR_REC));
+	SetDlgItemText(hBoutonsProc, 605, mmLoadString(hInstRes, STR_PAUSE));
+	ShowWindow(GetDlgItem(hBoutonsProc, idb_Pause), SW_SHOW);
+	ShowWindow(GetDlgItem(hBoutonsProc, idb_Reprendre), SW_HIDE);
+	ResetMciCmdCloseQueue;
+	ResetMciCmdQueue;
+
+	{ On sauvegarde les déplacements des fenêtres élèves }
+	SendMessage(window, WM_USER + 1000, WORD(TRUE), 0);
+
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'EndMciQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function PauseMciQueue : Bool;
+var MessageStr : szLongName;
+		Pause : Bool;
+
+{const
+		MciReturnStr  : TMCISTR='';
+		MciCommandStr : TMCISTR='';}
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+21, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+
+	{StrCopy(MciCommandStr, 'STATUS VIDEO MODE WAIT');
+	StrCopy(MciReturnStr, '');
+	if mciSendString(MciCommandStr, MciReturnStr, SizeOf(MciReturnStr)-1, 0) = 0 then begin
+		if (StrPos(StrUpper(MciReturnStr), 'AR') <> nil) OR
+			 (StrPos(StrUpper(MciReturnStr), 'ST') <> nil) then begin
+			mciSendString('CLOSE VIDEO WAIT', nil, 0, 0);
+			if bVideoWave then begin
+				mciSendString('CLOSE SON WAIT', nil, 0, 0);
+				WriteLn('CLOSE SON WAIT ', MciReturnStr);
+			end;
+		end;
+	end;}
+
+	StrCopy(MessageStr, 'PAUSE VIDEO');
+	Pause := mciSendString(@MessageStr,nil,0,0) = 0;
+	if Pause AND bVideoWave then begin
+		StrCopy(MessageStr, 'PAUSE SON');
+		mciSendString(@MessageStr,nil,0,0);
+	end;
+
+	if not Pause OR bVideoWave then begin
+		StrCopy(MessageStr, 'PAUSE SON');
+		Pause := mciSendString(@MessageStr,nil,0,0) = 0;
+		if not Pause then begin
+			StrCopy(MessageStr, 'PAUSE REC');
+			Pause := mciSendString(@MessageStr,nil,0,0) = 0;
+		end;
+	end;
+
+	PauseMciQueue := Pause;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'PauseMciQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function ResumeMciQueue : Bool;
+var MessageStr : szLongName;
+		Resume 		 : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+22, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+
+	StrCopy(MessageStr, 'resume video');
+	Resume := mciSendString(@MessageStr, nil, 0, 0) = 0;
+	if Resume AND bVideoWave then begin
+		StrCopy(MessageStr, 'resume son');
+		mciSendString(@MessageStr, nil, 0, 0);
+	end;
+
+	if NOT Resume then begin
+		StrCopy(MessageStr, 'resume son');
+		Resume := mciSendString(@MessageStr, nil, 0, 0) = 0;
+		if NOT Resume then begin
+			StrCopy(MessageStr, 'resume rec');
+			Resume := mciSendString(@MessageStr, nil, 0, 0) = 0;
+		end;
+	end;
+
+	ResumeMciQueue := Resume;
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'ResumeMciQueue', nil, TRUE);
+	{$ENDIF _DEBUG}
+end;
+
+function mciOn(MciCommandPStr : PChar) : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+23, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	while GetMciQueueString(mciMessage) AND
+				(StrLIComp(mciMessage, 'END', 3) <> 0) do begin
+		AddMciCmdCloseQueueString(mciMessage);
+	end;
+	mciOn := TRUE;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciSetFocus(MciCommandPStr : PChar) : Bool;
+var index,code : Integer;
+		PDebut : PChar;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+24, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	PDebut := StrRScan(MciCommandPStr, ' ');
+	Val(PDebut,Index,Code);
+	SetFocus(GetDlgItem(hLeconProc,idl_listeQ));
+	SendDlgItemMessage(hLeconProc,idl_ListeQ,LB_SETCARETINDEX,index,0);
+	mciSetFocus := Code = 0;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciSetLesson(MciCommandPStr : PChar) : Bool;
+var index,code : Integer;
+		PropositionNo : LongInt;
+		PDebut : PChar;
+		PathFichier : szLongName;
+		tLecon : typeLecon;
+		tQuestion : typeQuestion;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+25, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	PDebut := StrRScan(MciCommandPStr, ' ');
+	Val(PDebut, index, code);
+	SendDlgItemMessage(hLeconProc, idl_Lecon, CB_SETCURSEL, index, 0);
+
+	SendDlgItemMessage(hLeconProc,401,CB_RESETCONTENT,0,LongInt(0));
+	SendDlgItemMessage(hLeconProc,402,CB_RESETCONTENT,0,LongInt(0));
+	PropositionNo := GetCurItemData(hLeconProc, idl_Lecon) + 1;
+	GetLessonRec(PropositionNo,tLecon);
+
+	GetLessonRec(PropositionNo,tLecon);
+	StrCopy(PathFichier,tLecon.PathLecon);
+	StrCat(PathFichier, '\QUESTION.LST');
+	{$i-}
+	Assign(fQuestion,PChar(PathFichier));
+	FileMode := OF_SHARE_DENY_NONE OR  0;
+	reset(fQuestion);
+	{$i+}
+	if IOResult <> 0 then begin
+		{$i-}
+		rewrite(fQuestion);
+		GetFattr(fQuestion,wReturn);
+		SetFattr(fQuestion,wReturn OR faShare);
+		{$i+}
+	end;
+	while (IOResult = 0) AND NOT EOF(fQuestion) do begin
+		SetCursor(LoadCursor(0,IDC_WAIT));
+		{$i-}
+		Read(fQuestion,tQuestion);
+		{$I+}
+		SendDlgItemMessage(hLeconProc,401,CB_ADDSTRING,0,LongInt(@tQuestion.Nom));
+		SendDlgItemMessage(hLeconProc,402,CB_ADDSTRING,0,LongInt(@tQuestion.Nom));
+	end;
+	{$i-}
+	close(fQuestion);
+	FileMode := OF_SHARE_DENY_NONE OR  2;
+	{$I+}
+	InOutRes := 0;
+
+	mciSetLesson := Code = 0;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function MciGetStr(pszMciWord : PChar; fErrMsg : BOOL) : PCHAR;
+var pStr : PCHAR;
+		i : integer;
+
+const NSTR = 5;
+			pStrLst : Array[1..NSTR] of PCHAR = (nil, nil, nil, nil, nil);
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+33, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+
+	if pszMciWord = nil then begin
+		for i := 1 to NSTR do begin
+			if pStrLst[i] <> nil then begin
+				StrDispose(pStrLst[i]);
+				pStrLst[i] := nil;
+			end;
+		end;
+		exit;
+	end;
+
+	pStr := pStrLst[NSTR];
+	for i := NSTR downto 2 do begin
+		pStrLst[i] := pStrLst[i - 1];
+	end;
+	if pStr <> nil then StrDispose(pStr);
+	pStr := StrNew(pszMciWord);
+	pStrLst[1] := pStr;
+	if pStr <> nil then begin
+		MciGetStr := pStr;
+	end else begin
+		{ erreur de syntaxe }
+		if fErrMsg then MessageBox(Window, pszMciWord, 'Str syntax error !!!', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+		MciGetStr := nil;
+	end;
+end;
+
+function mciLoadLesson(MciCommandPStr : PChar) : Bool;
+var szCur : szLongName;
+		lIndexSearch		: longint;
+		pszMciWord : PChar;
+begin
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	If pszMciWord <> Nil Then begin
+	GetDlgItemText(hLeconProc, idl_Lecon, szCur, SizeOf(szCur));
+	if StrComp(pszMciWord, szCur) <> 0 then begin
+		{Sélectionne la leçon}
+		lIndexSearch := SendDlgItemMessage(hLeconProc, idl_Lecon, CB_FINDSTRINGEXACT, 0, LongInt(pszMciWord));
+		If lIndexSearch <> CB_ERR Then Begin
+			{changement de leçon}
+			if hListBar <> 0 then SendDlgItemMessage(hListBar, idl_Lecon, CB_SETCURSEL, WORD(lIndexSearch), 0);
+			SendDlgItemMessage(hLeconProc, idl_Lecon, CB_SETCURSEL, WORD(lIndexSearch), 0);
+			{ Notifie du changement de leçon sans jouer la première séquence }
+			if hListBar <> 0 then SendMessage(hListBar, WM_COMMAND, idl_Lecon, MakeLong(0, CBN_SELCHANGE));
+			SendMessage(hLeconProc, WM_COMMAND, idl_Lecon, MakeLong(GetDlgItem(hLeconProc, idl_Lecon), CBN_SELCHANGE));
+		end else begin
+			Windows.MessageBox(GetActiveWindow, 'Leçon introuvable, branchement non valide.',
+													 pszMciWord, MB_OK OR MB_ICONEXCLAMATION);
+		end;
+	End;
+	pszMciWord := StrTok(Nil, ' ');
+	end;
+
+	mciLoadLesson := TRUE;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciSetQuestion(MciCommandPStr : PChar) : Bool;
+var code : Integer;
+		de,
+		a : Integer;
+		Pde : PChar;
+		Pa : PChar;
+		szDe : szLongName;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+26, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	Pa := StrRScan(MciCommandPStr, ' ');
+	Val(Pa,a,Code);
+	Pde := StrScan(MciCommandPStr, ' ');
+	StrlCopy(Pde,Pde,StrLen(Pde)-StrLen(Pa));
+	Val(Pde,de,Code);
+	SendDlgItemMessage(hLeconProc,401,CB_SETCURSEL,de,0);
+	SendDlgItemMessage(hLeconProc,402,CB_SETCURSEL,a,0);
+	GetDlgItemText(hLeconProc, 401, szDe, SizeOf(szDe));
+	SetDlgItemText(hLeconProc, 103, szDe);
+	SendDlgItemMessage(hLeconProc,103,EM_SETREADONLY,WORD(TRUE),DWORD(0));
+	mciSetQuestion := Code = 0;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+{var   pszTok : PChar;
+			pszStartTok : PChar;
+      pszEndTok : PChar;
+			OldChar : Char;}
+
+function StrTok(lpszStr : PChar; Separator : PChar) : PChar;
+
+const pszTok : PChar = nil;
+			pszStartTok : PChar = nil;
+			pszEndTok : PChar = nil;
+			OldChar : Char = #0;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+27, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	{--1° appel on alloue--}
+	if lpszStr <> nil then begin
+		pszTok := StrNew(lpszStr);
+		pszStartTok := pszTok;
+	end;
+
+	{--appels suivant on extrait--}
+	if pszEndTok <> nil then pszEndTok[0] := OldChar;
+
+	if pszStartTok <> nil then pszStartTok := StrPos(pszStartTok, Separator);
+	if pszStartTok <> nil then begin
+		inc(pszStartTok);
+		pszEndTok := StrPos(pszStartTok, Separator);
+		if pszEndTok <> nil then begin
+			OldChar := pszEndTok[0];
+			pszEndTok[0] := #0;
+		end;
+		if StrPos(Separator, '"') = nil then StrUpper(pszStartTok);
+	end else begin
+		{--dernier appel on libère--}
+		StrDispose(pszTok);
+	end;
+	StrTok := pszStartTok;
+end;
+
+
+function NewWndProc(hwind : HWND; Msg : WORD ; wParam : DWORD ; lParam : longint): longint; export;
+const hLavacWin  : HWND = 0;
+      hLecon     : HWND = 0;
+      hTexte     : HWND = 0;
+      hGraphique : HWND = 0;
+      hBoutons   : HWND = 0;
+      lpOldProc  : WNDPROC = nil;
+			dwRet      : LongInt = 0;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+28, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+     case Msg of
+					WM_USER + 111 :
+          begin
+						case wParam of
+							1 : lpOldProc := WNDPROC(lParam);
+							2 : hLavacWin := HWND(lParam);
+							3 : hLecon := HWND(lParam);
+							4 : hTexte := HWND(lParam);
+							5 : hGraphique := HWND(lParam);
+							6 : hBoutons := HWND(lParam);
+						end;
+					end;
+
+					WM_ACTIVATE :
+					begin
+							if wParam AND WA_INACTIVE = WA_INACTIVE then begin
+								if HWND(LOWORD(lParam)) = hLavacWin then begin
+									 PostMessage(hWind, WM_CLOSE, 0, 0);
+								end;
+								NewWndProc := CallWindowProc(lpOldProc, hwind, Msg, wParam,lParam);
+							end;
+					end;
+
+					else begin
+							NewWndProc := CallWindowProc(lpOldProc, hwind, Msg, wParam,lParam);
+					end;
+		 end;
+end;
+
+function PlastronProc(Fen:HWND; Message:UINT; wParam:WPARAM; lParam:LPARAM):LRESULT;stdcall;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+29, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+
+	case message of
+
+		WM_MOUSEACTIVATE :
+			begin
+				PlastronProc := MA_NOACTIVATEANDEAT;
+				Exit;
+			end;
+
+	end;
+
+	PlastronProc := ( DefWindowProc( Fen, Message, wParam, lParam ) );
+end;
+
+function mciWinExec(MciCommandPStr : PChar) : Bool;
+var pFilename,
+		pDir,
+		pCmd : PChar;
+		MSG : TMSG;
+		hInstExec : THANDLE;
+		hWndExec : HWND ;
+		hMenuExec : HMENU ;
+		wc : TWNDCLASS;
+		hWndPlastron : HWND ;
+		szText : array[0..255] of char;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+30, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pFilename := StrScan(MciCommandPStr, ' ');
+	if pFilename <> nil then begin
+
+		inc(pFilename);
+
+		pDir := StrPos(pFilename, '/P:');
+		pCmd := StrPos(pFilename, '/C:');
+		if pDir <> nil then begin
+			pDir[0] := #0;
+			inc(pDir, 3);
+		end;
+		if pCmd <> nil then begin
+			pCmd[0] := #0;
+			inc(pCmd, 3);
+		end;
+
+		wc.style         := CS_HREDRAW or CS_VREDRAW;
+		wc.lpfnWndProc   := WNDPROC(@PlastronProc);
+		wc.cbClsExtra    := 0;
+		wc.cbWndExtra    := 0;
+		wc.hInstance     := hInstance;
+		wc.hIcon         := 0;
+		wc.hCursor       := LoadCursor( 0, IDC_ARROW );
+		wc.hbrBackground := 13;
+		wc.lpszMenuName  := Nil;
+		wc.lpszClassName := 'PLASTRON';
+		RegisterClass(wc);
+
+		hWndPlastron := CreateWindow( 'PLASTRON', 'PLASTRON',
+												WS_VISIBLE or WS_POPUP or WS_MAXIMIZE,
+												CW_USEDEFAULT, CW_USEDEFAULT,
+												500,500,
+												Window, 0, hInstance, Nil);
+
+		EnableWindow(hGraphiqueProc, FALSE);
+		ShowWindow( hWndPlastron, SW_SHOWMAXIMIZED);
+		SetFocus(hWndPlastron);
+
+		hWndExec := 0;
+		hInstExec := 0;
+		hMenuExec := 0;
+		Exec(hInstExec, hWndExec, hMenuExec, pCmd, pFilename, pDir);
+
+		if hWndExec <> 0 then begin
+
+			{ Boucle de message : Multitâche ...}
+			Repeat
+				if PeekMessage(MSG, 0, 0, 0, PM_REMOVE) then begin
+					TranslateMessage(MSG);
+					DispatchMessage(MSG);
+					{GetWindowText(hWndExec, szText, SizeOf(szText));
+					WriteLn(szText);
+					MessageBeep(WORD(-1));}
+				end;
+				if isIconic(hWndExec) then begin
+					PostMessage(hWndExec, WM_CLOSE, 0, 0);
+				end;
+			until NOT IsWindow(hWndExec);
+
+		end else begin
+			MessageBox(GetActiveWindow, pFilename, 'Error !!!', 0);
+		end;
+
+		DestroyWindow(hWndPlastron);
+
+	end;
+	EnableWindow(hGraphiqueProc,TRUE);
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+
+end;
+
+{QCM}
+Function mciPlayQcm (MciCommandPStr : PChar) : Bool;
+VAR
+	pszMciWord : PChar;
+	code       : Integer;
+	nId        : Word;
+
+const	stReqQcm   : TReqQcm = ();
+Begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+31, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+		FillChar (stReqQcm, SizeOf (stReqQcm), 0);
+		pszMciWord := StrTok (MciCommandPStr, ' ');
+		If pszMciWord <> Nil Then With stReqQcm Do Begin
+			StrCopy(Path, pszMciWord);
+			pszMciWord := StrTok(Nil, ' ');
+			If pszMciWord <> Nil Then Begin
+				If StrComp(pszMciWord, 'ID') = 0 then begin
+					pszMciWord := StrTok(nil, ' ');
+					If pszMciWord <> Nil Then
+						 Val (pszMciWord, nId, Code);
+					pszMciWord := StrTok(nil, ' ');
+				End;
+				If StrComp(pszMciWord, 'NELEV') = 0 then begin
+					pszMciWord := StrTok(nil, ' ');
+					If pszMciWord <> Nil Then
+						 Val (pszMciWord, nElev, Code);
+					pszMciWord := StrTok(nil, ' ');
+				End;
+				If (pszMciWord <> Nil) AND (StrComp(pszMciWord, 'AT') = 0) Then Begin
+					pszMciWord := StrTok(nil, ' ');
+					If pszMciWord <> Nil Then
+							Val(pszMciWord,Rect.left,Code);
+					pszMciWord := StrTok(nil, ' ');
+					If (pszMciWord <> Nil) AND (Code = 0) Then
+							Val(pszMciWord,Rect.top,Code);
+					pszMciWord := StrTok(nil, ' ');
+					If (pszMciWord <> Nil) AND (Code = 0) Then
+							Val(pszMciWord,Rect.right,Code);
+					pszMciWord := StrTok(Nil, ' ');
+					If (pszMciWord <> Nil) AND (Code = 0) Then
+							Val(pszMciWord,Rect.Bottom,Code);
+					AdjustRectToDesktop(Rect);
+				End;
+				If pszMciWord <> Nil Then begin
+					pszMciWord := StrTok(Nil, ' ');
+					If (pszMciWord <> Nil) AND (StrComp(pszMciWord, 'NOTIFY') = 0) Then Begin
+						bNotify := TRUE;
+					end;
+				end;
+				If pszMciWord <> Nil Then StrTok(Nil, ' ');
+			End;
+		End;
+		AfficheLed(hLed_J);
+		SetWindowPos(hQcmProc, HWND_TOP, 0, 0, 0, 0,
+					SWP_NOMOVE OR SWP_NOSIZE OR SWP_SHOWWINDOW);
+		SendMessage(hQcmProc, UM_PLAYQCM, nId, LongInt(@stReqQcm));
+		{SendMessage(hQcmProc, WM_PAINT, 0, 0);}
+End;
+
+function MciGetVal(pszMciWord : PChar; fErrMsg : BOOL) : DWORD;
+var dwVal : DWORD;
+		code : integer;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+32, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	Val(pszMciWord, dwVal, Code);
+	if Code = 0 then begin
+		MciGetVal := dwVal;
+	end else begin
+		{ erreur de syntaxe }
+		if fErrMsg then MessageBox(Window, pszMciWord, 'Val syntax error !!!', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+		MciGetVal := DWORD(-1);
+	end;
+end;
+
+function MciGetType(pszMciWord : PChar; fErrMsg : BOOL) : DWORD;
+Var	CurTyp	: TTyp;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+34, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	CurTyp := Typ_FIRST;
+	while (CurTyp <= Typ_LAST) AND
+				(StrComp(pszMciWord, TypMap[CurTyp].tok ) <> 0) do begin
+		inc(CurTyp);
+	end;
+
+	if CurTyp <= Typ_LAST then begin
+		{ renvoie la Typeiable lavac }
+		MciGetType := DWORD(TypMap[CurTyp].dwTyp);
+	end else begin
+		{ erreur de syntaxe }
+		if fErrMsg then MessageBox(Window, pszMciWord, 'Type syntax error !!!', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+		MciGetType := DWORD(-1);
+	end;
+end;
+
+function MciGetVar(pszMciWord : PChar; var wSize : WORD; fErrMsg : BOOL) : DWORD;
+var	CurVar	: TVar;
+		dwRet   : DWORD;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+35, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	CurVar := VAR_FIRST;
+	while (CurVar <= VAR_LAST) AND
+				(StrComp(pszMciWord, VarMap[CurVar].tok ) <> 0) do begin
+		inc(CurVar);
+	end;
+
+	if CurVar <= VAR_LAST then begin
+		{ renvoie la variable lavac }
+		wSize := VarMap[CurVar].wSize;
+		case wSize of
+			1 : dwRet := DWORD(BYTE(VarMap[CurVar].pVar^));
+			2 : dwRet := DWORD(WORD(VarMap[CurVar].pVar^));
+			else dwRet := DWORD(VarMap[CurVar].pVar^);
+		end;
+		MciGetVar := dwRet;
+	end else begin
+		{ erreur de syntaxe }
+		if fErrMsg then MessageBox(Window, pszMciWord, 'Var syntax error !!!', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+		wSize := 0;
+		MciGetVar := DWORD(-1);
+	end;
+end;
+
+function MciGetVarPtr(pszMciWord : PChar; var wSize : WORD; fErrMsg : BOOL) : POINTER;
+var	CurVar	: TVar;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+36, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	{ on commence au début des variables USER pour ne pas risquer de cartonner les variables LAVAC }
+	CurVar := VAR_USER0;
+	while (CurVar <= VAR_LAST) AND
+				(StrComp(pszMciWord, VarMap[CurVar].tok ) <> 0) do begin
+		inc(CurVar);
+	end;
+
+	if CurVar <= VAR_LAST then begin
+		{ renvoie la variable lavac }
+		wSize := VarMap[CurVar].wSize;
+		MciGetVarPtr := VarMap[CurVar].pVar;
+	end else begin
+		{ erreur de syntaxe }
+		if fErrMsg then MessageBox(Window, pszMciWord, 'VarPtr syntax error !!!', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+		wSize := 0;
+		MciGetVarPtr := nil;
+	end;
+end;
+
+function MciGetCst(pszMciWord : PChar; fErrMsg : BOOL) : DWORD;
+var	CurCst	: TCst;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+37, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	CurCst := CST_FIRST;
+	while (CurCst <= CST_LAST) AND
+				(StrComp(pszMciWord, CstMap[CurCst].tok ) <> 0) do begin
+		inc(CurCst);
+	end;
+
+	if CurCst <= CST_LAST then begin
+		{ renvoie le Style lavac }
+		MciGetCst := CstMap[CurCst].dwCst;
+	end else begin
+		{ erreur de syntaxe }
+		if fErrMsg then MessageBox(Window, pszMciWord, 'Cst syntax error !!!', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+		MciGetCst := DWORD(-1);
+	end;
+end;
+
+function MciGetParam(pszMciWord : PChar; fErrMsg : BOOL) : DWORD;
+var dwVal : DWORD;
+		wSize : WORD;
+		bSize : BYTE;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+38, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	dwVal := MciGetVar(pszMciWord, wSize, FALSE);
+	if dwVal = DWORD(-1) then	dwVal := MciGetCst(pszMciWord, FALSE);
+	if dwVal = DWORD(-1) then	dwVal := MciGetVal(pszMciWord, FALSE);
+	if dwVal = DWORD(-1) then	begin
+		bSize := BYTE(-1);
+		dwVal := wcGetCst(pszMciWord, bSize, TRUE);
+		wSize := WORD(bSize);
+	end;
+	MciGetParam := dwVal;
+end;
+
+function mciDisplay(MciCommandPStr : PChar) : Bool;
+var pszMciWord			: PChar;
+		hWin						: HWND;
+		Rect						: TRECT;
+		code						: Integer;
+		nType						: Integer;
+		NoElev,
+		lIndex 						: longint;
+		bTrackBar,
+		bAt,
+		bXlate						: bool;
+		tQ								: TypeQuestion;
+		szFileName				: szLongName;
+		CmdShow						: integer;
+		WndInsertAfter		: HWND;
+		nZoom							: integer;
+		MciStr						: TMCISTR;
+
+const
+		NullStr					: array[0..0] of char = #0;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+39, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	nZoom := 100;
+	nType := -1;
+
+	bTrackBar := StrPos(MciCommandPStr, 'TRACKBAR') <> nil;
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+
+		if StrComp(pszMciWord, 'ANSWER') = 0 then begin
+			pszMciWord := StrTok(nil, ' ');
+			if pszMciWord <> nil then begin
+				NoElev := GetDlgItemInt(hLeconProc, 5001, bXlate, FALSE);
+				lIndex := longint(MciGetVal(pszMciWord, TRUE));
+				ReponseTxtFileName(szFileName, NoElev, lIndex);
+				if NOT FileExist(szFileName) then begin
+					ReponseRtfFileName(szFileName, NoElev, lIndex);
+				end;
+				StrCopy(pszMciWord, szFileName);
+			end;
+		end else begin
+			if StrComp(pszMciWord, 'QUESTION') = 0 then begin
+				pszMciWord := StrTok(nil, ' ');
+				if pszMciWord <> nil then begin
+					lIndex  := longint(MciGetVal(pszMciWord, TRUE));
+					GetQuestionRec(lIndex, tQ);
+					if (StrPos(MciCommandPStr, 'BITMAP') <> nil) OR
+						 (StrPos(MciCommandPStr, 'VIDEO') <> nil) then begin
+						StrCopy(pszMciWord, tQ.FichierGraph);
+					end else
+					if StrPos(MciCommandPStr, 'TEXT') <> nil then begin
+						StrCopy(pszMciWord, tQ.FichierTexte);
+					end;
+				end;
+			end;
+		end;
+
+		{ Image }
+		if IsImageFile(pszMciWord) then begin
+			StrCopy(MciStr, pszMciWord);
+			nType := 1;
+		{ Video }
+		end else if IsVideoFile(pszMciWord) then begin
+			StrCopy(MciStr, pszMciWord);
+			nType := 2;
+			hWin := hGraphiqueProc;
+		{ Texte }
+		end else if IsTextFile(pszMciWord) then begin
+			StrCopy(MciStr, pszMciWord);
+			nType := 3;
+			hWin := hTexteProc;
+		end;
+
+	end;
+
+	pszMciWord := StrTok(nil, ' ');
+	if (pszMciWord <> nil) then begin
+
+		if StrComp(pszMciWord, 'STRETCHED') = 0 then begin
+			bStreched := TRUE;
+			pszMciWord := StrTok(nil, ' ');
+		end;
+
+		if StrComp(pszMciWord, 'UNSTRETCHED') = 0 then begin
+			bStreched := FALSE;
+			pszMciWord := StrTok(nil, ' ');
+		end;
+	end;
+
+	WndInsertAfter := WORD(-1);
+	CmdShow := -1;
+	bAt := FALSE;
+
+	if pszMciWord <> nil then begin
+
+		if (StrComp(pszMciWord, 'BITMAP') = 0) OR
+			 (StrComp(pszMciWord, 'VIDEO') = 0) then
+			hWin := hGraphiqueProc;
+
+		if StrComp(pszMciWord, 'TEXT') = 0 then
+			hWin := hTexteProc;
+
+		if (hWin <> 0) then begin
+			pszMciWord := StrTok(nil, ' ');
+			if (pszMciWord <> nil) then begin
+				if StrComp(pszMciWord, 'HIDEN') = 0 then begin
+					 {ShowWindow(hWin, SW_HIDE)}
+					 CmdShow := SW_HIDE;
+				end;
+
+				if StrComp(pszMciWord, 'ZOOMED') = 0 then begin
+					 if NOT IsZoomed(hWin) then begin
+						 {ShowWindow(hWin, SW_SHOWMAXIMIZED);}
+						 CmdShow := SW_SHOWMAXIMIZED;
+					 end;
+				end;
+
+				if StrComp(pszMciWord, 'DEFAULT') = 0 then begin
+					if IsZoomed(hWin) then begin
+						dwReturn := GetWindowLong(hWin, GWL_STYLE) AND NOT WS_MAXIMIZE;
+						SetWindowLong(hWin, GWL_STYLE, dwReturn);
+					end;
+					if NOT IsWindowVisible(hWin) then begin
+						{ShowWindow(hWin, SW_SHOW);}
+						CmdShow := SW_SHOW;
+					end;
+					SendMessage(hWin, WM_SYSCOMMAND, 1, 0);
+				end;
+
+				if StrComp(pszMciWord, 'NORMAL') = 0 then begin
+					{if NOT IsWindowVisible(hWin) then begin
+						CmdShow := SW_HIDE;
+					end else begin
+						CmdShow := SW_SHOW;
+					end;}
+				end;
+
+				if StrComp(pszMciWord, 'AT') = 0 then begin
+					 FillChar(Rect, SizeOf(Rect), 0);
+
+					 pszMciWord := StrTok(nil, ' ');
+					 if pszMciWord <> nil then
+						 Val(pszMciWord,Rect.left,Code);
+
+					 pszMciWord := StrTok(nil, ' ');
+					 if (pszMciWord <> nil) AND (Code = 0) then
+						 Val(pszMciWord,Rect.top,Code);
+
+					 pszMciWord := StrTok(nil, ' ');
+					 if (pszMciWord <> nil) AND (Code = 0) then
+						 Val(pszMciWord,Rect.right,Code);
+
+					 pszMciWord := StrTok(nil, ' ');
+					 if (pszMciWord <> nil) AND (Code = 0) then
+						 Val(pszMciWord,Rect.Bottom,Code);
+
+					 AdjustRectToDesktop(Rect);
+
+					 if (pszMciWord <> nil) AND (Code = 0) then begin
+						 if IsZoomed(hWin) then begin
+							 dwReturn := GetWindowLong(hWin, GWL_STYLE) AND NOT WS_MAXIMIZE;
+							 SetWindowLong(hWin, GWL_STYLE, dwReturn);
+						 end;
+						 bAt := TRUE;
+						 if NOT IsWindowVisible(hWin) then begin
+							{ShowWindow(hWin, SW_SHOW);}
+								CmdShow := SW_SHOW;
+						 end;
+					 end;
+				end;
+
+				if (pszMciWord <> nil) then begin
+					pszMciWord := StrTok(nil, ' ');
+					if (pszMciWord <> nil) then begin
+						if (StrComp(pszMciWord, 'TOP') = 0) then begin
+						 WndInsertAfter :=  HWND_TOP;
+						end;
+						if (StrComp(pszMciWord, 'BOTTOM') = 0) then begin
+						 WndInsertAfter :=  HWND_BOTTOM;
+						end;
+						if (StrComp(pszMciWord, '%') <> 0) then begin
+							pszMciWord := StrTok(nil, ' ');
+						end;
+						if (pszMciWord <> nil) then begin
+							if (StrComp(pszMciWord, '%') = 0) then begin
+								pszMciWord := StrTok(nil, ' ');
+								if (pszMciWord <> nil) then begin
+									Val(pszMciWord, nZoom, Code);
+								end;
+							end;
+						end;
+					end;
+				end;
+			end;
+		end;
+		if (pszMciWord <> nil) then StrTok(nil, ' ');
+	end;
+
+	{ Affichage de la fenêtre }
+	case nType of
+		1	: begin
+					{SendMessage(hGraphiqueProc, WM_USER + 1003, WORD(nZoom), DWORD(@MciStr));}
+					SendMessage(hGraphiqueProc, WM_USER + 1010, WORD(nZoom), DWORD(@MciStr));
+					SendMessage(hGraphiqueProc, WM_USER + 1011, WORD(nZoom), DWORD(@MciStr));
+				end;
+
+		2	: begin
+					{SendMessage(hGraphiqueProc, WM_USER + 1003, WORD(nZoom), DWORD(0));}
+					SendMessage(hGraphiqueProc, WM_USER + 1010, WORD(nZoom), DWORD(@MciStr));
+					if bTrackBar then begin
+						SendMessage(hGraphiqueProc, WM_USER + 1015, WORD(nZoom), DWORD(@MciStr));
+					end else begin
+						SendMessage(hGraphiqueProc, WM_USER + 1012, WORD(nZoom), DWORD(@MciStr));
+					end;
+				end;
+
+		3 : begin
+					{StrCopy(szFileName, PathTextes);
+					StrCat(szFileName, 'RTF.New');
+					MyLoadRTFFile(hWin, szFileName, SF_RTF);}
+				end;
+	end;
+
+	{WriteLn(' nType ', nType,
+					' bAt ', bAt,
+					' WndInsertAfter ', WndInsertAfter,
+					' CmdShow ', CmdShow);}
+
+	if bAt then begin
+		if WndInsertAfter = WORD(-1) then begin
+			SetWindowPos(hWin, 0,
+									Rect.left,
+									Rect.top,
+									Rect.right - Rect.left,
+									Rect.bottom - Rect.top,
+									SWP_NOACTIVATE OR SWP_NOZORDER);
+		end else begin
+			SetWindowPos(hWin, WndInsertAfter,
+									Rect.left,
+									Rect.top,
+									Rect.right - Rect.left,
+									Rect.bottom - Rect.top,
+									SWP_NOACTIVATE);
+		end;
+	end else begin
+		if WndInsertAfter <> WORD(-1) then begin
+			SetWindowPos(hWin, WndInsertAfter,
+									0,
+									0,
+									0,
+									0,
+									SWP_NOACTIVATE OR SWP_NOSIZE OR SWP_NOMOVE);
+		end else begin
+			SetWindowPos(hWin, 0,
+									0,
+									0,
+									0,
+									0,
+									SWP_NOZORDER OR SWP_NOACTIVATE OR SWP_NOSIZE OR SWP_NOMOVE);
+		end;
+	end;
+
+	if CmdShow <> -1 then begin
+		ShowWindow(hWin, CmdShow);
+	end;
+
+	SendMessage(hWin, WM_PAINT, 0, 0);
+
+	case nType of
+		1 : begin
+					{SendMessage(hGraphiqueProc, WM_USER + 1001, WORD(nZoom), DWORD(@MciStr));}
+					SendMessage(hGraphiqueProc, WM_USER + 1013, WORD(nZoom), DWORD(@MciStr));
+					{ Notify en fin d'affichage ...
+						... Sauf si image cachée }
+					if (hWin <> 0) AND NOT IsWindowVisible(hWin) then	begin
+						PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+					end;
+				end;
+
+		2 : begin
+					{SendMessage(hGraphiqueProc, WM_USER + 1002, WORD(nZoom), DWORD(@MciStr));}
+					if bTrackBar then begin
+						SendMessage(hGraphiqueProc, WM_USER + 1016, WORD(nZoom), DWORD(@MciStr));
+					end else begin
+						SendMessage(hGraphiqueProc, WM_USER + 1014, WORD(nZoom), DWORD(@MciStr));
+					end;
+					{ Notify en fin de video ... }
+				end;
+
+		3 : begin
+					if FileExist(MciStr) then begin
+						ReadTextFile(MciStr);
+					end;
+					PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+				end;
+
+		{default}
+		else PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+	end;
+
+	mciDisplay := TRUE;
+end;
+
+function mciSelect(MciCommandPStr : PChar) : Bool;
+var	pszMciWord : PChar;
+		nFrom,
+		nTo,
+		code : Integer;
+		szSeq	: array[0..255] of char;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+40, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		nFrom := integer(mciGetVal(pszMciWord, FALSE)) - 1;
+		pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			nTo := integer(mciGetVal(pszMciWord, FALSE)) - 1;
+		end else begin
+			nTo := nFrom;
+		end;
+	end;
+	if (nFrom >= 0) AND (nTo >= 0) then begin
+		SetFocus(GetDlgItem(hLeconProc,idl_listeQ));
+		SendDlgItemMessage(hLeconProc,idl_ListeQ, LB_SELITEMRANGE, WORD(TRUE), MakeLong(WORD(nFrom), WORD(nTo)));
+		SendDlgItemMessage(hLeconProc,idl_ListeQ, LB_SETSEL, WORD(TRUE), MakeLong(WORD(nFrom), 0));
+	end;
+
+	for code := nFrom to nTo do begin
+		SendDlgItemMessage(hLeconProc,idl_ListeQ, LB_GETTEXT, WORD(code), DWORD(@szSeq));
+		SendMessage(hQcmProc, UM_ADDSEL, code, DWORD(@szSeq));
+	end;
+
+	mciSelect := Code = 0;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciTestCall(MciCommandPStr : PChar) : Bool;
+begin
+        //
+        ResetMciCmdCloseQueue;
+        PostMessage(hMciQueueProc, mm_MciNotify, 0, 0);
+        exit;
+        //
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+41, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	ResetMciCmdCloseQueue;
+	{Prof ou élève ?}
+	GetWindowText(Window, szMessage, SizeOf(szMessage));
+	if StrComp(szMessage, 'Lavac_Pr') = 0 then begin
+		PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+	end else begin
+		{Test pour savoir si l'élève a stoppé le branchement conditionnel}
+		If bItsARet Then begin
+			PostMessage(hMciQueueProc, mm_MciNotify, 0, 0);
+		end Else begin
+			{ Détournement pour les branchements	conditionnels }
+			PostMessage(hQcmProc, UM_APPEL, 0, 0);
+		end;
+	end;
+end;
+
+function mciUnSelect(MciCommandPStr : PChar) : Bool;
+var	pszMciWord : PChar;
+		nFrom,
+		nTo,
+		code : Integer;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+42, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		nFrom := integer(mciGetVal(pszMciWord, FALSE)) - 1;
+		pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			nTo := integer(mciGetVal(pszMciWord, FALSE)) - 1;
+		end else begin
+			nTo := nFrom;
+		end;
+	end;
+	if (nFrom >= 0) AND (nTo >= 0) then begin
+		SetFocus(GetDlgItem(hLeconProc,idl_listeQ));
+		if nFrom = nTo then begin
+			SendDlgItemMessage(hLeconProc,idl_ListeQ, LB_SETSEL, WORD(FALSE), MakeLong(WORD(nFrom), 0));
+		end else begin
+			SendDlgItemMessage(hLeconProc,idl_ListeQ, LB_SELITEMRANGE, WORD(FALSE), MakeLong(WORD(nFrom), WORD(nTo)));
+		end;
+	end;
+	mciUnSelect := Code = 0;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciPlayQ(MciCommandPStr : PChar) : Bool;
+var	pszMciWord : PChar;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+43, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		mciPlayQ := mciPlayQuestion(MciCommandPStr);
+		exit;
+	end;
+	{ Jouer ... }
+	if Pause then SendMessage(hBoutonsProc, WM_COMMAND, idb_Pause, 0);
+	if PlayingQ OR
+		 PlayingR OR
+		 RecordingR then SendMessage(hBoutonsProc, WM_COMMAND, idb_PlayQ, 0);
+	PostMessage(hBoutonsProc, WM_COMMAND, idb_PlayQ, MakeLong(GetDlgItem(hBoutonsProc, idb_PlayQ), WORD(0)));
+end;
+
+function mciPlayA(MciCommandPStr : PChar) : Bool;
+var	pszMciWord : PChar;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+44, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		mciPlayA := mciPlayAnswer(MciCommandPStr);
+		exit;
+	end;
+	{ Jouer ... }
+	if Pause then SendMessage(hBoutonsProc, WM_COMMAND, idb_Pause, 0);
+	if PlayingQ OR
+		 PlayingR OR
+		 RecordingR then SendMessage(hBoutonsProc, WM_COMMAND, idb_PlayQ, 0);
+	PostMessage(hBoutonsProc, WM_COMMAND, idb_PlayR, MakeLong(GetDlgItem(hBoutonsProc, idb_PlayR), WORD(0)));
+end;
+
+function mciPlayQA(MciCommandPStr : PChar) : Bool;
+var	pszMciWord : PChar;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+45, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		mciPlayQA := mciPlayQuestion(MciCommandPStr);
+		mciPlayQA := mciPlayAnswer(MciCommandPStr);
+		exit;
+	end;
+	{ Jouer ... }
+	if Pause then SendMessage(hBoutonsProc, WM_COMMAND, idb_Pause, 0);
+	if PlayingQ OR
+		 PlayingR OR
+		 RecordingR then SendMessage(hBoutonsProc, WM_COMMAND, idb_PlayQ, 0);
+	PostMessage(hBoutonsProc, WM_COMMAND, idb_PlayQR, MakeLong(GetDlgItem(hBoutonsProc, idb_PlayQR), WORD(0)));
+end;
+
+function mciRecordA(MciCommandPStr : PChar) : Bool;
+var	pszMciWord : PChar;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+46, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		mciRecordA := mciRecordAnswer(MciCommandPStr);
+		exit;
+	end;
+	{ Jouer ... }
+	if Pause then SendMessage(hBoutonsProc, WM_COMMAND, idb_Pause, 0);
+	if PlayingQ OR
+		 PlayingR OR
+		 RecordingR then SendMessage(hBoutonsProc, WM_COMMAND, idb_PlayQ, 0);
+	PostMessage(hBoutonsProc, WM_COMMAND, idb_RecordR, MakeLong(GetDlgItem(hBoutonsProc, idb_RecordR), WORD(0)));
+end;
+
+function mciDisplayLed(MciCommandPStr : PChar) : Bool;
+var code : Integer;
+		hLed : Word;
+		dwVal : DWORD;
+		pszMciWord : PChar;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+47, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		Val(pszMciWord,hLed,Code);
+		pszMciWord := StrTok(nil, ' ');
+		dwVal := -1;
+		if pszMciWord <> nil then begin
+			dwVal := MciGetVal(pszMciWord, FALSE) DIV 64;
+			//if dwVal > 32767 then dwVal := 32767;
+			if dwVal <> DWORD(-1) then begin
+				SetTimer(hMciQueueProc, 2, dwVal, nil);
+			end;
+		end;
+		AfficheLed(hLed);
+		if dwVal <> DWORD(-1) then begin
+			PostMessage(hMciQueueProc, WM_TIMER, 2, 0);
+		end;
+		hOldLed := hLed;
+	end;
+	mciDisplayLed := Code = 0;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciSetVolume(MciCommandPStr : PChar) : Bool;
+var code : Integer;
+		PDebut : PChar;
+		i      : word;
+		ScrollPos : integer;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+48, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	PDebut := StrRScan(MciCommandPStr, ' ');
+	Val(PDebut,hAscPlaying,Code);
+	ScrollPos := GetScrollPos(hAscPlaying,SB_CTL);
+	if ScrollPos = 0  then ScrollPos := GetTrackPos(hAscPlaying);
+	for i := 0 to auxGetNumDevs do begin
+		waveOutSetVolume(WORD(i), DWORD(MakeLong(WORD(ScrollPos * 2),WORD(ScrollPos * 2))));
+	end;
+	mciSetVolume := Code = 0;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+TYPE
+	PENUMLOGFONTEX = ^TENUMLOGFONTEX;
+	TENUMLOGFONTEX = record
+		elfLogFont : TLOGFONT;
+		elfFullName : array[0..LF_FULLFACESIZE-1] of char;
+		elfStyle : array[0..LF_FACESIZE-1] of char;
+		elfScript : array[0..LF_FACESIZE-1] of char;
+	end;
+
+	PFONTSIGNATURE = ^TFONTSIGNATURE;
+	TFONTSIGNATURE = record
+		fsUsb : array[0..3] of DWORD;
+		fsCsb : array[0..1] of DWORD;
+	end;
+
+	PNEWTEXTMETRICEX = ^TNEWTEXTMETRICEX;
+	TNEWTEXTMETRICEX = record
+		ntmentm : TNEWTEXTMETRIC;
+		ntmeFontSignature : TFONTSIGNATURE;
+	end;
+
+function EnumFontFamExProc(
+		pelfe : PENUMLOGFONTEX;
+		pntme : PNEWTEXTMETRICEX;
+		FontType : integer;
+		lParam : LONGINT) : integer; stdcall;
+
+var
+		cf					: CHARFORMAT;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+49, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	cf.cbSize	:= SizeOf(cf);
+	cf.dwMask :=
+		CFM_BOLD OR
+		CFM_COLOR OR
+		CFM_FACE OR
+		CFM_ITALIC OR
+		CFM_OFFSET OR
+		CFM_PROTECTED OR
+		CFM_SIZE OR
+		CFM_STRIKEOUT OR
+		CFM_UNDERLINE;
+	SendMessage(LOWORD(lParam), EM_GETCHARFORMAT, WORD(TRUE), DWORD(@cf));
+	{WriteLn(pelfe^.elfLogFont.lfCharSet);
+	WriteLn(pelfe^.elfLogFont.lfFaceName);
+	WriteLn(pelfe^.elfFullName);
+	WriteLn(pelfe^.elfStyle);
+	WriteLn(pelfe^.elfScript);}
+	with cf do begin
+		bCharSet				:= pelfe^.elfLogFont.lfCharSet;
+		{bPitchAndFamily	:= pelfe^.elfLogFont.lfPitchAndFamily;}
+		{StrCopy(szFaceName, pelfe^.elfLogFont.lfFaceName);}
+	end;
+	SendMessage(LOWORD(lParam), EM_SETCHARFORMAT, SCF_SELECTION, DWORD(@cf));
+	SendMessage(LOWORD(lParam), WM_USER + 77, 2, 1);
+	SetFocus(LOWORD(lParam));
+	EnumFontFamExProc := 0;
+end;
+
+const
+	KLF_ACTIVATE        = $00000001;
+	KLF_SUBSTITUTE_OK   = $00000002;
+	KLF_UNLOADPREVIOUS  = $00000004;
+	KLF_REORDER         = $00000008;
+	KLF_REPLACELANG     = $00000010;
+	KLF_NOTELLSHELL     = $00000080;
+	HKL_PREV            = 0;
+	HKL_NEXT            = 1;
+	KL_NAMELENGTH       = 9;
+
+var lpOldRtfProc : WNDPROC;
+
+function SubClsRtfProc(Dialog: HWnd; Message, WParam: DWord;
+	LParam: Longint): Bool; stdcall;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+50, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	case Message of
+
+		WM_LBUTTONDOWN :
+			begin
+				PostMessage(GetParent(Dialog), WM_USER + 1, 0, 0);
+			end;
+
+		WM_KEYDOWN :
+			case wParam of
+				VK_PRIOR,
+				VK_NEXT,
+				VK_END,
+				VK_HOME,
+				VK_LEFT,
+				VK_UP,
+				VK_RIGHT,
+				VK_DOWN :
+					begin
+						PostMessage(GetParent(Dialog), WM_USER + 1, 0, 0);
+					end;
+			end;
+
+	end;
+	SubClsRtfProc := BOOL(CallWindowProc(lpOldRtfProc, Dialog, Message, wParam,	lParam));
+end;
+
+function RepTexteProc(Dialog: HWnd; Message, WParam: DWord;
+	LParam: Longint): Bool; stdcall;
+
+const stEditRect : TRECT = ();
+			stCboxRect : TRECT = ();
+			stButtRect : TRECT = ();
+			stHBarRect : TRECT = ();
+			stWindRect : TRECT = (left : -1);
+			pMyReqText : PReqText = nil;
+			nIn				 : integer = 0;
+			nOldWidth  : integer = 0;
+			nOldHeight : integer = 0;
+			lpSubClsRtfProc : TFarProc = nil;
+
+			dwDefKB		 	: DWORD = 0;
+			bCurCharSet	: BYTE = 255;
+			aCharset		: ARRAY[0..255] of BYTE =
+                                (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				 0);
+
+
+var i,
+		nX,
+		nY,
+		nWidth,
+		nHeight 		: Integer;
+		rc					: TRECT;
+		szKey				: array[0..255] of char;
+		hWin				: HWND;
+		wKB				 	: WORD;
+		dwKbIdx			: DWORD;
+		dwKBList	 	: array[1..100] of LongInt;
+		dwKB		  	: LongInt;
+		Key1,
+		Key2 				: HKey;
+		lType,
+		lSize				: longint;
+		lf					: TLOGFONT;
+		dc					: HDC;
+		lpEnumFontFamExProc : TFARPROC;
+		szKLID			: array[0..8] of char;
+		cf					: CHARFORMAT;
+                bPos : Bool;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+51, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	RepTexteProc := TRUE;
+
+	case Message of
+
+		wm_InitDialog:
+			begin
+
+				hRepTexte := Dialog;
+
+				GetWindowText(Dialog, szKey, SizeOf(szKey));
+				bPos := szKey[0] = ' ';
+
+				{ récupère position fenêtre rep texte }
+				GetClientRect(Dialog, stWindRect);
+				nOldWidth := stWindRect.right;
+				nOldHeight := stWindRect.bottom;
+				GetClientRect(GetDlgItem(Dialog,1), stButtRect);
+				MapWindowPoints(GetDlgItem(Dialog,1), Dialog, stButtRect, 2);
+				GetClientRect(GetDlgItem(Dialog,101), stEditRect);
+				MapWindowPoints(GetDlgItem(Dialog,101), Dialog, stEditRect, 2);
+				GetClientRect(GetDlgItem(Dialog,102), stHBarRect);
+				MapWindowPoints(GetDlgItem(Dialog,102), Dialog, stHBarRect, 2);
+				GetClientRect(GetDlgItem(Dialog,103), stCBoxRect);
+				MapWindowPoints(GetDlgItem(Dialog,103), Dialog, stCBoxRect, 2);
+
+				{ position programée par le créateur }
+				pMyReqText := PReqText(lParam);
+				if Boolean(pMyReqText) then with pMyReqText^ do begin
+					if bWin95 then begin
+						if NOT bPos then begin
+							MapWindowPoints(HWND_DESKTOP, Window, Rect, 1);
+							hWin := GetWindow(Window, GW_CHILD);
+							while hWin <> 0 do begin
+								EnableWindow(hWin, FALSE);
+								hWin := GetWindow(hWin, GW_HWNDNEXT);
+							end;
+							EnableWindow(Dialog, TRUE);
+						end;
+					end;
+					if Boolean(Mode AND $0002) then begin
+						MoveWindow(Dialog, Rect.left, Rect.top, Rect.right, Rect.bottom, FALSE);
+					end;
+				end;
+
+				SetFocus(Dialog);
+
+				{ recopie le texte de la question }
+				if Boolean(pMyReqText) AND
+					 Boolean(pMyReqText^.Mode AND $0001) AND
+					 (pMyReqText^.Path[0] <> #0) then begin
+					if StrPos(StrUpper(pMyReqText^.Path), 'RTF') <> nil then begin
+						MyLoadRTFFile(GetDlgItem(Dialog, 101), pMyReqText^.Path, SF_RTF);
+					end else begin
+						MyLoadRTFFile(GetDlgItem(Dialog, 101), pMyReqText^.Path, SF_TEXT);
+					end;
+				end;
+
+				if Boolean(pMyReqText) then begin
+					GetWindowRect(Dialog, pMyReqText^.Rect);
+					dec(pMyReqText^.Rect.right, pMyReqText^.Rect.left);
+					dec(pMyReqText^.Rect.bottom, pMyReqText^.Rect.top);
+				end;
+
+if bWin95 then begin
+				if RegOpenKey($80000002, 'System', Key1) <> ERROR_SUCCESS then WriteLn('System');
+				if RegOpenKey(Key1, 'CurrentControlSet', Key2) <> ERROR_SUCCESS then WriteLn('CurrentControlSet');
+				if RegOpenKey(Key2, 'Control', Key1) <> ERROR_SUCCESS then WriteLn('Control');
+				if RegOpenKey(Key1, 'keyboard layouts', Key2) <> ERROR_SUCCESS then WriteLn('keyboard layouts');
+
+				wKB := GetKeyboardLayoutList(sizeOf(dwKBList), dwKBList);
+				SetFocus(window);
+				dwDefKB := LongInt(ActivateKeyboardLayout(dwKBList[1], 0));
+				dwKbIdx := 0;
+				for i := 1 to wKB do begin
+					SetFocus(window);
+					ActivateKeyboardLayout(dwKBList[i], 0);
+					GetKeyboardLayoutName(szKLID);
+					lSize := SizeOf(szKey);
+					szKey[0] := #0;
+					if RegOpenKey(Key2, szKLID, Key1) <> ERROR_SUCCESS then WriteLn(szKLID);
+					if RegQueryValueEx(Key1, 'layout text', nil, @lType, PBYTE(@szKey[0]), @lSize)
+						 <> ERROR_SUCCESS then WriteLn('layout text');
+
+					dwReturn := SendDlgItemMessage(Dialog, 103, CB_ADDSTRING, 0, LongInt(@szKey));
+					if (dwReturn <> CB_ERR) AND
+						 (dwReturn <> CB_ERRSPACE) then begin
+						if dwKBList[i] = dwDefKB then dwKbIdx := dwReturn;
+						SendDlgItemMessage(Dialog, 103, CB_SETITEMDATA, WORD(dwReturn), dwKBList[i]);
+						aCharset[i - 1] := bCurCharset;
+					end;
+				end;
+
+				{ Met à jour la ComboBox }
+				SendDlgItemMessage(Dialog, 103, CB_SETCURSEL, WORD(dwKbIdx), 0);
+
+				{ Réactive le clavier par défaut et met à jour la fonte }
+				SendMessage(Dialog, WM_COMMAND, 103, MAKELONG(GetDlgItem(Dialog, 103), CBN_SELCHANGE));
+
+				{ formate le control RTF }
+				SendDlgItemMessage(Dialog, 101, WM_USER + 77, 2, 1);
+				SendDlgItemMessage(Dialog, 101, EM_SETTARGETDEVICE, 0, 0);
+
+			ShowWindow(Dialog, SW_SHOW);
+			if NOT bPos then FlashWindow(Dialog, TRUE);
+end;
+
+			BringWindowToTop(Dialog);
+
+			{ Start SubClassing de Ctl 101 pour changement de clavier }
+			//lpSubClsRtfProc := MakeProcInstance(@SubClsRtfProc, hInstance);
+			lpSubClsRtfProc := @SubClsRtfProc;
+			lpOldRtfProc := WNDPROC(SetWindowLong(GetDlgItem(Dialog, 101), GWL_WNDPROC, LongInt(lpSubClsRtfProc)));
+
+		end;
+
+		{WM_INPUTLANGCHANGEREQUEST} $0050:
+			begin
+				RepTexteProc := FALSE;
+				Exit;
+			end;
+
+		{WM_INPUTLANGCHANGE} $0051 :
+			begin
+
+				{GetKeyboardLayoutName(szKLID);
+				WriteLn(wParam, ' KLID:', szKLID, ' ', lParam);}
+
+				bCurCharSet := wParam;
+				dwKbIdx := SendDlgItemMessage(Dialog, 103, CB_GETCOUNT, i, 0);
+				if (dwKbIdx <> CB_ERR) AND
+					 (dwKbIdx <> CB_ERRSPACE) then begin
+					for i := 0 to dwKbIdx - 1 do begin
+						dwKB := SendDlgItemMessage(Dialog, 103, CB_GETITEMDATA, i, 0);
+						if (dwKB <> CB_ERR) AND
+							 (dwKB <> CB_ERRSPACE) AND
+							 (dwKB = lParam) then begin
+							if i <> SendDlgItemMessage(Dialog, 103, CB_GETCURSEL, 0, 0) then begin
+								SendDlgItemMessage(Dialog, 103, CB_SETCURSEL, WORD(i), 0);
+							end;
+							break;
+						end;
+					end;
+				end;
+				with lf do begin
+					lfCharSet := wParam;
+					StrCopy(lfFaceName, '');
+					lfPitchAndFamily := 0;
+				end;
+				dc := GetDC(GetDlgItem(Dialog, 101));
+				lpEnumFontFamExProc := @EnumFontFamExProc;
+				EnumFontFamiliesEx(dc, @lf, lpEnumFontFamExProc, MAKELONG(GetDlgItem(Dialog, 101), 0), 0);
+				//FreeProcInstance(lpEnumFontFamExProc);
+				ReleaseDC(GetDlgItem(Dialog, 101), dc);
+				if GetFocus <> GetDlgItem(Dialog, 101) then SetFocus(GetDlgItem(Dialog, 101));
+			end;
+
+		WM_USER + 1 :
+			begin
+				FillChar(cf, SizeOf(cf), 255);
+				cf.cbSize	:= SizeOf(cf);
+				cf.dwMask :=
+					CFM_BOLD OR
+					CFM_COLOR OR
+					CFM_FACE OR
+					CFM_ITALIC OR
+					CFM_OFFSET OR
+					CFM_PROTECTED OR
+					CFM_SIZE OR
+					CFM_STRIKEOUT OR
+					CFM_UNDERLINE;
+				SendDlgItemMessage(Dialog, 101, EM_GETCHARFORMAT, WORD(TRUE), DWORD(@cf));
+
+				{####
+				MessageBeep(WORD(-1));
+				WriteLn(cf.bCharset, ', ', cf.szFaceName);}
+
+				{ clavier français }
+				if cf.bCharset = 1 then cf.bCharset := 0;
+
+				dwKbIdx := SendDlgItemMessage(Dialog, 103, CB_GETCOUNT, 0, 0);
+				if (dwKbIdx <> CB_ERR) AND
+					 (dwKbIdx <> CB_ERRSPACE) then begin
+					for i := 0 to dwKbIdx - 1 do begin
+						dwKB := SendDlgItemMessage(Dialog, 103, CB_GETITEMDATA, i, 0);
+						if (dwKB <> CB_ERR) AND
+							 (dwKB <> CB_ERRSPACE) AND
+							 (cf.bCharset = aCharset[i]) then begin
+							if i <> SendDlgItemMessage(Dialog, 103, CB_GETCURSEL, 0, 0) then begin
+								SetFocus(window);
+								ActivateKeyboardLayout(dwKB, 0);
+								{SendDlgItemMessage(Dialog, 103, CB_SETCURSEL, WORD(i), 0);}
+							end;
+							break;
+						end;
+					end;
+				end;
+			end;
+
+		wm_Size :
+			begin
+				nWidth := (LOWORD(lParam) - (stButtRect.right - stButtRect.left)) DIV 2;
+				nHeight := HIWORD(lParam) - (nOldHeight - stButtRect.top);
+				SetWindowPos(GetDlgItem(Dialog,1), 0, nWidth, nHeight, 0, 0, SWP_NOZORDER OR SWP_NOSIZE);
+				GetClientRect(GetDlgItem(Dialog,1), stButtRect);
+				MapWindowPoints(GetDlgItem(Dialog,1), Dialog, stButtRect, 2);
+
+				GetClientRect(GetDlgItem(Dialog,103), stCBoxRect);
+				SetWindowPos(GetDlgItem(Dialog,103),
+										 0,
+										 stButtRect.right + 4,
+										 nHeight + (stButtRect.bottom - stButtRect.top) DIV 2 - stCBoxRect.bottom DIV 2,
+										 nWidth - 4,
+										 stCBoxRect.bottom,
+										 SWP_NOZORDER);
+
+				nWidth := LOWORD(lParam);
+				nHeight := HIWORD(lParam) - (nOldHeight - stHBarRect.top);
+				MoveWindow(GetDlgItem(Dialog,102), 0, nHeight, nWidth, stHBarRect.bottom - stHBarRect.top, TRUE);
+				GetClientRect(GetDlgItem(Dialog,102), stHBarRect);
+				MapWindowPoints(GetDlgItem(Dialog,102), Dialog, stHBarRect, 2);
+
+				nWidth := LOWORD(lParam) - 4;
+				nHeight := stHBarRect.top - stEditRect.top - (stButtRect.top - stHBarRect.bottom);
+				SetWindowPos(GetDlgItem(Dialog,101), 0, 2, 2, nWidth, nHeight, SWP_NOZORDER );
+				GetClientRect(GetDlgItem(Dialog,101), stEditRect);
+				MapWindowPoints(GetDlgItem(Dialog,101), Dialog, stEditRect, 2);
+
+				nOldWidth := LOWORD(lParam);
+				nOldHeight := HIWORD(lParam);
+
+				BringWindowToTop(Dialog);
+				SetFocus(GetDlgItem(Dialog,101));
+				if Boolean(pMyReqText) then begin
+					GetWindowRect(Dialog, pMyReqText^.Rect);
+					dec(pMyReqText^.Rect.right, pMyReqText^.Rect.left);
+					dec(pMyReqText^.Rect.bottom, pMyReqText^.Rect.top);
+				end;
+			end;
+
+		wm_Move :
+			begin
+				BringWindowToTop(Dialog);
+				SetFocus(GetDlgItem(Dialog,101));
+				if Boolean(pMyReqText) then begin
+					GetWindowRect(Dialog, pMyReqText^.Rect);
+					dec(pMyReqText^.Rect.right, pMyReqText^.Rect.left);
+					dec(pMyReqText^.Rect.bottom, pMyReqText^.Rect.top);
+				end;
+			end;
+
+		wm_Destroy :
+			begin
+				if bWin95 then begin
+					SetFocus(window);
+					ActivateKeyboardLayout(dwDefKB, 0);
+				end;
+			end;
+
+		wm_Command:
+			case LoWord(WParam) of
+
+				IDOK:
+                                         //if HIWORD(lParam) = BN_CLICKED then begin
+					 if HIWORD(wParam) = BN_CLICKED then begin
+						{ Stop SubClassing de Ctl 101 pour clavier }
+						SetWindowLong(GetDlgItem(Dialog, 101), GWL_WNDPROC, LongInt(lpOldRtfProc));
+						//FreeProcInstance(lpSubClsRtfProc);
+
+						GetDlgItemText(Dialog,101, lpszLineBuffer, MAXTEXTBUFFER);
+						if BOOL(pMyReqText) AND (pMyReqText^.Path[0] <> #0) then begin
+							if StrPos(StrUpper(pMyReqText^.Path), 'RTF') <> nil then begin
+								MySaveRTFFile(GetDlgItem(Dialog, 101), pMyReqText^.Path, SF_RTF);
+							end else begin
+								SauveReponseTexte(@pMyReqText^.Path);
+							end;
+						end;
+						hRepTexte := 0;
+						if bWin95 then begin
+							if bPos then begin
+								EndDialog(Dialog, 1);
+							end else begin
+								hWin := GetWindow(Window, GW_CHILD);
+								while hWin <> 0 do begin
+									EnableWindow(hWin, TRUE);
+									hWin := GetWindow(hWin, GW_HWNDNEXT);
+								end;
+								DestroyWindow(Dialog);
+							end;
+						end else begin
+							EndDialog(Dialog,1);
+						end;
+					end;
+
+				103 :
+					//case HIWORD(lParam) of
+       					case HiWord(wParam) of
+						CBN_SELCHANGE :
+							begin
+								dwKbIdx := SendDlgItemMessage(Dialog, 103, CB_GETCURSEL, 0, 0);
+								if (dwKbIdx <> CB_ERR) AND
+									 (dwKbIdx <> CB_ERRSPACE) then begin
+									dwKB := SendDlgItemMessage(Dialog, 103, CB_GETITEMDATA, dwKbIdx, 0);
+									if (dwKB <> CB_ERR) AND
+										 (dwKB <> CB_ERRSPACE) then begin
+										{ Attention si on ne redonne pas le focus à la dialog, elle ne recevra pas
+											le WM_INPUTLANGCHANGE }
+										if GetFocus <> GetDlgItem(Dialog, 101) then SetFocus(GetDlgItem(Dialog, 101));
+										SetFocus(window);
+										ActivateKeyboardLayout(dwKB, 0);
+									end;
+								end;
+							end;
+						end;
+
+			end;
+	end;
+	RepTexteProc := FALSE;
+end;
+
+function mciRequestText(MciCommandPStr : PChar) : Bool;
+
+var pszMciWord : PChar;
+		stReqText : TReqText;
+		seq				: integer;
+		code			: integer;
+		rWin			: TRECT;
+		MSG				: TMSG;
+		TempName	: szLongName;
+		lpRepTexteProc: WNDPROC;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+52, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	FillChar(stReqText, SizeOf(stReqText), 0);
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then with stReqText do begin
+		StrCopy(Path, pszMciWord);
+		pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			{ Reprise Question }
+			if StrComp(pszMciWord, 'APPEND') = 0 then begin
+				Mode := Mode OR $0001;
+				pszMciWord := StrTok(nil, ' ');
+			end;
+			{ Reprise Réponse }
+			if StrComp(pszMciWord, 'ADDIN') = 0 then begin
+				Mode := Mode OR $0001;
+				pszMciWord := StrTok(nil, ' ');
+				if pszMciWord <> nil then
+					Val(pszMciWord, seq, Code);
+				pszMciWord := StrTok(nil, ' ');
+				if (Code = 0) AND (Seq > 0) then begin
+					{ Séquence n }
+					ReponseRtfFileName(TempName, NoElev, Seq);
+					if FileExist(TempName) then begin
+						CopyFile(TempName, Path);
+					end;
+				end;
+			end;
+			if (pszMciWord <> nil) AND (StrComp(pszMciWord, 'AT') = 0) then begin
+				pszMciWord := StrTok(nil, ' ');
+				if pszMciWord <> nil then
+					Val(pszMciWord,Rect.left,Code);
+				pszMciWord := StrTok(nil, ' ');
+				if (pszMciWord <> nil) AND (Code = 0) then
+					Val(pszMciWord,Rect.top,Code);
+				pszMciWord := StrTok(nil, ' ');
+				if (pszMciWord <> nil) AND (Code = 0) then
+					Val(pszMciWord,Rect.right,Code);
+				pszMciWord := StrTok(nil, ' ');
+				if (pszMciWord <> nil) AND (Code = 0) then
+					Val(pszMciWord,Rect.Bottom,Code);
+				AdjustRectToDesktop(Rect);
+				if (pszMciWord <> nil) AND (Code = 0) then begin
+					Mode := Mode OR $0002;
+				end;
+			end;
+			if pszMciWord <> nil then StrTok(nil, ' ');
+		end;
+		{ Aligne sur fenêtre élève }
+		GetWindowRect(Window, rWin);
+		inc(Rect.left, rWin.left);
+		inc(Rect.top, rWin.top);
+	end;
+	AfficheLed(hLed_J);
+	//lpRepTexteProc := MakeProcInstance(@RepTexteProc, HInstance);
+	lpRepTexteProc := WNDPROC(@RepTexteProc);
+	if bWin95 then begin
+		hRepTexte := CreateDialogParam(hInstRes, 'ReponseTexte_ELPR95', Window, lpRepTexteProc, LongInt(@stReqText));
+		{hRepTexte := CreateDialogParam(hInstRes, 'REPTXTEDIT', Window, lpRepTexteProc, LongInt(@stReqText));}
+
+		while hRepTexte <> 0 do begin
+			while PeekMessage(MSG, 0, 0, 0, PM_REMOVE) do begin
+				TranslateMessage(MSG);
+				DispatchMessage(MSG);
+			end;
+		end;
+	end else begin
+		if bWinNT then begin
+			DialogBoxParam(hInstRes, 'ReponseTexte_ELPRNT', Window, lpRepTexteProc, LongInt(@stReqText));
+		end else begin
+			DialogBoxParam(hInstRes, 'ReponseTexte_ELPR31', Window, lpRepTexteProc, LongInt(@stReqText));
+		end;
+	end;
+	//FreeProcInstance(lpRepTexteProc);
+	PostMessage(hMciQueueProc, mm_MciNotify, 0, 0);
+end;
+
+function mciShare(MciCommandPStr : PChar) : Bool;
+var PDebut : PChar;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+53, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	PDebut := StrRScan(MciCommandPStr, ' ');
+	PDebut := PDebut+1;
+	MakeSharedFile(PDebut);
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciSetPosition(MciCommandPStr : PChar) : Bool;
+var code : Integer;
+		Position,
+		Etudiant : Integer;
+		PEtudiant : PChar;
+		PPosition : PChar;
+		tEtudiant : TypeEtudiant;
+		r					: TRECT;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+54, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	PPosition := StrRScan(MciCommandPStr, ' ');
+	Val(PPosition,Position,Code);
+	PEtudiant := StrScan(MciCommandPStr, ' ');
+	StrlCopy(PEtudiant,PEtudiant,StrLen(PEtudiant)-StrLen(PPosition));
+	Val(PEtudiant,Etudiant,Code);
+	{ si Position < 0 alors MAJ question en cours seulement }
+	if Position < 0 then begin
+		GetEtudiantRec(Etudiant,tEtudiant);
+		StrCopy(tEtudiant.LessonName, tLecon.Nom);
+		tEtudiant.LeconEnCours := SendDlgItemMessage(hLeconProc, idl_Lecon, CB_GETCURSEL, 0, LongInt(0));
+		tEtudiant.QuestionEnCours := SendDlgItemMessage(hLeconProc,idl_ListeQ,LB_GETCARETINDEX,0,LongInt(0));
+		SetEtudiantRec(Etudiant,tEtudiant);
+	end else begin
+		GetEtudiantRec(Etudiant, tEtudiant);
+		StrCopy(tEtudiant.LessonName, tLecon.Nom);
+		tEtudiant.Position := Position;
+                if RecordingR then tEtudiant.Score := tEtudiant.Score + 1;
+		tEtudiant.LeconEnCours := SendDlgItemMessage(hLeconProc, idl_Lecon, CB_GETCURSEL, 0, LongInt(0));
+		tEtudiant.QuestionEnCours := SendDlgItemMessage(hLeconProc,idl_ListeQ,LB_GETCARETINDEX,0,LongInt(0));
+		tEtudiant.ReponseEnCours := SendDlgItemMessage(hLeconProc,idl_ListeQ,LB_GETCARETINDEX,0,LongInt(0));
+		SetEtudiantRec(Etudiant,tEtudiant);
+		QuestionsFaite := QuestionsFaite + 1;
+		GetItemRect(hLeconProc, 105, r);
+		InvalidateRect(hLeconProc, @r, FALSE);
+	end;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+	mciSetPosition := Code = 0;
+end;
+
+function mciRemark(MciCommandPStr : PChar) : Bool; Register;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+55, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciSetCaption(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		hWin        : HWND;
+		wSize				: WORD;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+56, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		hWin := HWND(MciGetVar(pszMciWord, wSize, TRUE));
+		pszMciWord := StrTok(nil, '"');
+		if (pszMciWord <> nil) then begin
+			SetWindowText(hWin, pszMciWord);
+		end;
+	end;
+	StrTok(nil, ' ');
+
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciHide(MciCommandPStr : PChar) : Bool;
+	var pszMciWord	: PChar;
+		hWin        	: HWND;
+		wSize         : WORD;
+		lParam				: longint;
+		lpSeqProp,
+		lpNewSeqProp  : PSEQPROP;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+57, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		if StrIComp(pszMciWord, 'sequence') <> 0 then begin
+			hWin := HWND(MciGetVar(pszMciWord, wSize, TRUE));
+			if hWin <> HWND(-1) then begin
+				ShowWindow(hWin, SW_HIDE);
+				SendMessage(hWin, WM_PAINT, 0, 0);
+			end;
+		end else begin
+			{ Cacher une séquence }
+			pszMciWord := StrTok(nil, ' ');
+			if pszMciWord <> nil then begin
+				lParam := MciGetParam(pszMciWord, TRUE);
+				if lParam > 0 then begin
+					dec(lParam);
+					lpSeqProp := nil;
+					SendDlgItemMessage(hLeconProc, 102,
+														LB_GETTEXT,
+														lParam,
+														DWORD(@lpSeqProp));
+					if (lpSeqProp <> nil) then begin
+						if lpSeqProp^.hLogFnt.lfHeight < 1000 then begin
+							inc(lpSeqProp^.hLogFnt.lfHeight, 2000);
+							lpNewSeqProp := new(PSEQPROP);
+							if lpNewSeqProp <> nil then begin
+								lpNewSeqProp^.pszText := StrNew(lpSeqProp^.pszText);
+								lpNewSeqProp^.hLogFnt := lpSeqProp^.hLogFnt;
+								lpNewSeqProp^.FrColRef := lpSeqProp^.FrColRef;
+								lpNewSeqProp^.BkColRef := lpSeqProp^.BkColRef;
+								SendDlgItemMessage(hLeconProc, 102, LB_DELETESTRING, lParam, 0);
+								SendDlgItemMessage(hLeconProc, 102, LB_INSERTSTRING, lParam, LongInt(lpNewSeqProp));
+							end;
+						end;
+					end;
+				end;
+			end;
+		end;
+	end;
+	StrTok(nil, ' ');
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciShow(MciCommandPStr : PChar) : Bool;
+	var pszMciWord	: PChar;
+		hWin	        : HWND;
+		wSize					: WORD;
+		rc						: TRECT;
+		lParam				: longint;
+		lpSeqProp,
+		lpNewSeqProp  : PSEQPROP;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+58, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		if StrIComp(pszMciWord, 'sequence') <> 0 then begin
+			hWin := HWND(MciGetVar(pszMciWord, wSize, TRUE));
+			if hWin <> HWND(-1) then begin
+				ShowWindow(hWin, SW_SHOW);
+				{#### GDB 23/12/96 Try to fix not updated button bug. }
+				GetWindowRect(hwin, rc);
+				MapWindowPoints(hWin, GetParent(hWin), rc, 2);
+				InvalidateRect(GetParent(hWin), @rc, FALSE);
+				UpdateWindow(GetParent(hWin));
+				{SendMessage(hWin, WM_PAINT, 0, 0);}
+			end;
+		end else begin
+			{ Montrer une séquence }
+			pszMciWord := StrTok(nil, ' ');
+			if pszMciWord <> nil then begin
+				lParam := MciGetParam(pszMciWord, TRUE);
+				if lParam > 0 then begin
+					dec(lParam);
+					lpSeqProp := nil;
+					SendDlgItemMessage(hLeconProc, 102,
+														LB_GETTEXT,
+														lParam,
+														DWORD(@lpSeqProp));
+					if (lpSeqProp <> nil) then begin
+						if lpSeqProp^.hLogFnt.lfHeight > 1000 then begin
+							dec(lpSeqProp^.hLogFnt.lfHeight, 2000);
+							lpNewSeqProp := new(PSEQPROP);
+							if lpNewSeqProp <> nil then begin
+								lpNewSeqProp^.pszText := StrNew(lpSeqProp^.pszText);
+								lpNewSeqProp^.hLogFnt := lpSeqProp^.hLogFnt;
+								lpNewSeqProp^.FrColRef := lpSeqProp^.FrColRef;
+								lpNewSeqProp^.BkColRef := lpSeqProp^.BkColRef;
+								SendDlgItemMessage(hLeconProc, 102, LB_DELETESTRING, lParam, 0);
+								SendDlgItemMessage(hLeconProc, 102, LB_INSERTSTRING, lParam, LongInt(lpNewSeqProp));
+							end;
+						end;
+					end;
+				end;
+			end;
+		end;
+	end;
+	StrTok(nil, ' ');
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciSetPos(MciCommandPStr : PChar) : Bool;
+	var pszMciWord	: PChar;
+		hWin        : HWND;
+		hPos	 			: HWND;
+		wSize				: WORD;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+59, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		hWin := HWND(MciGetVar(pszMciWord, wSize, TRUE));
+		pszMciWord := StrTok(nil, ' ');
+		if (pszMciWord <> nil) then begin
+			hPos := HWND(MciGetVar(pszMciWord, wSize, FALSE));
+			if hPos = HWND(-1) then hPos := HWND(MciGetCst(pszMciWord, TRUE));
+			if hPos <> HWND(-1) then begin
+				SetWindowPos(hWin, hPos, 0, 0, 0, 0, SWP_NOSIZE OR SWP_NOMOVE OR SWP_NOACTIVATE);
+				SendMessage(hWin, WM_PAINT, 0, 0);
+			end;
+		end;
+	end;
+	StrTok(nil, ' ');
+
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciPlayAnswer(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		ReponseName : szLongName;
+		NoElev,
+		lIndex 			: longint;
+		bXlate			: bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+60, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		NoElev := GetDlgItemInt(hLeconProc, 5001, bXlate, FALSE);
+		lIndex := longint(MciGetVal(pszMciWord, TRUE));
+		ReponseFileName(ReponseName, NoElev, lIndex);
+		if FileExist(ReponseName) then begin
+			StrPCopy(mciMessage, 'DisplayLed '+IntToStr(hLed_V));
+			InsMciQueueString(mciMessage, 0);
+			StrPCopy(mciMessage, 'SetVolume from ' + IntToStr(GetDlgItem(hLeconProc, 107)));
+			InsMciQueueString(mciMessage, 1);
+			StrCopy(mciMessage, 'open ');
+			StrCat(mciMessage,ReponseName);
+			StrCat(mciMessage, ' alias son notify');
+			InsMciQueueString(mciMessage, 2);
+			StrCopy(mciMessage, 'play son notify');
+			InsMciQueueString(mciMessage, 3);
+			StrCopy(mciMessage, 'close son notify');
+			InsMciQueueString(mciMessage, 4);
+			StrPCopy(mciMessage, 'DisplayLed '+IntToStr(hLed_N));
+			InsMciQueueString(mciMessage, 5);
+		end;
+		ReponseTxtFileName(ReponseName, NoElev, lIndex);
+		if FileExist(ReponseName) then begin
+			StrPCopy(mciMessage, 'DisplayLed '+IntToStr(hLed_J));
+			InsMciQueueString(mciMessage, 6);
+			StrCopy(mciMessage, 'Display ');
+			StrCat(mciMessage,ReponseName);
+			InsMciQueueString(mciMessage, 7);
+			StrCopy(mciMessage, 'PAUSE 5000');
+			InsMciQueueString(mciMessage, 8);
+			StrPCopy(mciMessage, 'DisplayLed '+IntToStr(hLed_N));
+			InsMciQueueString(mciMessage, 9);
+		end;
+		ReponseRtfFileName(ReponseName, NoElev, lIndex);
+		if FileExist(ReponseName) then begin
+			StrPCopy(mciMessage, 'DisplayLed '+IntToStr(hLed_J));
+			InsMciQueueString(mciMessage, 6);
+			StrCopy(mciMessage, 'Display ');
+			StrCat(mciMessage,ReponseName);
+			InsMciQueueString(mciMessage, 7);
+			StrCopy(mciMessage, 'PAUSE 5000');
+			InsMciQueueString(mciMessage, 8);
+			StrPCopy(mciMessage, 'DisplayLed '+IntToStr(hLed_N));
+			InsMciQueueString(mciMessage, 9);
+		end;
+		pszMciWord := StrTok(nil, ' ');
+	end;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciPlayQuestion(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		lIndex 			: longint;
+		bXlate			: boolean;
+		tQuestion   : TypeQuestion;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+61, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		lIndex := longint(MciGetVal(pszMciWord, TRUE));
+		GetQuestionRec(lIndex, tQuestion);
+		if FileExist(tQuestion.FichierQuestion) then begin
+			StrPCopy(mciMessage, 'DISPLAYLED '+IntToStr(hLed_V));
+			InsMciQueueString(mciMessage, 0);
+			StrPCopy(mciMessage, 'SETVOLUME FROM ' + IntToStr(GetDlgItem(hLeconProc, 106)));
+			InsMciQueueString(mciMessage, 1);
+			StrCopy(mciMessage, 'OPEN ');
+			StrCat(mciMessage, tQuestion.FichierQuestion);
+			StrCat(mciMessage, ' ALIAS SON NOTIFY');
+			InsMciQueueString(mciMessage, 2);
+			StrCopy(mciMessage, 'PLAY SON NOTIFY');
+			InsMciQueueString(mciMessage, 3);
+			StrCopy(mciMessage, 'CLOSE SON NOTIFY');
+			InsMciQueueString(mciMessage, 4);
+			StrPCopy(mciMessage, 'DISPLAYLED '+IntToStr(hLed_N));
+			InsMciQueueString(mciMessage, 5);
+		end;
+		pszMciWord := StrTok(nil, ' ');
+	end;
+	PostMessage(hMciQueueProc,mm_MciNotify, 0, 0);
+end;
+
+function mciRecordAnswer(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		ReponseName : szLongName;
+		NoElev,
+		lIndex 			: longint;
+		bXlate			: bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+62, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		NoElev := GetDlgItemInt(hLeconProc, 5001, bXlate, FALSE);
+		lIndex := longint(MciGetVal(pszMciWord, TRUE));
+		GetQuestionRec(lIndex, tQuestion);
+		pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			tQuestion.DureeReponse := longint(MciGetVal(pszMciWord, TRUE));
+		end;
+		if tQuestion.DureeReponse < 0 then tQuestion.DureeReponse := 1;
+		ReponseFileName(ReponseName, NoElev, lIndex);
+		StrCopy(mciMessage, 'open new type waveaudio alias rec notify');
+		InsMciQueueString(mciMessage, 0);
+
+		StrPCopy(mciMessage, 'set rec '+
+													'time format ms '+
+													'channels '+IntToStr(1)+' '+
+													'bitspersample '+IntToStr(wNbBits)+' '+
+													'samplespersec '+IntToStr(FrequEch)+' '+
+													'alignment '+IntToStr(wNbBits DIV 8)+' '+
+													'bytespersec '+IntToStr(FrequEch * (wNbBits DIV 8))+' '+
+													{'format tag PCM '+}
+													'notify');
+		InsMciQueueString(mciMessage, 1);
+
+		StrPCopy(mciMessage, 'DisplayLed '+IntToStr(hLed_R));
+		InsMciQueueString(mciMessage, 2);
+
+		StrPCopy(mciMessage, 'record rec from 0 to '
+						 +IntToStr((tQuestion.DureeReponse * 1000 * DilateDuree) DIV 100 )
+						 +' notify');
+		InsMciQueueString(mciMessage, 3);
+
+		StrPCopy(mciMessage, 'DisplayLed '+IntToStr(hLed_N));
+		InsMciQueueString(mciMessage, 4);
+
+		StrCopy(mciMessage, 'save rec ');
+		StrCat(mciMessage,ReponseName);
+		StrCat(mciMessage, ' notify');
+		InsMciQueueString(mciMessage, 5);
+
+		StrCopy(mciMessage, 'close rec notify');
+		InsMciQueueString(mciMessage, 6);
+
+		StrCopy(mciMessage, 'Share ');
+		StrCat(mciMessage,ReponseName);
+		InsMciQueueString(mciMessage, 7);
+	end;
+	PostMessage(hMciQueueProc,mm_MciNotify, 0, 0);
+end;
+
+function mciSetStyle(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		hWin        : HWND;
+		dwStyle,
+		dwReturn		: DWORD;
+		rWin				: TRECT;
+		wSize				: WORD;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+63, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		hWin := HWND(MciGetVar(pszMciWord, wSize, TRUE));
+		pszMciWord := StrTok(nil, ' ');
+		if (pszMciWord <> nil) then begin
+			dwStyle := MciGetCst(pszMciWord, TRUE);
+
+			if dwStyle = DWORD(-1) then exit;
+
+			dwReturn := GetWindowLong(hWin, GWL_STYLE);
+
+			if dwStyle = WS_OVERLAPPED then dwReturn := (dwReturn OR WS_OVERLAPPEDWINDOW) AND NOT WS_MINIMIZEBOX;
+			if dwStyle = WS_CAPTION then dwReturn := (((((dwReturn OR WS_OVERLAPPEDWINDOW) AND NOT WS_MINIMIZEBOX)
+																		 AND NOT WS_MAXIMIZEBOX) AND NOT WS_SYSMENU) AND NOT WS_THICKFRAME) OR WS_BORDER
+																		 OR WS_THICKFRAME;{####Thickframe EDUCATEC...}
+			if dwStyle = WS_THICKFRAME then dwReturn := (((dwReturn OR WS_OVERLAPPEDWINDOW) AND NOT WS_MINIMIZEBOX)
+																		 AND NOT WS_CAPTION) OR WS_BORDER;
+			{if dwStyle = WS_BORDER then dwReturn := ((((dwReturn OR WS_OVERLAPPEDWINDOW) AND NOT WS_MINIMIZEBOX)
+																		 AND NOT WS_CAPTION) AND NOT WS_THICKFRAME) OR WS_BORDER;}
+
+			if dwStyle = WS_BORDER then dwReturn := (dwReturn AND NOT WS_OVERLAPPEDWINDOW) OR WS_DLGFRAME
+																		OR DS_MODALFRAME OR WS_SYSMENU OR WS_THICKFRAME;{####Thickframe EDUCATEC...}
+			SetWindowLong(hWin, GWL_STYLE, dwReturn);
+			GetWindowRect(hWin, rWin);
+			MapWindowPoints(0, Window, rWin, 2);
+			with rWin do begin
+				MoveWindow(hWin, left, top, right - left, bottom - top, TRUE);
+				ShowWindow(hWin, SW_SHOWNA);
+			end;
+		end;
+	end;
+	StrTok(nil, ' ');
+
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciCall(MciCommandPStr : PChar) : Bool;
+var hModule : THANDLE;
+		ProcAddr,
+		lpProcAddr : TFARPROC;
+		pszMciWord	: PChar;
+                pszURL	: PChar;
+		nType : TTyp;
+		bSize	: BYTE;
+		wSize : WORD;
+		wVal0	: WORD;
+		wVal2	: WORD;
+		dwVal : DWORD;
+                szModule  : Array[0..255] of Char;
+                szCommand  : Array[0..1024] of Char;
+                bVLC : Bool;
+                sxml : string;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+64, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+
+	{ --------------------------------------------------------------------- }
+	{ CALL MODULE FUNCTION (TYPE1) PARAM1 (TYPE2) PARAM2 (TYPE2) PARAM3 ... }
+	{ --------------------------------------------------------------------- }
+
+        bVLC := FALSE;
+        GetPrivateProfileString('LAVAC64', 'VLC_PATH', 'C:\Program Files (x86)\VideoLAN\VLC\vlc.exe', szCommand, SizeOf(szCommand), gszIni);
+        StrCat(szCommand, ' ');
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+
+		hModule := GetModuleHandle(pszMciWord); { Module }
+		if hModule = 0 then begin
+                   StrCopy(szModule, pszMciWord);
+                   StrCat(szModule, '32');
+                   hModule := GetModuleHandle(szModule); { Module }
+                end;
+		if hModule = 0 then begin
+			{####Charger la DLL...}
+		end else begin
+			pszMciWord := StrTok(nil, ' ');
+			if pszMciWord <> nil then begin
+				ProcAddr := GetProcAddress(hModule, pszMciWord); { function }
+				if ProcAddr = nil then begin
+        				ProcAddr := GetProcAddress(hModule, 'WinExec'); { function }
+                                end;
+                                if ProcAddr = nil then begin
+
+					MessageBox(Window, pszMciWord, 'Func syntax error !!!', MB_OK OR MB_APPLMODAL OR MB_ICONSTOP);
+				end else begin
+					lpProcAddr := TFARPROC(MakeProcInstance(longint(ProcAddr), hInstance));
+					pszMciWord := StrTok(nil, ' ');
+					while pszMciWord <> nil do begin { Param }
+						{ Write('<',pszMciWord,'>');}
+                			        // MessageBox(Window, pszMciWord, 'pszMciWord', MB_OK OR MB_APPLMODAL OR MB_ICONSTOP);
+						nType := TTyp(MciGetType(pszMciWord, FALSE));
+						if nType = TTyp(-1) then begin
+							if pszMciWord[0] = '"' then begin
+								pszMciWord := StrTok(nil, '"');
+								nType := TYP_STRING;
+							end else begin
+								MciGetVar(pszMciWord, wSize, FALSE);
+								case wSize of
+									0 : nType := TYP_WORD;
+									1 : nType := TYP_BYTE;
+									2 : nType := TYP_WORD;
+									else nType := TYP_DWORD;
+								end;
+							end;
+						end else begin
+							if nType = TYP_STRING then begin
+								pszMciWord := StrTok(nil, '"');
+							end else begin
+								pszMciWord := StrTok(nil, ' ');
+							end;
+						end;
+						if pszMciWord <> nil then begin
+							{ WriteLn ('<',pszMciWord,'>');}
+                					//MessageBox(Window, pszMciWord, 'pszMciWord', MB_OK OR MB_APPLMODAL OR MB_ICONSTOP);
+
+                                                        pszURL := StrPos(pszMciWord, ' ');
+                                                        if (pszURL <> nil) AND (strlicomp(pszURL, ' http://alturl.com', 16) = 0) then begin
+
+                                                                //MessageBox(Window, pszURL, 'pszURL', MB_OK OR MB_APPLMODAL OR MB_ICONSTOP);
+                                                                bVLC := TRUE;
+
+                                                                StrCat(szCommand, pszURL);
+                                                                if ShellExecute(0, Nil, szWriterApp, szNotesRtf, Nil, SW_SHOWNORMAL) <= 32 then begin
+                                                                  MessageBox(Window, szWriterApp, 'Impossible d''executer l''application (OpenOffice)', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+                                                                  if MessageBox(Window, 'Désirez vous être redirigé vers le site d''OpenOffice afin de le télécharger et de l''installer ?', 'Question', MB_YESNO OR MB_ICONQUESTION OR MB_APPLMODAL) = IDYES then begin
+                                                                    if ShellExecute(0, Nil, 'https://www.openoffice.org/fr/Telecharger/', '', Nil, SW_SHOWNORMAL) <= 32 then begin
+                                                                      MessageBox(Window, 'https://www.openoffice.org/fr/Telecharger/', 'Impossible d''accéder au site (OpenOffice)', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+                                                                    end;
+                                                                  end;
+                                                                end else begin
+                                                                  //MessageBox(Window, szWriterApp, szNotesRtf, MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+                                                                end;
+
+                                                        end;
+
+							case nType of
+								TYP_STRING :
+									begin
+										dwVal := DWORD(MciGetStr(pszMciWord, TRUE));
+										if StrPos(pszMciWord, ' ') <> nil then begin
+											while (pszMciWord <> nil) AND
+											      (StrPos(pszMciWord, '"') = nil) do begin { jette jusqu'à " }
+												pszMciWord := StrTok(nil, ' ');
+											end;
+
+										end;
+									end;
+								TYP_POINTER :
+									begin
+										dwVal := DWORD(MciGetVarPtr(pszMciWord, wSize, TRUE));
+									end;
+								else begin
+									dwVal := MciGetVar(pszMciWord, wSize, FALSE);
+									if dwVal = DWORD(-1) then	dwVal := MciGetCst(pszMciWord, FALSE);
+									if dwVal = DWORD(-1) then	dwVal := MciGetVal(pszMciWord, FALSE);
+									if dwVal = DWORD(-1) then	begin
+										bSize := BYTE(-1);
+										dwVal := wcGetCst(pszMciWord, bSize, TRUE);
+										if bSize <> BYTE(-1)then
+											case bSize of
+												2 : nType := TYP_WORD;
+												else nType := TYP_DWORD;
+											end;
+									end;
+								end;
+							end;
+							case nType of
+								TYP_BYTE,
+								TYP_WORD : wVal0 := WORD(dwVal);
+
+								TYP_STRING,
+								TYP_POINTER,
+								TYP_DWORD :
+									begin
+										wVal2 := HIWORD(dwVal);
+										wVal0 := LOWORD(dwVal);
+									end;
+							end;
+							case nType of
+								TYP_BYTE,
+								TYP_WORD :
+									asm
+										//push wVal0
+                                                                                push dwVal
+									end;
+
+								TYP_STRING,
+								TYP_POINTER,
+								TYP_DWORD :
+                                                                begin
+
+                                                                        //MessageBox(Window, PChar(dwVal), 'dwVal', MB_OK OR MB_APPLMODAL OR MB_ICONSTOP);
+                                                                        if bVLC then dwVal := DWORD(@szCommand[0]);
+									asm
+										//push wVal2
+										//push wVal0
+                                                                                push dwVal
+									end;
+
+                                                                end;
+                                                        end;
+							pszMciWord := StrTok(nil, ' ');
+						end;
+					end;
+					asm
+                                                pop eax
+                                                pop ebx
+                                                push eax
+                                                //lea ebx, szCommand
+                                                push ebx
+                                                xor eax, eax
+                                                //call WinExec
+						call lpProcAddr
+						//mov wVal0, ax
+						//mov wVal2, dx
+                                                mov dwVal, eax
+					end;
+					dwMciReturn := dwVal; // FIX LAVAC32 Makelong(wVal0, wVal2);
+					{ purge ... }
+					//FreeProcInstance(lpProcAddr);
+                                        if bVLC then if dwMciReturn <= 32 then begin
+                                          MessageBox(Window, szCommand, 'Impossible d''executer l''application (VLC)', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+
+                                          if MessageBox(Window, 'Désirez vous être redirigé vers le site de VLC afin de le télécharger et de l''installer ?', 'Question', MB_YESNO OR MB_ICONQUESTION OR MB_APPLMODAL) = IDYES then begin
+                                            if ShellExecute(0, Nil, 'http://www.videolan.org/vlc/', '', Nil, SW_SHOWNORMAL) <= 32 then begin
+                                              MessageBox(Window, 'http://www.videolan.org/vlc/', 'Impossible d''accéder au site (VLC)', MB_OK OR MB_ICONSTOP OR MB_APPLMODAL);
+                                            end;
+                                          end;
+
+                                        end;
+
+                                        MciGetStr(nil, FALSE);
+				end;
+			end;
+		end;
+	end;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciMsgBox(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		szFormat,
+		szTitle,
+		szDebug : Array[0..255]of char;
+		i				 : integer;
+		wArgList : Array[0..15]of WORD;
+		dwVal    : DWORD;
+		bSize		 : BYTE;
+		wSize		 : WORD;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+67, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, '"'); { prend "XXXXX" }
+	if pszMciWord <> nil then begin
+		StrCopy(szTitle, pszMciWord);
+		pszMciWord := StrTok(nil, '"'); { jette " " }
+		if pszMciWord <> nil then pszMciWord := StrTok(nil, '"');{ prend "XXXXX" }
+		if pszMciWord <> nil then begin
+			StrCopy(szFormat, pszMciWord);
+			if	StrPos(pszMciWord, ' ') <> nil then begin
+				while (pszMciWord <> nil) AND
+							(StrPos(pszMciWord, '"') = nil) do begin { jette _ jusqu'à " }
+					pszMciWord := StrTok(nil, ' ');
+				end;
+			end;
+			pszMciWord := StrTok(nil, ' ');
+			i := 0;
+			FillChar(wArgList, SizeOf(wArgList) * 2, 0);
+			while pszMciWord <> nil do begin { Param }
+				dwVal := MciGetVar(pszMciWord, wSize, FALSE);
+				if dwVal = DWORD(-1) then	dwVal := MciGetCst(pszMciWord, FALSE);
+				if dwVal = DWORD(-1) then	dwVal := MciGetVal(pszMciWord, FALSE);
+				if dwVal = DWORD(-1) then	begin
+					bSize := BYTE(-1);
+					dwVal := wcGetCst(pszMciWord, bSize, TRUE);
+					wSize := WORD(bSize);
+				end;
+				case wSize of
+					1, 2 : begin
+								wArgList[i] := WORD(dwVal);
+								inc(i);
+							end;
+					else begin
+								wArgList[i] := LOWORD(dwVal);
+								wArgList[i + 1] := HIWORD(dwVal);
+								inc(i, 2);
+							end;
+				end;
+				pszMciWord := StrTok(nil, ' ');
+			end;
+		end;
+		wvsprintf(szDebug, szFormat, @wArgList);
+		MessageBox(Window, szDebug, szTitle, MB_OK OR MB_APPLMODAL);
+	end;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciStop(MciCommandPStr : PChar) : Bool;
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+68, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	{ ne rien faire, ne pas passer à la suite ... }
+end;
+
+function mciPause(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		dwVal    		: DWORD;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+69, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	dwVal := DWORD(-1);
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		dwVal := MciGetVal(pszMciWord, FALSE);
+	end;
+	if (dwVal <> DWORD(-1)) AND
+		 (WORD(dwVal) <> WORD(-1)) then SetTimer(hMciQueueProc, 1, WORD(dwVal), nil);
+	{ Actionner le bouton Pause ... }
+	if NOT Pause then SendMessage(hBoutonsProc, WM_COMMAND, idb_Pause, 0);
+end;
+
+function ShowWaveProc(hWin : HWnd; Message, wParam: DWord;
+	lParam: Longint): Longint; StdCall;
+type
+		PAPOINT           = ^TAPOINT;
+		TAPOINT						= array[0..15000] of TPOINT;
+		PSHOWWAVE					= ^TSHOWWAVE;
+		TSHOWWAVE					= record
+													hThis			: THANDLE;
+													hPoints		: THANDLE;
+													pPoints		: PAPOINT;
+													nPoints		: integer;
+													dwRGB			: TCOLORREF;
+												end;
+const
+		hData       			: THANDLE = 0;
+		lpData      			: POINTER = nil;
+var
+		ps								: TPAINTSTRUCT;
+		dc								: HDC;
+		hMyMmio							: HMMIO;
+		mmckinfoParent,
+		mmckinfoSubchunk	: TMMCKINFO;
+		dwFmtSize					: DWORD;
+		hFormat						: THANDLE;
+		pFormat						: PWAVEFORMAT;
+		dwDataSize				: DWORD;
+		wChannels,
+		wBlockAlign				: WORD;
+		hWaveInst					: THANDLE;
+		i,
+		j,
+		min,
+		max,
+		Sample,
+		nBlockSize,
+		nTop,
+		nBase							: integer;
+		lOfs							: longint;
+		pt								: TPOINT;
+		rc								: TRECT;
+		wSize							: WORD;
+		hMyPen,
+		hOldPen						: HPEN;
+		pSample						: POINTER;
+		hSWave						: THANDLE;
+		pSWave						: PSHOWWAVE;
+		hOldCursor				: HCURSOR;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+70, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pSWave := PSHOWWAVE(GetWindowLong(hWin, 0));
+	case Message of
+
+		WM_CREATE :	begin
+
+			{ Allocate and lock memory for the window instance struct. }
+			hSWave := GlobalAlloc(GMEM_MOVEABLE , SizeOf(TSHOWWAVE));
+												 { GMEM_SHARE is not needed on 32 bits }
+			if (hSWave = 0)  then	begin
+					MessageBox(GetActiveWindow, 'Out of memory.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					exit;
+			end;
+
+			pSWave := GlobalLock(hSWave);
+			if (pSWave = nil) then begin
+					MessageBox(GetActiveWindow, 'Failed to lock memory.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					GlobalFree(hSWave);
+					exit;
+			end;
+
+			pSWave^.hThis := hSWave;
+			SetWindowLong(hWin, 0, DWORD(pSWave));
+
+			{ Open the given file for reading using buffered I/O. }
+			hMyMmio := mmioOpen(PCreateStruct(lParam)^.lpszName, nil, MMIO_READ OR MMIO_ALLOCBUF);
+			if hMyMmio = 0 then	begin
+					MessageBox(GetActiveWindow, 'Failed to open file.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					exit;
+			end;
+
+			{ Locate a 'RIFF' chunk with a 'WAVE' form type
+			 * to make sure it's a WAVE file.	 }
+			mmckinfoParent.fccType := mmioStringToFOURCC('WAVE', 0);
+			if mmioDescend(hMyMmio, @mmckinfoParent, nil, MMIO_FINDRIFF) <> 0 then begin
+					MessageBox(GetActiveWindow, 'This is not a WAVE file.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					mmioClose(hMyMmio, 0);
+					exit;
+			end;
+
+			{ Now, find the format chunk (form type 'fmt '). It should be
+			 * a subchunk of the 'RIFF' parent chunk.	 }
+			mmckinfoSubchunk.ckid := mmioStringToFOURCC('fmt ', 0);
+			if mmioDescend(hMyMmio, @mmckinfoSubchunk, @mmckinfoParent, MMIO_FINDCHUNK) <> 0 then begin
+					MessageBox(GetActiveWindow, 'WAVE file is corrupted.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					mmioClose(hMyMmio, 0);
+					exit;
+			end;
+
+			{ Get the size of the format chunk, allocate and lock memory for it.	 }
+			dwFmtSize := mmckinfoSubchunk.cksize;
+			hFormat := GlobalAlloc(GMEM_MOVEABLE , LOWORD(dwFmtSize));
+			if hFormat = 0 then	begin
+					MessageBox(GetActiveWindow, 'Out of memory.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					mmioClose(hMyMmio, 0);
+					exit;
+			end;
+
+			pFormat := PWAVEFORMAT(GlobalLock(hFormat));
+			if pFormat = nil then	begin
+					MessageBox(GetActiveWindow, 'Failed to lock memory for format chunk.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					GlobalFree(hFormat);
+					mmioClose(hMyMmio, 0);
+					exit;;
+			end;
+
+			{ Read the format chunk. }
+			if mmioRead(hMyMmio, PChar(pFormat), dwFmtSize) <> dwFmtSize then begin
+					MessageBox(GetActiveWindow, 'Failed to read format chunk.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					GlobalUnlock( hFormat );
+					GlobalFree( hFormat );
+					mmioClose(hMyMmio, 0);
+					exit;
+			end;
+
+			{ Make sure it's a PCM file. }
+			if pFormat^.wFormatTag <> WAVE_FORMAT_PCM then begin
+					GlobalUnlock( hFormat );
+					GlobalFree( hFormat );
+					mmioClose(hMyMmio, 0);
+					MessageBox(GetActiveWindow, 'The file is not a PCM file.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					exit;
+			end;
+
+			{ Ascend out of the format subchunk. }
+			mmioAscend(hMyMmio, @mmckinfoSubchunk, 0);
+
+			{ Find the data subchunk. }
+			mmckinfoSubchunk.ckid := mmioStringToFOURCC('data', 0);
+			if mmioDescend(hMyMmio, @mmckinfoSubchunk, @mmckinfoParent,	MMIO_FINDCHUNK) <> 0 then begin
+					MessageBox(GetActiveWindow, 'WAVE file has no data chunk.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					GlobalUnlock( hFormat );
+					GlobalFree( hFormat );
+					mmioClose(hMyMmio, 0);
+					exit;
+			end;
+
+			{ Get the size of the data subchunk. }
+			dwDataSize := mmckinfoSubchunk.cksize;
+			if dwDataSize = 0 then	begin
+					MessageBox(GetActiveWindow, 'The data chunk has no data.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					GlobalUnlock( hFormat );
+					GlobalFree( hFormat );
+					mmioClose(hMyMmio, 0);
+					exit;
+			end;
+
+			{ Save block alignment info for later use. }
+			wBlockAlign := pFormat^.nBlockAlign;
+			wChannels := pFormat^.nChannels;
+
+			{ We're done with the format header, free it. }
+			GlobalUnlock( hFormat );
+			GlobalFree( hFormat );
+
+			{ Allocate and lock memory for the waveform data. }
+			hData := GlobalAlloc(GMEM_MOVEABLE , dwDataSize );
+												 { GMEM_SHARE is not needed on 32 bits }
+			if (hData = 0)  then	begin
+					MessageBox(GetActiveWindow, 'Out of memory.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					mmioClose(hMyMmio, 0);
+					exit;
+			end;
+
+			lpData := GlobalLock(hData);
+			if (lpData = nil) then begin
+					MessageBox(GetActiveWindow, 'Failed to lock memory.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					GlobalFree( hData );
+					mmioClose(hMyMmio, 0);
+					exit;
+			end;
+
+			{ Read the waveform data subchunk. }
+			hOldCursor := SetCursor(LoadCursor(0, IDC_WAIT));
+			SetCapture(hWin);
+			if mmioRead(hMyMmio, PChar(lpData), dwDataSize) <> dwDataSize then	begin
+					MessageBox(GetActiveWindow, 'Failed to read data chunk.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					GlobalUnlock( hData );
+					GlobalFree( hData );
+					mmioClose(hMyMmio, 0);
+					SetCursor(hOldCursor);
+					ReleaseCapture;
+					exit;
+			end;
+			SetCursor(hOldCursor);
+			ReleaseCapture;
+
+			{ We're done with the file, close it. }
+			mmioClose(hMyMmio, 0);
+			pSWave^.dwRGB := TCOLORREF(PCreateStruct(lParam)^.lpCreateParams);
+			GetClientRect(hWin, rc);
+			nBase := (rc.bottom - rc.top) DIV 2;
+			pSWave^.nPoints := (rc.right - rc.left) * 2;
+			if pSWave^.nPoints = 0 then begin
+				exit;
+			end;
+			nBlockSize := dwDataSize DIV wBlockAlign DIV pSWave^.nPoints * 2;
+
+			{ Allocate and lock memory for the waveform data. }
+			pSWave^.hPoints := GlobalAlloc(GMEM_MOVEABLE , pSWave^.nPoints * SizeOf(TPOINT));
+												 { GMEM_SHARE is not needed on 32 bits }
+			if (pSWave^.hPoints = 0) then	begin
+					MessageBox(GetActiveWindow, 'Out of memory.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					exit;
+			end;
+
+			pSWave^.pPoints := PAPOINT(GlobalLock(pSWave^.hPoints));
+			if (pSWave^.pPoints = nil) then begin
+					MessageBox(GetActiveWindow, 'Failed to lock memory.',
+										 'mmWave', MB_OK OR MB_ICONEXCLAMATION);
+					GlobalFree(pSWave^.hPoints);
+					exit;
+			end;
+
+			hOldCursor := SetCursor(LoadCursor(0, IDC_WAIT));
+			SetCapture(hWin);
+			{$IFOPT R+}
+				{$R-}
+				{$DEFINE _RANGE_ON}
+			{$ENDIF}
+			{ Prepare the point array. }
+			i := 0;
+			lOfs := 0;
+			Sample := 0;
+			wSize := wBlockAlign DIV wChannels;
+			case wSize of
+				1 :	begin
+							nTop := 255;
+							inc(nBase, nBase);
+						end;
+				2 :	nTop := 32767;
+			end;
+			while i < pSWave^.nPoints do begin
+				min := nTop;
+				max := -nTop;
+				j := 0;
+				while j < nBlockSize do begin
+       					//pSample := Ptr(PtrRec(lpData).Hi + PtrRec(lOfs).Hi * Ofs(AHIncr),PtrRec(lOfs).Lo);
+       					pSample := lpData + lOfs;
+					Move(pSample^, Sample, wSize);
+					if Sample > max then max := Sample;
+					if Sample < min then min := Sample;
+					inc(lOfs, wBlockAlign);
+					inc(j);
+				end;
+				pSWave^.pPoints^[i].x := i DIV 2;
+				pSWave^.pPoints^[i].y := integer(nBase - MulDiv(min, nBase, nTop));
+				inc(i);
+				pSWave^.pPoints^[i].x := pSWave^.pPoints^[i - 1].x;
+				pSWave^.pPoints^[i].y := integer(nBase - MulDiv(max, nBase, nTop));
+				inc(i);
+			end;
+			{$IFDEF _RANGE_ON}
+				{$R+}
+				{$UNDEF _RANGE_ON}
+			{$ENDIF}
+			SetCursor(hOldCursor);
+			ReleaseCapture;
+
+			{ Unlock and free memory for the waveform data. }
+			GlobalUnlock( hData );
+			GlobalFree( hData );
+			BringWindowToTop(hWin);
+			FlashWindow(hWin, TRUE);
+		end;
+
+		{ test for moving }
+		{WM_NCHITTEST : begin
+			GetClientRect(hWin, rc);
+			pt.x := integer(LOWORD(lParam));
+			pt.y := integer(HIWORD(lParam));
+			ScreenToClient(hWin, pt);
+			if PtInRect(rc, pt) then begin
+				ShowWaveProc := HTCAPTION;
+				Exit;
+			end;
+		end;}
+
+		WM_PAINT : begin
+			{ Display the sound. }
+			dc := BeginPaint(hWin, ps);
+			hMyPen := CreatePen(PS_SOLID, 1, pSWave^.dwRGB);
+			{PatBlt(DC, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, Blackness);}
+			hOldPen := SelectObject(DC, hMyPen);
+			PolyLine(dc, TPOINT(pSWave^.pPoints^[0]), pSWave^.nPoints);
+			SelectObject(DC, hOldPen);
+			DeleteObject(hMyPen);
+			EndPaint(hWin, ps);
+		end;
+
+		WM_MOUSEACTIVATE : begin
+			DestroyWindow(hWin);
+		end;
+
+		WM_DESTROY : begin
+			{ Unlock and free memory for the waveform point array. }
+			GlobalUnlock(pSWave^.hPoints);
+			GlobalFree(pSWave^.hPoints);
+			{ Unlock and free memory for the window instance struct. }
+			hData := pSWave^.hThis;
+			GlobalUnlock(hData);
+			GlobalFree(hData);
+		end;
+	end;
+	ShowWaveProc := DefWindowProc(hWin, Message, wParam, lParam);
+end;
+
+function mciShowWave(MciCommandPStr : PChar) : Bool;
+var pszMciWord				: PChar;
+		hWin  			      : HWND;
+		rc								: TRECT;
+		nVal							: integer;
+		bVal,
+		R,
+		G,
+		B									: BYTE;
+		szFileName				: szLongName;
+		NoElev,
+		lIndex 						: longint;
+		bXlate						: bool;
+		tQ								: TypeQuestion;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+71, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		if StrComp(pszMciWord, 'ANSWER') = 0 then begin
+			pszMciWord := StrTok(nil, ' ');
+			if pszMciWord <> nil then begin
+				NoElev := GetDlgItemInt(hLeconProc, 5001, bXlate, FALSE);
+				lIndex := longint(MciGetVal(pszMciWord, TRUE));
+				ReponseFileName(szFileName, NoElev, lIndex);
+			end;
+		end else begin
+			if StrComp(pszMciWord, 'QUESTION') = 0 then begin
+				pszMciWord := StrTok(nil, ' ');
+				if pszMciWord <> nil then begin
+					lIndex  := longint(MciGetVal(pszMciWord, TRUE));
+					GetQuestionRec(lIndex, tQ);
+					StrCopy(szFileName, tQ.FichierQuestion);
+				end;
+			end else begin
+				StrCopy(szFileName, pszMciWord);
+			end;
+		end;
+		rc.left := 0;
+		rc.top := 0;
+		rc.right := 640;
+		rc.bottom := 200;
+		pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			nVal := integer(MciGetParam(pszMciWord, FALSE));
+			if nVal <> -1 then rc.left := nVal;
+		end;
+		if pszMciWord <> nil then pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			nVal := integer(MciGetParam(pszMciWord, FALSE));
+			if nVal <> -1 then rc.top := nVal;
+		end;
+		if pszMciWord <> nil then pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			nVal := integer(MciGetParam(pszMciWord, FALSE));
+			if nVal <> -1 then rc.right := nVal;
+		end;
+		if pszMciWord <> nil then pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			nVal := integer(MciGetParam(pszMciWord, FALSE));
+			if nVal <> -1 then rc.bottom := nVal;
+		end;
+		AdjustRectToDesktop(rc);
+		R := 0;
+		G := 255;
+		B := 0;
+		if pszMciWord <> nil then pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			R := BYTE(MciGetParam(pszMciWord, FALSE));
+		end;
+		if pszMciWord <> nil then pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			G := BYTE(MciGetParam(pszMciWord, FALSE));
+		end;
+		if pszMciWord <> nil then pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			B := BYTE(MciGetParam(pszMciWord, FALSE));
+		end;
+		if FileExist(szFileName) then begin
+			hWin := CreateWindow(
+				'ShowWave',
+				szFileName,
+				WS_CHILD OR WS_VISIBLE OR WS_CLIPSIBLINGS OR WS_DLGFRAME,
+				rc.left,
+				rc.top,
+				rc.right,
+				rc.bottom,
+				window,
+				0,
+				hInstance,
+				PChar(RGB( R, G, B)));
+			ShowWindow(hWin, SW_SHOW);
+			UpdateWindow(hWin);
+			dwMciReturn := DWORD(hWin);
+		end;
+	end;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciMciWnd(MciCommandPStr : PChar) : Bool;
+var pszMciWord				: PChar;
+		hWin  			      : HWND;
+		szName						: szLongName;
+		szFileName				: szLongName;
+		NoElev,
+		lIndex 						: longint;
+		bXlate						: bool;
+		tQ								: TypeQuestion;
+		nX,
+		nY,
+		nW,
+		code							: integer;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+72, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		StrCopy(szName, 'Son');
+		if StrComp(pszMciWord, 'ANSWER') = 0 then begin
+			pszMciWord := StrTok(nil, ' ');
+			if pszMciWord <> nil then begin
+				StrCopy(szName, 'Réponse son');
+				StrCat(szName, pszMciWord);
+				NoElev := GetDlgItemInt(hLeconProc, 5001, bXlate, FALSE);
+				lIndex := longint(MciGetVal(pszMciWord, TRUE));
+				ReponseFileName(szFileName, NoElev, lIndex);
+			end;
+		end else begin
+			if StrComp(pszMciWord, 'QUESTION') = 0 then begin
+				pszMciWord := StrTok(nil, ' ');
+				if pszMciWord <> nil then begin
+					lIndex  := longint(MciGetVal(pszMciWord, TRUE));
+					GetQuestionRec(lIndex, tQ);
+					StrCopy(szFileName, tQ.FichierQuestion);
+					StrCopy(szName, tQ.nom);
+				end;
+			end else begin
+				StrCopy(szFileName, pszMciWord);
+			end;
+		end;
+
+		//hWin := MciWndCreate(szFileName,
+                //		 WS_CHILD OR WS_OVERLAPPED OR
+		//                 WS_CAPTION OR WS_THICKFRAME OR WS_SYSMENU OR
+		//                 MCIWNDF_NOERRORDLG OR
+		//                 MCIWNDF_NOMENU,
+		//                 hInstance, Window);
+
+                hWin := MciWndCreate(Window, hInstance,
+                		 WS_CHILD OR WS_OVERLAPPED OR
+		                 WS_CAPTION OR WS_THICKFRAME OR WS_SYSMENU OR
+		                 MCIWNDF_NOERRORDLG OR
+		                 MCIWNDF_NOMENU,
+		                 szFileName);
+
+		pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then begin
+			If (pszMciWord <> Nil) AND (StrComp(pszMciWord, 'AT') = 0) Then Begin
+				pszMciWord := StrTok(nil, ' ');
+				If pszMciWord <> Nil Then
+						Val(pszMciWord,nX,Code);
+				pszMciWord := StrTok(nil, ' ');
+				If (pszMciWord <> Nil) AND (Code = 0) Then
+						Val(pszMciWord,nY,Code);
+				pszMciWord := StrTok(nil, ' ');
+				If (pszMciWord <> Nil) AND (Code = 0) Then
+						Val(pszMciWord,nW,Code);
+
+				SetWindowPos(hWin, 0, nX, nY, nW, 0, SWP_NOZORDER);
+
+			End;
+		End;
+
+		SetwindowText(hWin, szName);
+		FlashWindow(hWin, TRUE);
+		BringWindowToTop(hWin);
+		ShowWindow(hWin, SW_SHOW);
+
+		SendMessage(hWin, MCI_PLAY, 0, 0);
+
+	end;
+	dwMciReturn := hWin;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciLet(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		pVar				: POINTER;
+		dwStock  		: DWORD;
+		dwVal    		: DWORD;
+		wResSize		: WORD;
+		bSize				: BYTE;
+		wSize				: WORD;
+		szOp				: Array[0..255] of char;
+		bNot 				: BOOL;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+73, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	if pszMciWord <> nil then begin
+		pVar := MciGetVarPtr(pszMciWord, wResSize, TRUE);
+		pszMciWord := StrTok(nil, ' '); { récupère le = }
+		if (pszMciWord <> nil) AND
+			 (pszMciWord[0] = '=') then pszMciWord := StrTok(nil, ' '); { récupère la valeur }
+		StrCopy(szOp, '=');
+		dwStock := 0;
+		while pszMciWord <> nil do begin { Param }
+			dwVal := DWORD(-1);
+			if pszMciWord[0] = '@' then
+				dwVal := DWORD(MciGetVarPtr(PCHAR(@pszMciWord[1]), wSize, FALSE));
+			if pszMciWord[0] = '#' then begin
+				dwVal := DWORD(MciGetVarPtr(PCHAR(@pszMciWord[1]), wSize, FALSE));
+				writeln(PChar(dwVal));
+				if dwVal <> 0 then dwVal := MciGetVal(PCHAR(dwVal), FALSE);
+				writeln(dwVal);
+			end;
+			if pszMciWord[0] = '!' then begin
+				pszMciWord := PChar(@pszMciWord[1]);
+				bNot := TRUE;
+			end else begin
+				bNot := FALSE;
+			end;
+			if dwVal = DWORD(-1) then dwVal := MciGetVar(pszMciWord, wSize, FALSE);
+			if dwVal = DWORD(-1) then	dwVal := MciGetCst(pszMciWord, FALSE);
+			if dwVal = DWORD(-1) then	dwVal := MciGetVal(pszMciWord, FALSE);
+			if dwVal = DWORD(-1) then	begin
+				bSize := BYTE(-1);
+				dwVal := wcGetCst(pszMciWord, bSize, TRUE);
+				wSize := WORD(bSize);
+			end;
+			if bNot then dwVal := NOT dwVal;
+			case szOp[0] of
+				'=' : dwStock := dwVal;
+				'+' : inc(dwStock, dwVal);
+				'-' : dec(dwStock, dwVal);
+				'/' : dwStock := dwStock DIV dwVal;
+				'*' : dwStock := dwStock * dwVal;
+				'|' : dwStock := dwStock OR dwVal;
+				'&' : dwStock := dwStock AND dwVal;
+				'^' : dwStock := dwStock XOR dwVal;
+			end;
+			if pVar <> nil then begin
+				case wResSize of
+					1 : BYTE(pVar^) := BYTE(dwStock);
+					2 : WORD(pVar^) := WORD(dwStock);
+					else DWORD(pVar^) := dwStock;
+				end;
+			end;
+			pszMciWord := StrTok(nil, ' '); { récupère l'opérateur }
+			if pszMciWord <> nil then  begin
+				StrCopy(szOp, pszMciWord);
+				pszMciWord := StrTok(nil, ' '); { récupère la valeur }
+			end;
+		end;
+	end;
+	PostMessage(hMciQueueProc,mm_MciNotify,0,0);
+end;
+
+function mciRemoveXtraSpace(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		szCopy 			: TMCISTR;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+74, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	pszMciWord := StrPos(MciCommandPStr, '  ');
+	while pszMciWord <> nil do begin
+		StrCopy(pszMciWord, PCHAR(@pszMciWord[1]));
+		pszMciWord := StrPos(MciCommandPStr, '  ');
+	end;
+end;
+
+function mciPreProcess(MciCommandPStr : PChar) : Bool;
+var pszMciWord	: PChar;
+		dwVar				: DWORD;
+		szVar 			: Array[0..11] of char;
+		szCopy 			: TMCISTR;
+		wSize				: WORD;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+75, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	StrCopy(szCopy, MciCommandPStr);
+	pszMciWord := StrPos(szCopy, ' ');
+	if pszMciWord <> nil then pszMciWord[1] := #0;
+	pszMciWord := StrTok(MciCommandPStr, ' ');
+	while pszMciWord <> nil do begin
+		if StrPos(pszMciWord, '$' ) <> nil then begin
+			dwVar := MciGetVar(pszMciWord, wSize, TRUE);
+			StrPCopy(szVar, IntToStr(dwVar));
+			StrCat(szCopy, szVar);
+		end else begin
+			StrCat(szCopy, pszMciWord);
+		end;
+		pszMciWord := StrTok(nil, ' ');
+		if pszMciWord <> nil then StrCat(szCopy, ' ');
+	end;
+	StrCopy(MciCommandPStr, szCopy);
+end;
+
+function MciQueueProc(Dialog: HWnd; Message, WParam: DWord;
+	LParam: Longint): Bool; stdcall;
+
+var MciUppCmdStr		: TMCISTR;
+		MciCommandStr		: TMCISTR;
+		{$IFDEF _DEBUG}
+		pMciCommandStr	: PCHAR;
+		{$ENDIF _DEBUG}
+		MciErrorStr			: TMCISTR;
+		MciReturnStr		: TMCISTR;
+		dwReturn 				: DWORD;
+		CurCmd					: TCmd;
+		pszMciWord			: PChar;
+		dc							: HDC;
+		rc							: TRECT;
+		hBr							: HBRUSH;
+
+const nDelay	: integer = 0;
+			nRec		: integer = 0;
+			nIn			: integer = 0;
+			{$IFDEF _DEBUG}
+			pszRet	: PCHAR = nil;
+			szRet		: ARRAY[0..255] of char = 'UNKNOWN !';
+			szWM		: PCHAR = 'WM_';
+			bSize		: BYTE = 2;
+			{$ENDIF _DEBUG}
+
+label ExitThisProc;
+
+begin
+
+	{$IFDEF _DEBUG}
+	AddDebugFunction(FUNC_MMMCI, nFUNC_MMMCI+76, 0, 0, 0, nil, TRUE);
+	{$ENDIF}
+
+	MciQueueProc := TRUE;
+
+	inc(nIn);
+	{$IFDEF _DEBUG}
+	bSize := 2;
+	if Message = MM_MCINOTIFY then begin
+		StrCopy(szRet, 'MM_MCINOTIFY');
+	end else begin
+		FindCst(szWM, Message, szRet, SizeOf(szRet), bSize, FALSE);
+	end;
+	pszRet := @szRet;
+	if nIn = 1 then begin
+		AddDebugText(DBG_MCI, 'In  MciQueueProc(%d) :'+#9+'%s', @nIn, TRUE);
+	end else begin
+		AddDebugText(DBG_MCI, 'WARNING !!! In  MciQueueProc(%d) :'+#9+'%s', @nIn, TRUE);
+	end;
+	{$ENDIF _DEBUG}
+
+	if nIn <> 1 then begin
+		{PostMessage(window, UM_ENGINEOVERRUN, nIn, 0);}
+		goto ExitThisProc;
+	end;
+
+	case Message of
+		wm_InitDialog:
+			begin
+			end;
+
+		mm_MCINOTIFY :
+			if NOT Pause then begin
+
+				nRec := 0;
+
+				if NOT GetMciQueueString(@MciCommandStr) then goto ExitThisProc;
+
+				if MciCommandStr[0] = #0 then begin
+						PostMessage(Dialog,mm_MciNotify,0,0);
+						goto ExitThisProc;
+				end;
+
+				mciRemoveXtraSpace(MciCommandStr);
+
+				StrCopy(MciUppCmdStr, MciCommandStr);
+				StrUpper(MciUppCmdStr);
+
+				pszMciWord := StrPos(MciUppCmdStr, ' ');
+				if pszMciWord <> nil then pszMciWord^ := #0;
+				CurCmd := CMD_FIRST;
+				while (CurCmd <= CMD_LAST) AND
+							(StrComp(MciUppCmdStr, CmdMap[CurCmd].cmd ) <> 0) do begin
+					inc(CurCmd);
+				end;
+				if pszMciWord <> nil then pszMciWord^ := ' ';
+
+				if CurCmd <= CMD_LAST then begin
+					{ appel de la fonction lavac }
+					{$IFDEF _DEBUG}
+					pMciCommandStr := @MciCommandStr;
+					AddDebugText(DBG_MCI, 'Calling : %s', @pMciCommandStr, TRUE);
+					{$ENDIF _DEBUG}
+					CmdMap[CurCmd].func(@MciCommandStr);
+				end else begin
+
+					StrUpper(MciCommandStr);
+
+					{ pré traitement de la commande MCI }
+					mciPreProcess(MciCommandStr);
+
+					{ détection des ouverture et fermeture au cas ou ouvert }
+					if StrPos(MciCommandStr, 'OPEN' ) = MciCommandStr then begin
+						if StrPos(MciCommandStr, 'ALIAS' ) <> nil then begin
+							pszMciWord := StrTok(StrPos(MciCommandStr, 'ALIAS' ), ' ');
+						end else begin
+							pszMciWord := StrTok(StrPos(MciCommandStr, 'OPEN' ), ' ');
+						end;
+						if pszMciWord <> nil Then begin
+							StrCopy(MciReturnStr, 'CLOSE ');
+							StrCat(MciReturnStr, pszMciWord);
+							StrCat(MciReturnStr, ' WAIT');
+							mciSendString(@MciReturnStr, nil, 0, 0);
+						end;
+						pszMciWord := StrTok(nil, ' ');
+					end;
+
+					{ envoi de la commande MCI }
+					dwReturn := mciSendString(@MciCommandStr,@MciReturnStr,SizeOf(MciReturnStr)-1,Dialog);
+					dwMciReturn := DWORD(@MciReturnStr);
+
+					{ si erreur MCI... }
+					if dwReturn <> 0 then begin
+						if Bool(mciGetErrorString(dwReturn,@MciErrorStr,SizeOf(MciErrorStr))) then begin
+							MessageBox(Dialog,MciErrorStr,MciCommandStr,MB_OK + MB_ICONSTOP OR MB_APPLMODAL);
+						end;
+						PostMessage(Dialog,mm_MciNotify,0,0);
+					{ sinon }
+					end else begin
+						{ post traitement de la commande MCI }
+
+						{ envoie NOTIFY si pas fait => commande MCI immediate }
+						if StrPos(MciCommandStr, 'NOTIFY' ) = nil then
+							PostMessage(Dialog,mm_MciNotify,0,0);
+
+						{ détection des ouverture et stockage des alias => fermetures si stop }
+						if StrPos(MciCommandStr, 'OPEN' ) = MciCommandStr then begin
+							if StrPos(MciCommandStr, 'ALIAS' ) <> nil then begin
+								pszMciWord := StrTok(StrPos(MciCommandStr, 'ALIAS' ), ' ');
+							end else begin
+								pszMciWord := StrTok(StrPos(MciCommandStr, 'OPEN' ), ' ');
+							end;
+							if pszMciWord <> nil Then begin
+								StrCopy(MciReturnStr, 'CLOSE ');
+								StrCat(MciReturnStr, pszMciWord);
+								AddMciCloseQueueString(MciReturnStr);
+							end;
+							pszMciWord := StrTok(nil, ' ');
+						end;
+
+						{ détection des fermeture et destockage des alias => pas de fermetures si stop }
+						if StrPos(MciCommandStr, 'CLOSE' ) = MciCommandStr then begin
+							pszMciWord := StrPos(MciCommandStr, 'NOTIFY');
+							if pszMciWord <> nil then pszMciWord[0] := #0;
+							pszMciWord := StrPos(MciCommandStr, 'WAIT');
+							if pszMciWord <> nil then pszMciWord[0] := #0;
+							dwReturn := SendDlgItemMessage(hMciQueueProc,idmq_ListeMciClose,LB_FINDSTRINGEXACT,WORD(-1),DWORD(@MciCommandStr));
+							if dwReturn = LB_ERR then begin
+								StrCat(MciCommandStr, ' NOTIFY');
+								dwReturn := SendDlgItemMessage(hMciQueueProc,idmq_ListeMciClose,LB_FINDSTRINGEXACT,WORD(-1),DWORD(@MciCommandStr));
+							end;
+							if dwReturn = LB_ERR then begin
+								StrCat(MciCommandStr, ' WAIT');
+								dwReturn := SendDlgItemMessage(hMciQueueProc,idmq_ListeMciClose,LB_FINDSTRINGEXACT,WORD(-1),DWORD(@MciCommandStr));
+							end;
+							if dwReturn <> LB_ERR then begin
+								SendDlgItemMessage(hMciQueueProc,idmq_ListeMciClose,LB_DELETESTRING,WORD(dwReturn),DWORD(0));
+							end;
+						end;
+
+					end;
+				end;
+
+			end;
+
+		wm_MouseActivate:
+			begin
+				BringWindowToTop(Dialog);
+			end;
+
+		WM_TIMER :
+			case wParam of
+				1 : begin
+				         if Pause then PostMessage(hBoutonsProc, WM_COMMAND, idb_Pause, 0);
+					    KillTimer(Dialog, wParam);
+					 end;
+
+				2 : begin
+							if NOT Pause then begin
+								inc(nRec);
+								dc := GetDC(GetDlgItem(hBoutonsProc, 113));
+								GetClientRect(GetDlgItem(hBoutonsProc, 113), rc);
+								rc.top := rc.bottom - 7;
+								rc.right := MulDiv(rc.right, nRec, 65);
+								InflateRect(rc, -1, -1);
+								//if NOT RecordingR OR (SendDlgItemMessage(hBoutonsProc, 113, STM_GETICON, 0, 0) <> hLed_R) then begin
+                						//if NOT RecordingR or (SendDlgItemMessage( hBoutonsProc, 113, BM_GETIMAGE, IMAGE_ICON, 0 ) <> hLed_R) then begin
+                        					if NOT RecordingR then begin
+									//AfficheLed(hLed_N);
+									KillTimer(Dialog, wParam);
+									ReleaseDC(GetDlgItem(hBoutonsProc, 113), dc);
+									InvalidateRect(GetDlgItem(hBoutonsProc, 113), @rc, TRUE);
+									nRec := 0;
+									goto ExitThisProc;
+								end;
+								if PriseNotes then
+                                                                    hBr := CreateSolidBrush(RGB(226, 226, 55))
+                                                                else
+                                                                    hBr := CreateSolidBrush(RGB(226, 55, 55));
+								FillRect(dc, rc, hBr);
+								DeleteObject(hBr);
+								ReleaseDC(GetDlgItem(hBoutonsProc, 113), dc);
+								if nRec >= 64 then begin
+									AfficheLed(hLed_N);
+									KillTimer(Dialog, wParam);
+									InvalidateRect(GetDlgItem(hBoutonsProc, 113), @rc, TRUE);
+									nRec := 0;
+								end;
+							end else begin
+								GetClientRect(GetDlgItem(hBoutonsProc, 113), rc);
+								rc.top := rc.bottom - 10;
+								rc.right := MulDiv(rc.right, nRec, 11);
+								InflateRect(rc, -1, -1);
+								InvalidateRect(GetDlgItem(hBoutonsProc, 113), @rc, TRUE);
+							end;
+						end;
+
+				3 : begin
+
+							inc(nDelay);
+							{ éviter débordement }
+							if nDelay > nVideoWaveDelay then begin
+								nDelay := nVideoWaveDelay + 1;
+							end;
+
+							if bVideoWave then begin
+								{ jouer le son }
+								if nDelay = nVideoWaveDelay then begin
+									mciSendString('PLAY SON', nil, 0, 0);
+								end;
+							end;
+
+							StrCopy(MciCommandStr, 'STATUS VIDEO MODE WAIT');
+							if SendMci(MciCommandStr, @MciReturnStr, 0) = 0 then begin
+								if (StrPos(StrUpper(MciReturnStr), 'AR') <> nil) OR
+									 (StrPos(StrUpper(MciReturnStr), 'ST') <> nil)then begin
+									if nDelay > 0 then begin
+										mciSendString('CLOSE VIDEO WAIT', nil, 0, 0);
+										mciSendString('CLOSE SON WAIT', nil, 0, 0);
+										PostMessage(hMciQueueProc, mm_MciNotify, 0, 0);
+										KillTimer(Dialog, wParam);
+									end;
+									nDelay := 0;
+								end;
+							end else begin
+								PostMessage(hMciQueueProc, mm_MciNotify, 0, 0);
+								KillTimer(Dialog, wParam);
+								nDelay := 0;
+								goto ExitThisProc;
+							end;
+
+						end;
+			end;
+
+		wm_Command:
+			case LoWord(wParam) of
+				idb_PlayQ:
+					begin
+					end;
+			end;
+	end;
+
+ExitThisProc :
+
+	{$IFDEF _DEBUG}
+	if nIn = 1 then begin
+		AddDebugText(DBG_MCI, 'Out MciQueueProc(%d)', @nIn, TRUE);
+	end else begin
+		AddDebugText(DBG_MCI, 'WARNING !!! Out MciQueueProc(%d)', @nIn, TRUE);
+	end;
+	{$ENDIF _DEBUG}
+	dec(nIn);
+
+	MciQueueProc := FALSE;
+
+end;
+
+const
+	{-- Classe de la fenêtre ShowWave --}
+	SWClass: TWndClass = (
+		style : 0;
+		lpfnWndProc: WNDPROC(@ShowWaveProc);
+		cbClsExtra: 0;
+		cbWndExtra: SizeOf(POINTER);
+		hInstance: 0;
+		hIcon: 0;
+		hCursor: 0;
+		hbrBackground: 0;
+		lpszMenuName: nil;
+		lpszClassName: 'ShowWave');
+
+begin
+	{--  spécifications de la classe AppClass --}
+	SWClass.hInstance := HInstance;
+	SWClass.hIcon := 0;
+	SWClass.hCursor := LoadCursor(0, idc_Arrow);
+	SWClass.hbrBackground := GetStockObject(BLACK_BRUSH);
+	if not (RegisterClass(SWClass) <> 0) then MessageBeep(WORD(-1));
+
+	{$IFDEF _DEBUG}
+	AddDebugText(DBG_MCI, 'Init MCI module.', nil, TRUE);
+	{$ENDIF _DEBUG}
+
+end.

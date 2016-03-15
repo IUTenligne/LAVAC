@@ -1,0 +1,74 @@
+object Form1: TForm1
+  Left = 404
+  Height = 481
+  Top = 180
+  Width = 483
+  Caption = 'Form1'
+  ClientHeight = 481
+  ClientWidth = 483
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '0.9.29'
+  object Chart1: TChart
+    Left = 0
+    Height = 447
+    Top = 34
+    Width = 483
+    AxisList = <    
+      item
+        Title.LabelFont.Orientation = 900
+      end    
+      item
+        Alignment = calBottom
+      end>
+    Foot.Brush.Color = clBtnFace
+    Foot.Font.Color = clBlue
+    Title.Brush.Color = clBtnFace
+    Title.Font.Color = clBlue
+    Title.Text.Strings = (
+      'Drag data points while holding Shift key'
+    )
+    Title.Visible = True
+    Toolset = ChartToolset1
+    Align = alClient
+    DoubleBuffered = True
+    ParentColor = False
+    object Chart1LineSeries1: TLineSeries
+      Marks.Clipped = False
+      Marks.Format = '%0:.9g'
+      Marks.Style = smsValue
+      Pointer.Brush.Color = clPurple
+      Pointer.HorizSize = 6
+      Pointer.Style = psDiamond
+      Pointer.VertSize = 6
+      ShowPoints = True
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 34
+    Top = 0
+    Width = 483
+    Align = alTop
+    ClientHeight = 34
+    ClientWidth = 483
+    TabOrder = 1
+    object cbSorted: TCheckBox
+      Left = 12
+      Height = 17
+      Top = 8
+      Width = 52
+      Caption = 'Sorted'
+      OnChange = cbSortedChange
+      TabOrder = 0
+    end
+  end
+  object ChartToolset1: TChartToolset
+    left = 99
+    top = 129
+    object ChartToolset1DataPointDragTool1: TDataPointDragTool
+      Shift = [ssShift, ssLeft]
+      ActiveCursor = crHandPoint
+    end
+  end
+end

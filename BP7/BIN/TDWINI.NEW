@@ -1,0 +1,12 @@
+[TurboDebugger]
+VideoDLL=E:\BP\BIN\svga.dll
+DebuggerDLL=E:\BP\BIN\tdwin.dll
+[VideoOptions]
+BitBlt=Y
+ForceRepaint=N
+Rows=25
+XGA=N
+DebugFile=E:\BP\BIN\svga.dbg
+SaveWholeScreen=no
+Int2FAssist=no
+IgnoreMode=no

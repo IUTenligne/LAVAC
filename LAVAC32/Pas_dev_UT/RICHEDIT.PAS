@@ -1,0 +1,295 @@
+{
+ *	RICHEDIT.H
+ *
+ *	Purpose:
+ *		RICHEDIT public definitions
+ *
+ *	Owner:
+ *		David R. Fulmer
+ }
+UNIT RICHEDIT;
+
+INTERFACE
+
+Uses Windows;
+
+const cchTextLimitDefault = 32767;
+
+{ RichEdit messages }
+
+const WM_CONTEXTMENU		=	$007B;
+const EM_GETLIMITTEXT		=	(WM_USER + 37);
+const EM_POSFROMCHAR		=	(WM_USER + 38);
+const EM_CHARFROMPOS		=	(WM_USER + 39);
+const EM_SCROLLCARET		=	(WM_USER + 49);
+const EM_CANPASTE				=(WM_USER + 50) ;
+const EM_DISPLAYBAND		=	(WM_USER + 51);
+const EM_EXGETSEL				=(WM_USER + 52) ;
+const EM_EXLIMITTEXT		=	(WM_USER + 53);
+const EM_EXLINEFROMCHAR	=	(WM_USER + 54);
+const EM_EXSETSEL				=(WM_USER + 55) ;
+const EM_FINDTEXT				=(WM_USER + 56) ;
+const EM_FORMATRANGE		=	(WM_USER + 57);
+const EM_GETCHARFORMAT	=	(WM_USER + 58);
+const EM_GETEVENTMASK		=	(WM_USER + 59);
+const EM_GETOLEINTERFACE=		(WM_USER + 60);
+const EM_GETPARAFORMAT	=	(WM_USER + 61);
+const EM_GETSELTEXT			=(WM_USER + 62);
+const EM_HIDESELECTION	=	(WM_USER + 63);
+const EM_PASTESPECIAL		=	(WM_USER + 64);
+const EM_REQUESTRESIZE	=	(WM_USER + 65);
+const EM_SELECTIONTYPE	=	(WM_USER + 66);
+const EM_SETBKGNDCOLOR	=	(WM_USER + 67);
+const EM_SETCHARFORMAT	=	(WM_USER + 68);
+const EM_SETEVENTMASK		=	(WM_USER + 69);
+const EM_SETOLECALLBACK	=	(WM_USER + 70);
+const EM_SETPARAFORMAT	=	(WM_USER + 71);
+const EM_SETTARGETDEVICE=		(WM_USER + 72);
+const EM_STREAMIN				=(WM_USER + 73);
+const EM_STREAMOUT			=(WM_USER + 74);
+const EM_GETTEXTRANGE		=	(WM_USER + 75);
+const EM_FINDWORDBREAK	=	(WM_USER + 76);
+{ new notifications }
+const EN_MSGFILTER		 =	$0700;
+const EN_REQUESTRESIZE =	$0701;
+const EN_SELCHANGE		 =	$0702;
+const EN_DROPFILES		 =	$0703;
+const EN_PROTECTED		 =	$0704;
+{ PenWin specific}
+const EN_CORRECTTEXT	 =		$0705;
+{ event notification masks }
+const ENM_NONE				=$00000000;
+const ENM_CHANGE			=	$00000001;
+const ENM_UPDATE			=	$00000002;
+const ENM_SCROLL			=	$00000004;
+const ENM_KEYEVENTS		=	$00010000;
+const ENM_MOUSEEVENTS	=		$00020000;
+const ENM_REQUESTRESIZE=		$00040000;
+const ENM_SELCHANGE		=	$00080000;
+const ENM_DROPFILES		=	$00100000 ;
+const ENM_PROTECTED		=	$00200000;
+{ PenWin specific }
+const ENM_CORRECTTEXT	=		$00400000;
+{ new edit control styles }
+const ES_SAVESEL			 =	$00008000;
+const ES_SUNKEN				=$00004000;
+const ES_DISABLENOSCROLL =		$00002000;
+{$ifdef DBCS}
+const ES_VERTICAL		 =		$00010000;
+const ES_HORIZONTAL	 =		$00000000;
+const	ES_IME				 =	$00000000;
+const	ES_NOIME			 =	$00020000;
+const ES_SELFIME		 =		$00040000;
+{$endif} { DBCS}
+{ new word break function actions }
+const WB_CLASSIFY		 =	3;
+const WB_MOVEWORDLEFT=		4;
+const WB_MOVEWORDRIGHT=	5;
+const WB_LEFTBREAK	 =	6;
+const WB_RIGHTBREAK	 =	7;
+const WB_MOVEWORDPREV	=	4;
+const WB_MOVEWORDNEXT	=	5;
+const WB_PREVBREAK	 =	6;
+const WB_NEXTBREAK	 =	7;
+{ word break flags (used with WB_CLASSIFY) }
+const WBF_CLASS		 =	BYTE( $0F);
+const WBF_ISWHITE	 =		BYTE( $10);
+const WBF_BREAKLINE	 =	BYTE( $20);
+const WBF_BREAKAFTER =		BYTE( $40);
+{ new data types }
+
+{ all character format measurements are in twips }
+type CHARFORMAT = Record
+		cbSize					: WORD;
+		dwMask					:	Longint;
+		dwEffects				:	Longint;
+		yHeight					:	LONGint;
+		yOffset					:	LONGint;			{ > 0 for superscript, < 0 for subscript }
+		crTextColor			:	TCOLORREF;
+		bCharSet				: BYTE;
+		bPitchAndFamily	:	BYTE;
+		szFaceName			:	ARRAY[0..LF_FACESIZE - 1] of CHAR;
+end;
+{
+	UINT		cbSize;
+	_WPAD		_wPad1;
+	DWORD		dwMask;
+	DWORD		dwEffects;
+	LONG		yHeight;
+	LONG		yOffset;			/* > 0 for superscript, < 0 for subscript */
+	COLORREF	crTextColor;
+	BYTE		bCharSet;
+	BYTE		bPitchAndFamily;
+	TCHAR		szFaceName[LF_FACESIZE];
+	_WPAD		_wPad2;
+}
+
+{ CHARFORMAT masks }
+const CFM_BOLD		=$00000001;
+const CFM_ITALIC	=	$00000002;
+const CFM_UNDERLINE=	$00000004;
+const CFM_STRIKEOUT=	$00000008;
+const CFM_PROTECTED=	$00000010;
+const CFM_SIZE		=$80000000;
+const CFM_COLOR		=$40000000;
+const CFM_FACE		=$20000000;
+const CFM_OFFSET	=	$10000000;
+
+{ CHARFORMAT effects }
+const CFE_BOLD		=$0001;
+const CFE_ITALIC	=	$0002;
+const CFE_UNDERLINE=	$0004;
+const CFE_STRIKEOUT=	$0008;
+const CFE_PROTECTED=	$0010;
+{ NOTE: CFE_AUTOCOLOR corresponds to CFM_COLOR, which controls it }
+const CFE_AUTOCOLOR	=$40000000;
+
+const yHeightCharPtsMost= 1638;
+
+{ EM_SETCHARFORMAT wParam masks }
+const SCF_SELECTION	=$0001;
+const SCF_WORD		=$0002;
+
+type  CHARRANGE = record
+	cpMin : Longint	;
+	cpMax : Longint	;
+end;
+
+type  TEXTRANGE = record
+	chrg : CHARRANGE;
+	lpstrText : PCHAR;	{ allocated by caller, zero terminated by RichEdit }
+end;
+
+type EDITSTREAMCALLBACK = function(dwCookie : DWORD_PTR; pbBuff : LPBYTE; cb : LONG; pcb : LPLONG) : Longint; stdcall;
+
+type  EDITSTREAM = record
+	dwCookie : Longint;		{ user value passed to callback as first parameter }
+	dwError : Longint ;		{ last error }
+	pfnCallback : EDITSTREAMCALLBACK;
+end;
+
+{ stream formats }
+
+const SF_TEXT			=$0001;
+const SF_RTF			=$0002;
+const SF_RTFNOOBJS =	$0003;		{ outbound only }
+const SF_TEXTIZED	 =	$0004;		{ outbound only }
+
+{ Flag telling stream operations to operate on the selection only }
+{ EM_STREAMIN will replace the current selection }
+{ EM_STREAMOUT will stream out the current selection }
+const SFF_SELECTION	=$8000;
+
+type FINDTEXT = record
+	chrg : CHARRANGE;
+	lpstrText : PCHAR;
+end;
+
+type  FORMATRANGE = record
+	hdc : HDC;
+	hdcTarget : HDC;
+	rc : TRECT;
+	rcPage : TRECT;
+	chrg : CHARRANGE;
+end;
+
+{ all paragraph measurements are in twips }
+
+const MAX_TAB_STOPS =32;
+const lDefaultTab =720;
+
+type PARAFORMAT = record
+	dwMask : Longint;
+	wNumbering : WORD;
+	wReserved : WORD;
+	dxStartIndent : Longint;
+	dxRightIndent : Longint;
+	dxOffset : Longint;
+	wAlignment : WORD;
+	cTabCount : WORD;
+	rgxTabs : array[0..MAX_TAB_STOPS-1] of Longint;
+end;
+
+{ PARAFORMAT mask values }
+const PFM_STARTINDENT	=	$00000001;
+const PFM_RIGHTINDENT	=	$00000002;
+const PFM_OFFSET			=	$00000004;
+const PFM_ALIGNMENT		=	$00000008;
+const PFM_TABSTOPS		=	$00000010;
+const PFM_NUMBERING		=	$00000020;
+const PFM_OFFSETINDENT=	$80000000;
+
+{ PARAFORMAT numbering options }
+const PFN_BULLET = $0001;
+
+{ PARAFORMAT alignment options }
+const PFA_LEFT	 = $0001;
+const PFA_RIGHT	 = $0002;
+const PFA_CENTER = $0003;
+
+{ notification structures }
+
+{$ifndef WM_NOTIFY}
+const WM_NOTIFY		=		$004E;
+
+type NMHDR = record
+	wndFrom : HWND;
+	idFrom  : WORD;
+	code    : WORD;
+end;
+{$endif}  { !WM_NOTIFY }
+
+type MSGFILTER = record
+	nmhdr  : NMHDR;
+	msg 	 : WORD;
+	wParam : WORD;
+	lParam : longint;
+end;
+
+type REQRESIZE = record
+	nmhdr : NMHDR;
+	rc : TRECT;
+end;
+
+type  SELCHANGE = record
+	nmhdr : NMHDR;
+	chrg : CHARRANGE;
+	seltyp : WORD;
+end;
+
+const SEL_EMPTY		=$0000;
+const SEL_TEXT		=$0001;
+const SEL_OBJECT	 =	$0002;
+const SEL_MULTICHAR	=$0004;
+const SEL_MULTIOBJECT=	$0008;
+
+type ENDROPFILES = record
+	nmhdr : NMHDR;
+	hDrop : THANDLE;
+	cp : Longint;
+	fProtected : BOOL;
+end;
+
+type ENPROTECTED = record
+	nmhdr : NMHDR;
+	msg : WORD;
+	wParam : WORD;
+	lParam : longint;
+	chrg : CHARRANGE;
+end;
+
+{ PenWin specific}
+type ENCORRECTTEXT = record
+	nmhdr : NMHDR;
+	chrg : CHARRANGE;
+	seltyp : WORD;
+end;
+
+
+{ clipboard formats - use as parameter to RegisterClipboardFormat() }
+const CF_RTF = 'Rich Text Format';
+const CF_RETEXTOBJ = 'RichEdit Text and Objects';
+
+IMPLEMENTATION
+
+END.

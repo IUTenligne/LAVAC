@@ -1,0 +1,58 @@
+unit licdata;
+
+interface
+
+uses Windows;
+
+type TAPPTYPE = (ST_EMPTY,
+								 ST_LAVAC,
+								 ST_CDLAVAC,
+								 ST_MMWIZARD,
+								 ST_VRECORDER,
+								 ST_VVCR);
+
+type TENUMPROC = function (nType : TAPPTYPE; nNum, nIndex : integer) : longint;
+
+const szAPPDESC : array[TAPPTYPE] of PCHAR =
+								 ('UNKNOWN',
+									'LAVAC',
+									'LAVAC CD',
+									'Multimedia Assistant',
+									'Virtual Recorder',
+									'Virtual VCR');
+
+const szAPPINI : array[TAPPTYPE] of PCHAR =
+								 ('',
+									'LAVAC.INI',
+									'LAVACCD.INI',
+									'MMASSIST.INI',
+									'VRECORD.INI',
+									'VIDEOSEQ.INI');
+
+const szAPPLIC : array[TAPPTYPE] of PCHAR =
+								 ('',
+									'LAVAC.LIC',
+									'LAVACCD.LIC',
+									'MMASSIST.LIC',
+									'VRECORD.LIC',
+									'VIDEOSEQ.LIC');
+
+{$IFDEF _LAVAC}
+	const gCurAppType : TAPPTYPE = ST_LAVAC;
+{$ENDIF}
+{$IFDEF _CDLAVAC}
+	const gCurAppType : TAPPTYPE = ST_CDLAVAC;
+{$ENDIF}
+{$IFDEF _MMWIZARD}
+	const gCurAppType : TAPPTYPE = ST_MMWIZARD;
+{$ENDIF}
+{$IFDEF _VRECORDER}
+	const gCurAppType : TAPPTYPE = ST_VRECORDER;
+{$ENDIF}
+{$IFDEF _VVCR}
+	const gCurAppType : TAPPTYPE = ST_VVCR;
+{$ENDIF}
+
+implementation
+
+end.

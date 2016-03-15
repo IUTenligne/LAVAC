@@ -1,0 +1,32 @@
+{ This unit was automatically created by update_allunits }
+unit AllLCLIntfUnits;
+interface
+uses
+  qtproc,
+  qtwscontrols,
+  qtwsgrids,
+  qtprivate,
+  qtwsdesigner,
+  qtwsspin,
+  qtwidgets,
+  qtcaret,
+  qtthemes,
+  qtwsextdlgs,
+  interfaces,
+  qtwsforms,
+  qtwsbuttons,
+  qtwsextctrls,
+  qtint,
+  qtwspairsplitter,
+  qtwsfactory,
+  qtwscomctrls,
+  qtwsimglist,
+  qtwsmenus,
+  qtwscalendar,
+  qtwsdialogs,
+  qtwsarrow,
+  qtobjects,
+  qtwschecklst,
+  qtwsstdctrls;
+implementation
+end.
